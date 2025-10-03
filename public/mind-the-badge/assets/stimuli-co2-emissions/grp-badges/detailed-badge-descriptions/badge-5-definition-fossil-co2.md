@@ -1,0 +1,1 @@
+CO₂ released from burning fossil fuels (coal, oil, gas) and from certain industrial processes. Includes emissions from transport, electricity generation, heating, and industry, plus gas flaring. Also includes process CO₂ from cement and steel production.

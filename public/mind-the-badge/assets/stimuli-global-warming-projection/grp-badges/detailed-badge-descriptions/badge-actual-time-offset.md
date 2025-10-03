@@ -1,0 +1,1 @@
+Compilation of the latest 2100 median warming projections from UNEP, CAT, IEA and CR as of 9 November 2021, compared to the assessed warming values for the five shared socioeconomic pathway (SSP) scenarios highlighted in the recent IPCC AR6 WG1 report.

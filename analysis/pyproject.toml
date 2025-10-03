@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mtb-analysis"
+version = "0.0.1"
+description = "Lowkey Analysis tools for Mind the Badge study"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+mtb-clean = "mtb.clean:main"
+mtb-export-time = "mtb.export_time_spent:main"
+mtb-export-notes = "mtb.export_speech:main"
+mtb-export-likert = "mtb.export_questionnaire_likert:main"
+mtb-export-open = "mtb.export_questionnaire_open:main"
+mtb-export-badges = "mtb.export_badge_stats:main"
+mtb-export-participants = "mtb.export_participant_meta:main"
+mtb-export-all = "mtb:main_run_all"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["mtb*"]
+
+
+

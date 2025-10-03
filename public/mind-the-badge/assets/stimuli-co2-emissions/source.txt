@@ -1,0 +1,3 @@
+# Source Link
+https://ourworldindata.org/co2-emissions
+NOTE: Filtered by Continent

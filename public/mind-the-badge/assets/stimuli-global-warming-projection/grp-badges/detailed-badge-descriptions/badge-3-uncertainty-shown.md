@@ -1,0 +1,3 @@
+Each bar reports the median (50th-percentile) warming plus a central range printed inside the column. The span reflects variation across integrated-assessment and climate models; wider ranges indicate lower agreement. 
+
+These warming numbers come with some important caveats. First, uncertainties – due to climate sensitivity and carbon cycle feedbacks – are quite large. For example, while current policies are expected to result in around 2.6C to 2.7C warming, the Earth could, in fact, end up with anywhere between 2C to 3.6C or so, depending on how the climate system responds to emissions. These uncertainties are cause for caution and increase the urgency of emissions reductions.

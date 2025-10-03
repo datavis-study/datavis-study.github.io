@@ -1,0 +1,1 @@
+All data is harmonised to a common baseline (1850–1900 average) and statistic (median warming in 2100). This makes the disparate sources directly comparable within the same visual. Both central estimates and uncertainty ranges are shown. Note that the IEA current policy scenario (STEPS) is in-between policies in place today and 2030 commitments.
