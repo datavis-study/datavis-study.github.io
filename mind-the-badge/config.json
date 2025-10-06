@@ -1,0 +1,394 @@
+{
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "Experiment I",
+    "version": "0.0.1",
+    "authors": [
+      "Valentin Edelsbrunner"
+    ],
+    "date": "2025-01-28",
+    "description": "This study studies the perceptual footprint of visualization badges on visualization readers",
+    "organizations": [
+      "inria",
+      "University of Bordeaux",
+      "University of Edinburgh",
+      "University of Oxford"
+    ]
+  },
+  "uiConfig": {
+    "contactEmail": "valentin.edelsbrunner@inria.fr",
+    "helpTextPath": "mind-the-badge/assets/help.md",
+    "logoPath": "revisitAssets/badge-logo.png",
+    "withProgressBar": true,
+    "autoDownloadStudy": false,
+    "sidebar": true,
+    "studyEndMsg": "Thanks for participating—your time and insights really help us!",
+    "hideStudyBrowser": false
+
+  },
+  "importedLibraries": [
+    "demographics",
+    "sus"
+  ],
+  "baseComponents": {
+    "stimuliWithBadge": {
+      "description": "A static visualization with one to many interactive visualization badges placed bottom right",
+      "type": "react-component",
+      "path": "mind-the-badge/assets/StimuliWithBadge.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "sidebar",
+      "response": []
+    }
+  },
+  "components": {
+    "introduction": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/introduction.md",
+      "nextButtonText": "Click here to Start",
+      "response": []
+    },
+    "consent": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/consent.md",
+      "nextButtonText": "Accept and Continue",
+      "response": []
+    },
+    "pre-example": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/pre-example.md",
+      "nextButtonText": "Continue to Example",
+      "response": []
+    },
+    "example": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/example.md",
+      "nextButtonText": "I am Ready to Start",
+      "nextButtonLocation": "sidebar",
+      "instruction": "Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.",
+      "instructionLocation": "sidebar",
+      "response": [
+        {
+          "id": "main-observations-example",
+          "prompt": "####  <span style=\"color:red\">Example Response</span> \n",
+          "location": "sidebar",
+          "type": "longText",
+          "minRows": 19,
+          "autosize": true,
+          "maxRows": 19,
+          "required": false,
+          "defaultValue": "This line chart shows regional population data from 1950 to 2100. The x-axis shows years in 20-year steps; the y-axis shows population size (millions, M, to billions, G).\n\nIt is clear to see that Asia (the orange line) has the largest population, which is projected to peak a little above 5 billion around mid-century (~2050–2060) and then to decline to about 4.6 billion.\n\nAfrica (blue) shows the strongest growth—rising from a few hundred million in 1950 to almost 4 billion by 2100—almost closing the gap to Asia.\n\n [Example intentionally stops here]\n\nWrite your speech in your own style. You do not need to word things this way: you can be shorter (but not much shorter) or longer; use bullet points or full sentences; reorder points; and choose different phrasing."
+        }
+      ]
+    },
+    "pre-questionnaire": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/pre-questionnaire.md",
+      "nextButtonText": "Continue to Questionnaire",
+      "response": []
+    },
+    "global-warming-projection-badges": {
+      "baseComponent": "stimuliWithBadge",
+      "instruction": "Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.",
+      "parameters": {
+        "imageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
+        "detailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json"
+      },
+      "response": [
+        {
+          "id": "main-observations",
+          "prompt": "**Your Speech**",
+          "location": "sidebar",
+          "type": "longText",
+          "placeholder": "Write the text you would use for your speech (~150words)... ",
+          "minRows": 19,
+          "autosize": true,
+          "maxRows": 19
+        }
+      ]
+    },
+    "co2-emissions-badges": {
+      "baseComponent": "stimuliWithBadge",
+      "instruction": "Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.",
+      "parameters": {
+        "imageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
+        "detailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json"
+      },
+      "response": [
+        {
+          "id": "main-observations",
+          "prompt": "**Your Speech**",
+          "location": "sidebar",
+          "type": "longText",
+          "placeholder": "Write the text you would use for your speech (~150words)... ",
+          "minRows": 19,
+          "autosize": true,
+          "maxRows": 19
+        }
+      ]
+    },
+    "co2-emissions-footnotes": {
+      "type": "image",
+      "path": "mind-the-badge/assets/stimuli-co2-emissions/grp-footnotes/source.png",
+      "instruction": "Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.",
+      "instructionLocation": "sidebar",
+      "nextButtonLocation": "sidebar",
+      "response": [
+        {
+          "id": "main-observations",
+          "prompt": "**Your Speech**",
+          "location": "sidebar",
+          "type": "longText",
+          "placeholder": "Write the text you would use for your speech (~150words)... ",
+          "minRows": 19,
+          "autosize": true,
+          "maxRows": 19
+        }
+      ]
+    },
+    "global-warming-projection-footnotes": {
+      "type": "image",
+      "path": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
+      "instruction": "Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.",
+      "instructionLocation": "sidebar",
+      "nextButtonLocation": "sidebar",
+      "response": [
+        {
+          "id": "main-observations",
+          "prompt": "**Your Speech**",
+          "location": "sidebar",
+          "type": "longText",
+          "placeholder": "Write the text you would use for your speech (~150words)... ",
+          "minRows": 19,
+          "autosize": true,
+          "maxRows": 19
+        }
+      ]
+    },
+    "demographics-custom": {
+      "type": "questionnaire",
+      "description": "Demographic and background questions for visualization research study",
+      "response": [
+        {
+          "id": "gender",
+          "prompt": "What is your **gender**?",
+          "required": true,
+          "type": "radio",
+          "withOther": true,
+          "options": [
+            "Woman",
+            "Man",
+            "Non-binary",
+            "Questioning",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "age",
+          "prompt": "What is your **age group**?",
+          "required": true,
+          "type": "radio",
+          "options": [
+            "18-24 years",
+            "25-34 years",
+            "35-44 years",
+            "45-54 years",
+            "55-64 years",
+            "65+ years",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "education",
+          "prompt": "What is the **highest degree or level of education** you have completed?",
+          "required": true,
+          "type": "radio",
+          "withOther": true,
+          "options": [
+            "Less than high school",
+            "High school diploma or equivalent (e.g., GED, Matura)",
+            "Bachelor's degree",
+            "Master's degree",
+            "Doctorate (e.g., PhD, EdD)",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "field-of-study",
+          "prompt": "What is your **primary field of study or work**?",
+          "required": true,
+          "type": "radio",
+          "withOther": true,
+          "options": [
+            "Computer Science / Information Technology",
+            "Data Science / Statistics",
+            "Business / Economics",
+            "Social Sciences (Psychology, Sociology, etc.)",
+            "Natural Sciences (Biology, Chemistry, Physics, etc.)",
+            "Engineering",
+            "Arts / Design",
+            "Humanities",
+            "Healthcare / Medicine",
+            "Education"
+          ]
+        },
+        {
+          "id": "chart-reading-frequency",
+          "prompt": "How often do you **read or interpret charts and graphs**?",
+          "required": true,
+          "type": "radio",
+          "options": [
+            "Never",
+            "Rarely (few times per year)",
+            "Occasionally (few times per month)",
+            "Regularly (few times per week)",
+            "Frequently (daily or almost daily)"
+          ]
+        },
+        {
+          "id": "chart-creation-frequency",
+          "prompt": "How often do you **create charts and graphs**?",
+          "required": true,
+          "type": "radio",
+          "options": [
+            "Never",
+            "Rarely (few times per year)",
+            "Occasionally (few times per month)",
+            "Regularly (few times per week)",
+            "Frequently (daily or almost daily)"
+          ]
+        },
+        {
+          "id": "color-vision",
+          "prompt": "Do you have any form of color‑vision deficiency (often called color‑blindness)?",
+          "required": false,
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No",
+            "Not sure",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "color-vision-type",
+          "prompt": "If yes, which type of color‑vision deficiency? (optional)",
+          "required": false,
+          "type": "shortText",
+          "placeholder": "e.g., Deuteranopia, Protanopia, Tritanopia"
+        }
+      ]
+    },
+
+    "badge-questionaire-1": {
+      "type": "questionnaire",
+      "description": "Post-task questionnaire about visualization badges",
+      "instruction": "### Please answer the following questions",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        { "id": "noticed-in-task", "prompt": "Do you notice the **visualization badges**? By visualization badges we refer to the graphical labels that were displayed bellow the visualizations (see figre). ![badge examples](mind-the-badge/assets/badge-examples.png)", "type": "radio", "options": ["Yes", "No", "Sometimes (I did not consistently check)", "Not sure"], "required": true },
+        { "id": "noticed-interactivity", "prompt": "Did you notice these visualization badges were interactive (hover or click for details)?", "type": "radio", "options": ["Yes", "No", "Not sure"], "required": true },
+        { "id": "notice-comments", "prompt": "Additional comments about noticing or interactivity", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 },
+        { "id": "experience-with-badges", "prompt": "If you noticed the visualization badges, describe your experience using them alongside the visualization. Did they influence how you read and interpreted the visualization? If so, how?", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 },
+        { "id": "ease-of-understanding", "prompt": "How easy was it to understand each visualization badge—from the label alone and from the detailed description on hover/click?", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 },
+        { "id": "considered-in-notes", "prompt": "Did you consider information from visualization badges in Your Speech? Please explain.", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 },
+        { "id": "most-least-useful", "prompt": "Which visualization badges were most and/or least useful? Why?", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 },
+        { "id": "overall-help", "prompt": "Overall, did the visualization badges help you understand and interpret the visualization? Please explain.", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows":6 }
+      ]
+    },
+
+    "badge-questionaire-2": {
+      "type": "questionnaire",
+      "description": "Post task likert scale questioanire about visualization badges",
+      "instruction": "### Please answer the following questions",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        { "id": "saliency", "prompt": "Visualization badges were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "clutter", "prompt": "Visualization badges cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "interpretability", "prompt": "Visualization badges were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "usefulness", "prompt": "Information in the visualization badges was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "trust", "prompt": "Visualization badges increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "standardization", "prompt": "Visualization badges should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "final-comments", "prompt": "Any additional comments?", "type": "longText", "required": false, "minRows": 3, "autosize": true, "maxRows": 8 }
+      ]
+    },
+
+    "footnote-questionaire-1": {
+      "type": "questionnaire",
+      "description": "Post-task questionnaire about visualization footnotes",
+      "instruction": "### Please answer the following questions",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        { "id": "noticed-in-task", "prompt": "Did you notice the footnotes during your tasks? ![footnote examples](mind-the-badge/assets/footnote-examples.png)", "type": "radio", "options": ["Yes", "No", "Sometimes (I did not consistently check)", "Not sure"], "required": true },
+        { "id": "ease-of-understanding", "prompt": "How easy was it to understand the footnotes?", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 },
+        { "id": "considered-in-notes", "prompt": "Did you consider information in the footnotes for Your Speech? Please explain.", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 },
+        { "id": "overall-help", "prompt": "Overall, did the footnotes help you understand and interpret the visualization? Please explain.", "type": "longText", "required": false, "minRows": 6, "autosize": true, "maxRows": 6 }
+      ]
+    },
+    "footnote-questionaire-2": {
+      "type": "questionnaire",
+      "description": "Post-task questionnaire about visualization footnotes",
+      "instruction": "### Please answer the following questions",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        { "id": "saliency", "prompt": "Footnotes were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "clutter", "prompt": "Footnotes cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "interpretability", "prompt": "Footnotes were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "usefulness", "prompt": "Information in the footnotes was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "trust", "prompt": "Footnotes increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "standardization", "prompt": "Footnotes like these should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "final-comments", "prompt": "Any additional comments?", "type": "longText", "required": false, "minRows": 3, "autosize": true, "maxRows": 8 }
+      ]
+    }
+
+  },
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "introduction",
+      "consent",
+      "pre-example",
+      "example",
+      {
+        "id": "group-assignment",
+        "order": "latinSquare",
+        "numSamples": 1,
+        "components": [
+          {
+            "id": "badge-group",
+            "order": "fixed",
+            "components": [
+              {
+                "order": "random",
+                "components": [
+                  "global-warming-projection-badges",
+                  "co2-emissions-badges"
+                ]
+              },
+              "pre-questionnaire",
+              "badge-questionaire-1",
+              "badge-questionaire-2",
+              "demographics-custom"
+            ]
+          },
+          {
+            "id": "footnote-group",
+            "order": "fixed",
+            "components": [
+              {
+                "order": "random",
+                "components": [
+                  "global-warming-projection-footnotes",
+                  "co2-emissions-footnotes"
+                ]
+              },
+              "pre-questionnaire",
+              "footnote-questionaire-1",
+              "footnote-questionaire-2",
+              "demographics-custom"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

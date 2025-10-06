@@ -1,0 +1,49 @@
+{
+  "badges": [
+    {
+      "badgeType": "BINARY",
+      "id": "data-source-disclosed__co2-emissions",
+      "label": "Data Source Disclosed",
+      "description": "Global Carbon Budget (2024), via OurWorldInData.org/co2-and-greenhouse-gas-emissions.",
+      "type": "DATA",
+      "intent": "CONFIRMATION",
+      "topics": ["Source"],
+      "link": "https://ourworldindata.org/co2-and-greenhouse-gas-emissions",
+      "detailedDescription": "detailed-badge-descriptions/badge-1-data-source-disclosed.md"
+    },
+    {
+      "badgeType": "BINARY",
+      "id": "definition-co2-emissions__co2-emissions",
+      "label": "Definition: CO₂ emissions",
+      "description": "CO₂ released from burning fossil fuels (coal, oil, gas) and from certain industrial processes. Includes emissions from transport, electricity generation, heating, and industry, plus gas flaring. Also includes process CO₂ from cement and steel production.",
+      "type": "DATA",
+      "intent": "INFORMATION",
+      "topics": ["Definition", "Coverage"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-5-definition-fossil-co2.md"
+    },
+    {
+      "badgeType": "BINARY",
+      "id": "cc-by-licence__co2-emissions",
+      "label": "CC BY Licence",
+      "description": "Creative Commons Attribution (CC BY).",
+      "type": "INFORMATION",
+      "intent": "INFORMATION",
+      "topics": ["License"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-cc-by.md"
+    },
+    {
+      "badgeType": "BINARY",
+      "id": "missing-data__co2-emissions",
+      "label": "Missing Data",
+      "description": "These figures don’t include CO₂ emissions from land-use change (e.g., deforestation or reforestation).",
+      "type": "DATA",
+      "intent": "WARNING",
+      "topics": ["Coverage", "Exclusions"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-missing-data.md"
+    }
+  ]
+}
+ 

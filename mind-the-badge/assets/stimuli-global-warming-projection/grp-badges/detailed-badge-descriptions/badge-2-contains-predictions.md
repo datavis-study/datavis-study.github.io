@@ -1,0 +1,5 @@
+All values are model-derived temperatures for the year 2100 under specified policy or socioeconomic scenarios.  
+
+These warming numbers come with some important caveats. First, uncertainties – due to climate sensitivity and carbon cycle feedbacks – are quite large. For example, while current policies are expected to result in around 2.6C to 2.7C warming, the Earth could, in fact, end up with anywhere between 2C to 3.6C or so, depending on how the climate system responds to emissions. These uncertainties are cause for caution and increase the urgency of emissions reductions.
+
+Second, the world does not end in 2100, even though many climate model simulations do. The world will continue warming until global CO2 emissions reach zero (or net-zero) and, even then, will not cool back down for many centuries to come – barring widespread deployment of net-negative emissions to actively suck more CO2 out of the atmosphere than is being emitted. Both current policy and 2030 commitment scenarios do not result in net-zero CO2 emissions before 2100 and would, ultimately, see more warming as CO2 emissions continue into the 22nd century.

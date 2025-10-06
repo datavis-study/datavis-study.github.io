@@ -1,0 +1,6 @@
+Data source: Global Carbon Budget (2024)  OurWorldinData.org/co2-and-greenhouse-gas-emissions  |  CC BY
+
+Fossil CO₂ emissions This refers to the carbon dioxide released when burning fossil fuels or from certain industrial activities.
+Burning fossil fuels — coal, oil, and gas — produces CO₂ during transport (cars, trucks, planes), electricity generation, heating, and energy use in industry. This also includes flaring, which is the burning of extra gas during oil and gas extraction.
+Some industrial processes also release CO₂. This happens especially in cement and steel production, where chemical reactions (unrelated to burning fuel) produce carbon dioxide.
+These figures don't include CO₂ emissions from changes in land use, like deforestation or reforestation.

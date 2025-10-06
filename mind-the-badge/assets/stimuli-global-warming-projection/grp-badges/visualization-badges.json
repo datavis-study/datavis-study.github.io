@@ -1,0 +1,48 @@
+{
+  "badges": [
+    {
+      "badgeType": "BINARY",
+      "id": "data-sources-disclosed__global-warming-projection",
+      "label": "Data Sources Disclosed",
+      "description": "This chart depicts a compilation of the latest 2100 median warming projections from UNEP, CAT, IEA, and Climate Resource (as of 9 Nov 2021), compared with IPCC AR6 WG1 SSP scenario values",
+      "type": "DATA",
+      "intent": "CONFIRMATION",
+      "topics": ["Source"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-1-data-source-disclosed.md"
+    },
+    {
+      "badgeType": "BINARY",
+      "id": "contains-predictions__global-warming-projection",
+      "label": "Contains Predictions",
+      "description": "Every bar shows model-based, scenario-dependent future warming estimates rather than observations, signalling that numbers rely on underlying assumptions and may evolve as models or pledges change.",
+      "type": "ANALYSIS",
+      "intent": "WARNING",
+      "topics": ["Prediction"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-2-contains-predictions.md"
+    },
+    {
+      "badgeType": "BINARY",
+      "id": "actual-time-offset__global-warming-projection",
+      "label": "Actual Time Offset",
+      "description": "Compiled on 9 November 2021 from UNEP, CAT, IEA & CR.",
+      "type": "ANALYSIS",
+      "intent": "WARNING",
+      "topics": ["Time"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-actual-time-offset.md"
+    },
+    {
+      "badgeType": "BINARY",
+      "id": "uncertainty-shown__global-warming-projection",
+      "label": "Uncertainty Shown",
+      "description": "Each bar reports the median (50th-percentile) warming plus a central range printed inside the column. The span reflects variation across integrated-assessment and climate models; wider ranges indicate lower agreement.",
+      "type": "ANALYSIS",
+      "intent": "CONFIRMATION",
+      "topics": ["Uncertainty"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-3-uncertainty-shown.md"
+    }
+  ]
+}
