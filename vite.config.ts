@@ -6,7 +6,7 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd());
 
   return {
-    // base: command === 'build' ? '/study/' : '/',
+    base: command === 'build' ? '/mind-the-badge/' : '/',
     plugins: [
       react({ devTarget: 'es2022' }),
     ],
