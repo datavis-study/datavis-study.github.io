@@ -1,3 +1,1 @@
-export const PREFIX = import.meta.env.PROD
-  ? (import.meta.env.VITE_BASE_PATH || '/mind-the-badge/')
-  : '/';
+export const PREFIX = import.meta.env.BASE_URL;
