@@ -2,7 +2,7 @@ import {
   Flex, Image, Select, Title, Space, Grid, AppShell, Button,
 } from '@mantine/core';
 
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 
 import { IconListCheck, IconSettings } from '@tabler/icons-react';
 import { PREFIX } from '../../utils/Prefix';
@@ -44,7 +44,7 @@ export function AppHeader({ studyIds }: { studyIds: string[] }) {
                   onChange={(value) => navigate(`/analysis/stats/${value}`)}
                   mr={16}
                 />
-                <Button component="a" href={`${PREFIX}${studyId}`} target="_blank" leftSection={<IconListCheck />} mr="sm">
+                <Button component={Link} to={`/${studyId}`} target="_blank" leftSection={<IconListCheck />} mr="sm">
                   Go to Study
                 </Button>
               </>

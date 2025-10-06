@@ -6,7 +6,7 @@ import {
 } from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Timestamp } from 'firebase/firestore';
-import { useNavigate, useSearchParams } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import {
   GlobalConfig, ParsedConfig, StudyConfig,
 } from '../parser/types';
@@ -166,8 +166,8 @@ function StudyCard({ configName, config, url }: { configName: string; config: Pa
               </Button>
               <Button
                 leftSection={<IconListCheck />}
-                component="a"
-                href={`${PREFIX}${url}`}
+                component={Link}
+                to={`/${url}`}
               >
                 Go to Study
               </Button>
