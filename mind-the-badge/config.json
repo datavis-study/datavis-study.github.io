@@ -23,7 +23,7 @@
     "autoDownloadStudy": false,
     "sidebar": true,
     "studyEndMsg": "Thanks for participating—your time and insights really help us!",
-    "hideStudyBrowser": false
+    "hideStudyBrowser": true
 
   },
   "importedLibraries": [
