@@ -14,7 +14,16 @@ yarn serve
 From `analysis/`:
 
 ```bash
-# Run all exports and archive data
+cd analysis
+
+# 1) Create & activate a virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate   # on Windows: .venv\\Scripts\\activate
+
+# 2) Install the CLI in editable mode to get console scripts
+python -m pip install -e .
+
+# 3) Run all exports and archive data
 mtb-export-all
 
 # Individual exports
@@ -26,9 +35,17 @@ mtb-export-open              # questionnaire_open_responses.csv
 mtb-export-badges            # stimulus_badge_metrics.csv
 ```
 
-- Input JSON: `analysis/input/db.json`
-- Output CSVs: `analysis/input/`
+- Input JSON: `analysis/data/db.json`
+- Output CSVs: `analysis/data/`
 - Archives: `analysis/archive/study-data-YYYY-MM-DD_HH-MM-SS.zip`
+
+Run without installing (fallback):
+
+```bash
+# from repo root, run without installing console scripts
+PYTHONPATH=analysis/src \
+python -c "from mtb import main_run_all; main_run_all()"
+```
 
 ## License
 

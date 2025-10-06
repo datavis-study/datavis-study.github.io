@@ -1,0 +1,3 @@
+participantGroup,participantId,participantIndex,completed,ip,country,language,userAgent,resolutionWidth,resolutionHeight
+footnote-group,bf287135-ddbb-473a-a940-8e836a11d9c1,3,True,194.199.1.52,France,en-US,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15",1512,892
+badge-group,8ec3a0fa-bb20-490e-908b-e70ed9138156,2,True,194.199.1.52,France,de-DE,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",1512,982

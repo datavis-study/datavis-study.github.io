@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: mtb-analysis
+Version: 0.0.1
+Summary: Lowkey Analysis tools for Mind the Badge study
+Requires-Python: >=3.10
