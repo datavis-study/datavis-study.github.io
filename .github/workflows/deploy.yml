@@ -26,18 +26,20 @@ jobs:
         if: ${{ vars.VITE_STORAGE_ENGINE == '' }}
         run: yarn build
         env:
-          VITE_BASE_PATH: /study/
+          VITE_BASE_PATH: /
+#   VITE_BASE_PATH: /study/
 
       - name: Build with github environment variables
         if: ${{ vars.VITE_STORAGE_ENGINE != '' }}
         run: VITE_STORAGE_ENGINE=$VITE_STORAGE_ENGINE yarn build
         env:
           VITE_STORAGE_ENGINE: ${{ vars.VITE_STORAGE_ENGINE }}
-          VITE_BASE_PATH: /study/
+          VITE_BASE_PATH: /
+#         VITE_BASE_PATH: /study/
 
       - uses: peaceiris/actions-gh-pages@v3
         name: Deploy
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist 
+          publish_dir: ./dist
