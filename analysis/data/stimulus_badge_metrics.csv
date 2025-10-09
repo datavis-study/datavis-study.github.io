@@ -1,9 +1,9 @@
 stimulusId,badgeId,badgeLabel,clickCount,firstBadgeClickCount,hoverCount,drawerOpenCount,totalHoverTime,maxHoverTime,minHoverTime,totalDrawerOpenTime,maxDrawerOpenTime,minDrawerOpenTime
-co2-emissions,cc-by-licence__co2-emissions,CC BY Licence,1,1,1,1,1.112,1.112,1.112,1.733,1.733,1.733
-co2-emissions,data-source-disclosed__co2-emissions,Data Source Disclosed,0,0,3,0,3.289,1.21,1.006,0.0,,
-co2-emissions,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,1,0,1,1,1.135,1.135,1.135,0.995,0.995,0.995
-co2-emissions,missing-data__co2-emissions,Missing Data,,,,,,,,,,
-global-warming-projection,actual-time-offset__global-warming-projection,Actual Time Offset,0,0,1,0,0.815,0.815,0.815,0.0,,
-global-warming-projection,contains-predictions__global-warming-projection,Contains Predictions,1,0,1,1,0.83,0.83,0.83,0.797,0.797,0.797
-global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,1,1,1,1,0.871,0.871,0.871,0.481,0.481,0.481
-global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,0,0,2,0,0.996,0.97,0.026,0.0,,
+co2-emissions,cc-by-licence__co2-emissions,CC BY Licence,0,0,3,0,2.395,1.431,0.016,0.0,,
+co2-emissions,data-source-disclosed__co2-emissions,Data Source Disclosed,0,0,4,0,4.408,3.356,0.034,0.0,,
+co2-emissions,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,0,0,4,0,3.198,1.912,0.049,0.0,,
+co2-emissions,missing-data__co2-emissions,Missing Data,0,0,3,0,9.015,4.891,0.505,0.0,,
+global-warming-projection,actual-time-offset__global-warming-projection,Actual Time Offset,0,0,9,0,22.334,8.23,0.015,0.0,,
+global-warming-projection,contains-predictions__global-warming-projection,Contains Predictions,0,0,4,0,2.551,1.301,0.015,0.0,,
+global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,0,0,8,0,5.935,4.588,0.015,0.0,,
+global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,0,0,8,0,8.118,6.071,0.016,0.0,,
