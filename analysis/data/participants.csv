@@ -1,5 +1,0 @@
-participantGroup,participantId,participantIndex,completed,ip,country,language,userAgent,resolutionWidth,resolutionHeight
-footnote-group,2b69160b-3a1e-4ad9-9039-f3758f20b569,11,True,194.199.1.36,France,fr,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0,1536,960
-badge-group,37b66c79-da74-498e-9567-c79c5d7efd41,8,True,194.199.1.52,France,fr,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0,1920,1080
-footnote-group,4798e3dc-4588-41b2-8e23-9f43d695c79e,7,True,193.50.110.58,France,en,Mozilla/5.0 (X11; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0,1920,1080
-badge-group,0b6ad5e0-be61-411e-980c-c773e0482c66,5,True,193.50.110.227,France,fr-FR,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",1920,1080
