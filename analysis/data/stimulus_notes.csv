@@ -1,0 +1,64 @@
+group,participantId,stimulusId,speech
+footnote,9a73ce92-5365-411d-a81d-1db38ff72f4e,global-warming-projection,"IPCC publishes projections of global warming following five different pathways, the highest being 4.7 degrees in ""SSP5-8.5"" and the lowest being 1.4 degrees in ""SSP1-1.9"". Current policies and 2030 commitments are around the ""SSP2-2.45"" pathway which is the middle one, where current policy is slightly behind the 2030 commitments by around 0.2 degrees. The projections from UNEP, CAT, and IEA are not very different. Net-zero promises + 2030 commitments are the most promising one in terms of warming projections."
+footnote,9a73ce92-5365-411d-a81d-1db38ff72f4e,co2-emissions,"The historical annual record of global CO2 emissions starts from 1750 sourced from Global Carbon Budget (2024). Before 1850 there're barely any CO2 emissions on the billion ton scale. Since 1850, emissions started to rise with Europe and North America lead the emission, which is in accordance with knowledge in industrial revolutions, trade, and wars. Europe and North America had been the biggest emission regions since record to around 1990. After that they are on the decline and there's a sharp increase for Asia in emissions from 1950. The turning point of emission in 1990s was around 7-8 billion tons annually for Europe, North America and Asia. However the sharp increase in Asia continues and is now reaching over 22 billion ton a year in 2023."
+footnote,2b69160b-3a1e-4ad9-9039-f3758f20b569,co2-emissions,"This chart display the evolution of annual CO2 emissions (in tons) between 1750 and 2023 for continents (with America being splits into two parts)
+
+We can note that all continents stayed at 0t until the first part of 1830 where Europe (in green) started to slowly increasing their emission. They were followed in late 19th century by North America (NA). 
+
+The 20th century established a strong explosion of annual CO2 emission in 1945 where NA, Europe and Asia went from less 5 billions t, to approximatively 8 billions t.
+
+The start of the 21th century marked a stabilization of NA and Europe emission around 5 billions t, while Asia keep exploding until reaching more than 20 billions t in 2023.
+
+In the meantime, Africa, South America and Oceania, started also to increase their emission to reach appromatively 2.5 billions in 2023.
+"
+footnote,2b69160b-3a1e-4ad9-9039-f3758f20b569,global-warming-projection,"These four series of bar chart display the warming projection for differents scenarios in 2100.
+
+First, the IPCC scenarios demonstrate what would happens regarding differents trajectories (SSP) with the SSP1-1.9 leading to only 1.4°C increase compared to the 4.7°C of the SSP5-8.5 scenario.
+
+Then the 3 others series of charts explore other scenarios (respectively, UNEP, CAT et IEA) according to the application of current policies or maintaining commitements.
+
+We can see that all scenarios leads to similar results inside each policies applications. 
+
+With current policies, warming will increase from 2.6 or 2.7°C degrees. 
+
+With 2030 commitments it should be only 2.4°C (CR is not taken in account).
+
+With Net-zero promises and 2030 commitments, we should limit the increase at 1.8°C (CR is also not included) "
+badge,37b66c79-da74-498e-9567-c79c5d7efd41,global-warming-projection,"This bar chart compares global warming projections for the year 2100 under four different scenarios. The projections were made in 2021. The graph is divided into four sections, each corresponding to one scenario. In every section, the x-axis represents the various projections, while the y-axis indicates the expected increase in global temperature (in degrees Celsius).
+
+Each bar shows the estimated temperature rise for a specific projection within a scenario, along with its associated confidence interval.
+
+In the first scenario, the projections are produced by different organizations than those used for the other scenarios.
+
+It is clear that the IPCC scenarios are the most pessimistic, projecting up to a 4.7°C increase by 2100. In contrast, the “Net-zero promises + 2030 commitments” scenario is the most optimistic, with all projections agreeing on a 1.8°C increase by 2100."
+badge,37b66c79-da74-498e-9567-c79c5d7efd41,co2-emissions,"This line chart shows the evolution of annual CO₂ emissions by continent over time. The x-axis represents the years from 1750 to 2023, with 50-year intervals, while the y-axis shows annual CO₂ emissions ranging from 0 to 25 billion tons, in increments of 5 billion tons.
+
+The chart reveals that CO₂ emissions remained close to zero until around 1850. After that point, emissions increased rapidly across north continents.
+
+Europe and North America were the highest emitters until the late 20th century, when they were surpassed by Asia. Asia’s emissions grew exponentially from 1900, reaching in 2023 a level nearly twice the combined total of all other continents.
+
+For the remaining continents—Africa, South America, and Oceania—the increase began later, around 1950. By 2023, their emissions remained below 2 billion tons of CO₂ each."
+footnote,4798e3dc-4588-41b2-8e23-9f43d695c79e,co2-emissions,"On this line chart describing the CO2 emissions per continent, qe can see that the western ones start the rise of theirs in the 1850s and start to strikingly increase from the 1950s. Although it reaches a peak of  about 7 billion tons a year for Europe between the 1970s and 1980s, the continent starts to decline in its annual emissions continuously down to 5 billion tons in 2023.
+
+In the meantime, North America steadily augments its emissions up to the 2010s (~7 billion tons) before starting its decline.
+
+On the other hand, Asia doesn't start to emit a noticeable amount of CO2 until the late 1950s where it skyrockets its emissions to 23 billion tons of CO2 in 60 years only."
+footnote,4798e3dc-4588-41b2-8e23-9f43d695c79e,global-warming-projection,"This bar chart shows the projected global temperature rise by 2100 according to different scenarios described by the IPCC, the current policies of groups of countries, their 2030 commitments and those commitments associated with Net-zero promises.
+
+The IPCC scenarios range from the most pessimistic (4.7°C) to the most optimistic (1.4°C) while the current policies allow for the median scenario (2.7°C), the 2030 commitments only show a difference of 0.3°C to the current policies. Meanwhile, the net-zero policies implies a projection of almost a full degree Celsius difference difference with the projection of the current policies."
+badge,0b6ad5e0-be61-411e-980c-c773e0482c66,global-warming-projection,"This graph shows several bar charts. The first one present different IPCC predictions regarding the expected temperature on Earth according to 5 different scenarios.
+
+The second one shows different projection considering current policies, according to different agencies. It's almost the same value: 2.6°C, which correspond to the middle scenario of IPCC.
+
+The third one shows the expected temperature rise considering the 2030 commitments. It's around 24°C. One value is missing for CR.
+
+Same for the fourth bar chart, but here considering the net-zero is achieved, leading to an increase of 1.8°C in average. 
+
+A badge is wrong : the uncertainty is not showed. "
+badge,0b6ad5e0-be61-411e-980c-c773e0482c66,co2-emissions,"This line chart shows the annual C02 emissions for all the continent on Earth. Asia is skyrocketing since 1950. North America and Europe start to decrease respectively in 2010 and 1980. Africa, South America and Oceania are really low. This graph does not include land change. "
+badge,6a223d18-f389-4312-a78f-38ca9bbbd583,global-warming-projection,"I find I lack the expertise to write my speech as I don't understand the content on the x-axis. 
+
+I noticed the four labels on the bottom right. I suppose I will explain the data sources and highlight that there is data about uncertainty, and some data is predictions.
+
+However, I don't understand what ""Actual Time Offset"" means."
+badge,6a223d18-f389-4312-a78f-38ca9bbbd583,co2-emissions,"The chart presents the CO2 emissions of Asia, North America...While the increase in the absolute value of CO2 emissions from Asia is shocking and alarming, we need to look into the CO2 emissions per person to understand which region should pay more attention to the issue."
