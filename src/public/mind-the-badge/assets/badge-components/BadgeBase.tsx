@@ -66,7 +66,33 @@ const BadgeBase: React.FC<BadgeBaseProps> = ({
     return (
         <Box>
             <Tooltip
-                title={description}
+                title={(
+                    <Box>
+                        {description && (
+                            <Box sx={{ mb: 0.75 }}>{description}</Box>
+                        )}
+                        <Box
+                            sx={{
+                                mt: description ? 0.75 : 0,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 0.3,
+                                px: 0.5,
+                                py: 0.2,
+                                borderRadius: '999px',
+                                backgroundColor: 'rgba(255, 255, 255, 0.10)',
+                                color: 'rgba(255, 255, 255, 0.95)',
+                                fontSize: '0.62rem',
+                                fontWeight: 600,
+                                letterSpacing: '0.02em',
+                                border: '1px solid rgba(255, 255, 255, 0.18)',
+                            }}
+                        >
+                            <Icons.TouchApp sx={{ fontSize: '0.8em', opacity: 0.9 }} />
+                            Click for more
+                        </Box>
+                    </Box>
+                )}
                 arrow
                 placement="top"
                 enterDelay={200}
