@@ -35,6 +35,17 @@
     },
     {
       "badgeType": "BINARY",
+      "id": "multiple-data-sources__global-warming-projection",
+      "label": "Multiple Data Sources",
+      "description": "Estimates compiled from multiple independent groups (UNEP, CAT, IEA, CR).",
+      "type": "DATA",
+      "intent": "INFORMATION",
+      "topics": ["Source"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/badge-multiple-data-sources.md"
+    },
+    {
+      "badgeType": "BINARY",
       "id": "uncertainty-shown__global-warming-projection",
       "label": "Uncertainty Shown",
       "description": "Each bar reports the median (50th-percentile) warming plus a central range printed inside the column. The span reflects variation across integrated-assessment and climate models; wider ranges indicate lower agreement.",
