@@ -27,6 +27,7 @@ export function StringInput({
   return (
     <TextInput
       disabled={disabled}
+      readOnly={response.id.endsWith('-example')}
       placeholder={placeholder}
       label={(
         <Flex direction="row" wrap="nowrap" gap={4}>
