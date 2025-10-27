@@ -7,7 +7,7 @@ Benjamin Bach, Inria Researcher
 Valentin Edelsbrunner, Inria PhD Student
 
 **Other scientists involved:**  
-Jinrui Wang, PhD Candidate at the University of Edinburgh
+Jinrui Wang, PhD Candidate at the University of Edinburgh  
 Pierre Dragicevic, Inria Researcher
 
 **Project team:** Bivwac, Inria at the University of Bordeaux  
@@ -60,7 +60,7 @@ E-mail: valentin.edelsbrunner@inria.fr
 
 **Pierre DRAGICEVIC**  
 Title: Researcher  
-E-mail: Pierre.Dragicevic@inria.fr
+E-mail: pierre.dragicevic@inria.fr
 
 ---
 
