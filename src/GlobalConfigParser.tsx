@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router';
 import { ModalsProvider } from '@mantine/modals';
 import { AppShell } from '@mantine/core';
 import { ConfigSwitcher } from './components/ConfigSwitcher';
@@ -79,8 +79,9 @@ export function GlobalConfigParser() {
       <AuthProvider>
         <ModalsProvider>
           <Routes>
+            <Route path="/" element={<Navigate to="/s1" replace />} />
             <Route
-              path="/"
+              path="/admincenter"
               element={(
                 <>
                   <PageTitle title="ReVISit | Home" />

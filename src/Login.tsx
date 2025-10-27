@@ -45,7 +45,7 @@ export function Login() {
   }, [user.adminVerification]);
 
   if (!user.determiningStatus && user.isAdmin) {
-    return <Navigate to="/" />;
+    return <Navigate to="/admincenter" />;
   }
 
   return (

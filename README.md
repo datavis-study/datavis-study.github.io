@@ -50,3 +50,9 @@ python -c "from mtb import main_run_all; main_run_all()"
 ## License
 
 MIT
+
+## Hosting routes note
+
+- All public traffic is routed to the study at `/s1`. Navigating to the site root will redirect to `/s1`.
+- Admin dashboard is intentionally hidden behind an alternate path: open `.../admincenter` to access the admin interface.
+- This is a convenience "backdoor" for deployment on GitHub Pages to avoid exposing the admin landing page; keep the link private.

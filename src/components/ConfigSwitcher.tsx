@@ -242,7 +242,7 @@ export function ConfigSwitcher({
           src={`${PREFIX}revisitAssets/revisitLogoSquare.svg`}
           alt="reVISit"
         />
-        <Tabs variant="outline" defaultValue={others.length > 0 ? 'Others' : 'Demos'} value={tab} onChange={(value) => navigate(`/?tab=${value}`)}>
+        <Tabs variant="outline" defaultValue={others.length > 0 ? 'Others' : 'Demos'} value={tab} onChange={(value) => navigate(`/admincenter?tab=${value}`)}>
           <Tabs.List>
             {othersFiltered.length > 0 && (
               <Tabs.Tab value="Others">Your Studies</Tabs.Tab>
