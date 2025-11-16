@@ -13,6 +13,9 @@ from charts.group_counts import plot_group_counts
 from charts.time_distributions import plot_time_distributions
 from charts.total_time_hist import plot_total_time_hist
 from charts.likert_beehive import plot_likert_beehive
+from charts.likert_diverging_bars import plot_likert_diverging_bars
+from charts.likert_dot_ci import plot_likert_dot_ci
+from charts.likert_mean_bars import plot_likert_mean_bars
 
 import json
 
@@ -42,21 +45,10 @@ def _render_md_template(md_text: str, context: dict) -> str:
 	return Template(md_text).render(**context)
 
 
-def _build_markdown(report_title: str, timestamp: str, intro_lines: List[str], narrative_md: str | None = None) -> str:
-	lines: List[str] = []
-	lines.append(f"# {report_title}")
-	lines.append("")
-	lines.append(f"_Generated: {timestamp}_")
-	lines.append("")
-	if intro_lines:
-		lines.append("## Overview")
-		lines.extend([f"- {line}" for line in intro_lines])
-		lines.append("")
-	if narrative_md:
-		lines.append("## Narrative")
-		lines.append(narrative_md.strip())
-		lines.append("")
-	return "\n".join(lines).rstrip() + "\n"
+def _render_full_template(md_text: str, context: dict) -> str:
+	if not md_text:
+		return ""
+	return Template(md_text).render(**context)
 
 
 def generate_report(
@@ -96,6 +88,15 @@ def generate_report(
 		p_likert_bee = plot_likert_beehive(data.likert_scores, root_out)
 		if p_likert_bee is not None:
 			figure_paths.append(p_likert_bee)
+		# Likert diverging bars (100% stacked)
+		# p_likert_div = plot_likert_diverging_bars(data.likert_scores, root_out)
+		# if p_likert_div is not None:
+		# 	figure_paths.append(p_likert_div)
+		# (removed) Likert mean scores chart
+		# Likert mean bars
+		p_likert_bar = plot_likert_mean_bars(data.likert_scores, root_out)
+		if p_likert_bar is not None:
+			figure_paths.append(p_likert_bar)
 
 	n_participants = (
 		int(data.participants["participantId"].nunique())
@@ -163,13 +164,8 @@ def generate_report(
 	n_badge_labels = int(data.badge_metrics["badgeLabel"].nunique()) if data.badge_metrics is not None and "badgeLabel" in data.badge_metrics.columns else 0
 	n_stimuli_with_badges = int(data.badge_metrics["stimulusId"].nunique()) if data.badge_metrics is not None and "stimulusId" in data.badge_metrics.columns else 0
 
-	intro_lines = [
-		f"Participants: {n_participants}",
-		f"Group split: {group_line}",
-		f"Data directory: {pathlib.Path(data_dir).resolve()}",
-	]
-
 	context = {
+		"report_title": "Mind the Badge – Automated Report",
 		"participants_count": n_participants,
 		"group_counts": (group_counts.to_dict(orient="records") if group_counts is not None else []),
 		"data_dir": str(pathlib.Path(data_dir).resolve()),
@@ -208,15 +204,21 @@ def generate_report(
 		],
 		"likert_questions_badge_md": likert_questions_badge_md,
 		"likert_questions_footnote_md": likert_questions_footnote_md,
+		"group_line": group_line,
 	}
 
-	narrative_md = None
+	# Build the template text: use provided --md paths as the full template,
+	# otherwise fall back to the default packaged template.
+	md_template_text = ""
 	if md_paths:
-		md_text = _read_markdown_files(md_paths)
-		narrative_md = _render_md_template(md_text, context) if md_text else None
+		md_template_text = _read_markdown_files(md_paths)
+	if not md_template_text:
+		default_template = pathlib.Path(__file__).with_name("templates") / "report.md"
+		if default_template.exists():
+			md_template_text = default_template.read_text(encoding="utf-8")
 
 	# Auto-load study Likert question texts if not provided
-	def _auto_load_likert_md() -> tuple[Optional[str], Optional[str]]:
+	def _auto_load_likert_md() -> tuple[Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str]]:
 		try_paths = []
 		# Attempt to locate project root (study/) from this file path
 		this_file = pathlib.Path(__file__).resolve()
@@ -228,42 +230,104 @@ def generate_report(
 				try:
 					cfg = json.loads(p.read_text(encoding="utf-8"))
 					components = cfg.get("components", {})
-					def _build_md(key: str, label_prefix: str) -> Optional[str]:
+					def _extract_items(key: str) -> tuple[list[tuple[str, str]], Optional[str], Optional[str]]:
 						comp = components.get(key)
 						if not isinstance(comp, dict):
-							return None
+							return [], None, None
 						items = comp.get("response", [])
 						likerts = [it for it in items if isinstance(it, dict) and it.get("type") == "likert"]
 						if not likerts:
-							return None
-						left = likerts[0].get("leftLabel", "Strongly Disagree")
-						right = likerts[0].get("rightLabel", "Strongly Agree")
-						lines = [f"_Scale: 1 = {left}, 5 = {right}_", ""]
+							return [], None, None
+						left = likerts[0].get("leftLabel")
+						right = likerts[0].get("rightLabel")
+						items_out: list[tuple[str, str]] = []
 						for it in likerts:
-							item_id = it.get("id", "")
-							prompt = it.get("prompt", "")
-							lines.append(f"- **{item_id}**: {prompt}")
-						return "\n".join(lines)
-					badge_md = _build_md("badge-questionaire-2", "Badges")
-					foot_md = _build_md("footnote-questionaire-2", "Footnotes")
-					return badge_md, foot_md
+							item_id = str(it.get("id", "")).strip()
+							prompt = str(it.get("prompt", "")).strip()
+							if item_id or prompt:
+								items_out.append((item_id, prompt))
+						return items_out, left, right
+					def _build_md_from_items(items: list[tuple[str, str]], left: Optional[str], right: Optional[str]) -> Optional[str]:
+						if not items:
+							return None
+						ls = [f"_Scale: 1 = {left or 'Strongly Disagree'}, 5 = {right or 'Strongly Agree'}_", ""]
+						for item_id, prompt in items:
+							label = f"**{item_id}**: " if item_id else ""
+							ls.append(f"- {label}{prompt}")
+						return "\n".join(ls)
+					badge_items, b_left, b_right = _extract_items("badge-questionaire-2")
+					foot_items, f_left, f_right = _extract_items("footnote-questionaire-2")
+					badge_md = _build_md_from_items(badge_items, b_left, b_right)
+					foot_md = _build_md_from_items(foot_items, f_left, f_right)
+					# Scale labels (prefer badge, then footnote)
+					scale_left = b_left or f_left
+					scale_right = b_right or f_right
+					# Build merged items, deduplicating identical prompts per id
+					merged_lines: list[str] = []
+					compact_lines: list[str] = []
+					if badge_items or foot_items:
+						merged_lines.append(f"_Scale: 1 = {scale_left or 'Strongly Disagree'}, 5 = {scale_right or 'Strongly Agree'}_")
+						merged_lines.append("")
+						# Build stable keys (prefer id; fallback to prompt)
+						def _key_for(item_id: str, prompt: str) -> str:
+							return item_id if item_id else f"__prompt__:{prompt}"
+						foot_keys = [_key_for(i, p) for i, p in foot_items]
+						badge_keys = [_key_for(i, p) for i, p in badge_items]
+						# Preserve order: start with footnotes, then append any missing from badges
+						order = foot_keys + [k for k in badge_keys if k not in set(foot_keys)]
+						# Build maps from key to prompt text
+						foot_map = {_key_for(i, p): p for i, p in foot_items}
+						badge_map = {_key_for(i, p): p for i, p in badge_items}
+						seen = set()
+						for key in order:
+							if key in seen:
+								continue
+							seen.add(key)
+							fp = foot_map.get(key)
+							bp = badge_map.get(key)
+							item_label = key if not str(key).startswith("__prompt__:") else ""
+							if fp and bp and fp.strip().lower() == bp.strip().lower():
+								prefix = f"**{item_label}**: " if item_label else ""
+								merged_lines.append(f"- {prefix}{fp}")
+								# Compact: just the prompt
+								compact_lines.append(f"- {fp}")
+							else:
+								# Show differences per group
+								title = f"**{item_label}**" if item_label else None
+								if title:
+									merged_lines.append(f"- {title}")
+								if fp:
+									merged_lines.append(f"  - Footnotes: {fp}")
+								if bp:
+									merged_lines.append(f"  - Badges: {bp}")
+								# Compact: show a single line and mark as differing
+								choice = fp or bp or ""
+								if choice:
+									compact_lines.append(f"- {choice} _(differs by group)_")
+					merged_md = "\n".join(merged_lines) if merged_lines else None
+					compact_md = "\n".join(compact_lines) if compact_lines else None
+					return badge_md, foot_md, scale_left, scale_right, merged_md, compact_md
 				except Exception:
 					continue
-		return None, None
+		return None, None, None, None, None, None
 
-	if not likert_questions_badge_md or not likert_questions_footnote_md:
-		auto_badge_md, auto_foot_md = _auto_load_likert_md()
+	if (not likert_questions_badge_md) or (not likert_questions_footnote_md):
+		auto_badge_md, auto_foot_md, scale_left, scale_right, merged_md, compact_md = _auto_load_likert_md()
 		if not likert_questions_badge_md and auto_badge_md:
 			context["likert_questions_badge_md"] = auto_badge_md
 		if not likert_questions_footnote_md and auto_foot_md:
 			context["likert_questions_footnote_md"] = auto_foot_md
+		if scale_left:
+			context["likert_scale_left"] = scale_left
+		if scale_right:
+			context["likert_scale_right"] = scale_right
+		if merged_md:
+			context["likert_questions_merged_md"] = merged_md
+		if compact_md:
+			context["likert_questions_compact_md"] = compact_md
 
-	md_out = _build_markdown(
-		report_title="Mind the Badge – Automated Report",
-		timestamp=_human_timestamp(),
-		intro_lines=intro_lines,
-		narrative_md=narrative_md,
-	)
+	# Render the full template with the context
+	md_out = _render_full_template(md_template_text, context)
 	md_path = root_out / "report.md"
 	with open(md_path, "w", encoding="utf-8") as f:
 		f.write(md_out)
@@ -275,7 +339,7 @@ def parse_args() -> argparse.Namespace:
 	parser.add_argument("--data-dir", type=str, default="data", help="Directory containing CSV files.")
 	parser.add_argument("--out-dir", type=str, default="reports", help="Directory to write the generated report into.")
 	parser.add_argument("--run-id", type=str, default=None, help="Optional custom run id to use in the output path.")
-	parser.add_argument("--md", action="append", default=[], help="Path(s) to Markdown file(s) to include as narrative (supports Jinja2 templating). Can be passed multiple times.")
+	parser.add_argument("--md", action="append", default=[], help="Path(s) to Markdown template file(s) to render (Jinja2). If multiple are provided, they will be concatenated in order before rendering.")
 	parser.add_argument("--likert-questions-badge", type=str, default=None, help="Optional Markdown file with exact badge-group Likert question texts.")
 	parser.add_argument("--likert-questions-footnote", type=str, default=None, help="Optional Markdown file with exact footnote-group Likert question texts.")
 	return parser.parse_args()

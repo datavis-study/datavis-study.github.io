@@ -66,11 +66,14 @@ fi
 if ! has_arg "--out-dir" "${ARGS[@]-}"; then
 	ARGS+=("--out-dir" "$OUT_DIR_DEFAULT")
 fi
-# If no --md was passed, include the default analysis/report.md template when present
+# If no --md was passed, include the default template when present
 if ! has_arg "--md" "${ARGS[@]-}"; then
-	DEFAULT_MD="${SCRIPT_DIR}/report.md"
-	if [ -f "$DEFAULT_MD" ]; then
-		ARGS+=("--md" "$DEFAULT_MD")
+	NEW_MD="${SCRIPT_DIR}/src/reporting/templates/report.md"
+	LEGACY_MD="${SCRIPT_DIR}/report.md"
+	if [ -f "$NEW_MD" ]; then
+		ARGS+=("--md" "$NEW_MD")
+	elif [ -f "$LEGACY_MD" ]; then
+		ARGS+=("--md" "$LEGACY_MD")
 	fi
 fi
 
