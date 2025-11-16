@@ -27,6 +27,16 @@ def _timestamp() -> str:
 def _human_timestamp() -> str:
 	return dt.datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
 
+def _run_label() -> str:
+	# Human-friendly, filesystem-safe label for the report directory
+	# Lowercase, underscores instead of spaces. Example: "sun_16_nov_2025_13-22"
+	raw = dt.datetime.now().astimezone().strftime("%a %d %b %Y %H-%M")
+	return raw.lower().replace(" ", "_")
+
+def _sanitize_path_component(name: str) -> str:
+	# Prevent path separator issues while keeping it readable
+	return "".join(("-" if ch in {"/", "\\"} else ch) for ch in name).strip()
+
 
 def _read_markdown_files(md_paths: List[str]) -> str:
 	texts: List[str] = []
@@ -63,8 +73,8 @@ def generate_report(
 	plt.rcParams["font.family"] = "DejaVu Sans"
 	data = util.load_all_data(data_dir)
 
-	run_id = run_id or _timestamp()
-	root_out = pathlib.Path(out_dir) / f"report_{run_id}"
+	run_id = run_id or _run_label()
+	root_out = pathlib.Path(out_dir) / _sanitize_path_component(run_id)
 	fig_out = root_out / "figures"
 	util.safe_make_dir(fig_out)
 
