@@ -77,6 +77,15 @@ if ! has_arg "--md" "${ARGS[@]-}"; then
 	fi
 fi
 
+# Run full data preparation pipeline before report generation
+echo "Exporting study data (participants, time, questionnaires, notes, badges)..."
+"$PYTHON_BIN" -m data_prep.export_participant_meta >/dev/null
+"$PYTHON_BIN" -m data_prep.export_time_spent >/dev/null
+"$PYTHON_BIN" -m data_prep.export_questionnaire_likert >/dev/null
+"$PYTHON_BIN" -m data_prep.export_questionnaire_open >/dev/null
+"$PYTHON_BIN" -m data_prep.export_speech >/dev/null
+"$PYTHON_BIN" -m data_prep.export_badge_stats >/dev/null
+
 mkdir -p "$OUT_DIR_DEFAULT"
 
 exec "$PYTHON_BIN" -m reporting.generate_report "${ARGS[@]-}"

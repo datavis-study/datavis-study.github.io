@@ -1,5 +1,27 @@
 Generated at: `{{ generated_at }}`
 
+### Stimulus notes
+
+{% if notes_summary and notes_items and notes_items|length > 0 %}
+- Total entries: {{ notes_summary.total }}
+- Median words: {{ notes_summary.median_words }}
+- Mean words: {{ notes_summary.mean_words }}
+- By group: {% for g, c in notes_summary.counts_by_group.items() %}{{ g }}: {{ c }}{% if not loop.last %}; {% endif %}{% endfor %}
+
+{% for s in notes_items %}
+<details>
+<summary><strong>{{ s.stimulus }}</strong> — {{ s.count }} notes</summary>
+
+{% for r in s.responses %}
+- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{% endfor %}
+
+</details>
+{% endfor %}
+{% else %}
+> No stimulus notes available.
+{% endif %}
+
 ### Likert questions
 
 - **Saliency** Footnotes/Badges were easy to spot.

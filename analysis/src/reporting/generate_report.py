@@ -9,6 +9,7 @@ import seaborn as sns
 from jinja2 import Template
 
 from . import util
+from . import text_clean
 from charts.group_counts import plot_group_counts
 from charts.time_distributions import plot_time_distributions
 from charts.total_time_hist import plot_total_time_hist
@@ -243,7 +244,7 @@ def generate_report(
 			if col not in df.columns:
 				continue
 			sub = df[[c for c in ["participantId", "group_friendly", col] if c in df.columns]].copy()
-			sub[col] = sub[col].fillna("").astype(str).str.strip()
+			sub[col] = sub[col].apply(text_clean.clean_text)
 			sub = sub[sub[col] != ""]
 			if sub.empty:
 				continue
@@ -268,6 +269,63 @@ def generate_report(
 		return questions
 
 	context["open_questions"] = _build_open_questions_context()
+
+	# Build stimulus notes context and simple stats
+	def _build_notes_context() -> tuple[list[dict], dict]:
+		if data.notes is None or data.notes.empty:
+			return [], {}
+		dfn = data.notes.copy()
+		dfn["speech"] = dfn["speech"].apply(text_clean.clean_text)
+		dfn = dfn[dfn["speech"].str.strip() != ""]
+		if dfn.empty:
+			return [], {}
+		# Friendly group names
+		title_map = {"footnote": "Footnotes", "badge": "Badges"}
+		if "group" in dfn.columns:
+			dfn["group_friendly"] = dfn["group"].map(lambda g: title_map.get(str(g).lower(), str(g).title()))
+		else:
+			dfn["group_friendly"] = "Unknown"
+		# Word counts
+		dfn["word_count"] = dfn["speech"].str.split().map(len)
+		# Pretty stimulus labels
+		stim_label = {
+			"global-warming-projection": "Global Warming Projection",
+			"co2-emissions": "CO₂ Emissions",
+		}
+		dfn["stimulus_label"] = dfn["stimulusId"].map(lambda s: stim_label.get(str(s), str(s)))
+		# Summary stats
+		total = int(dfn.shape[0])
+		median_wc = int(dfn["word_count"].median()) if not dfn["word_count"].empty else 0
+		mean_wc = float(dfn["word_count"].mean()) if not dfn["word_count"].empty else 0.0
+		counts_by_group = dfn.groupby("group_friendly")["speech"].count().to_dict()
+		summary = {
+			"total": total,
+			"median_words": median_wc,
+			"mean_words": round(mean_wc, 1),
+			"counts_by_group": counts_by_group,
+		}
+		# Group responses by stimulus label
+		items: list[dict] = []
+		for stim, sub in dfn.groupby("stimulus_label", dropna=False):
+			responses = []
+			for _, row in sub.iterrows():
+				pid = str(row.get("participantId", ""))[:8]
+				responses.append(
+					{
+						"participant": pid,
+						"group": row.get("group_friendly", "Unknown"),
+						"words": int(row.get("word_count", 0)),
+						"text": row.get("speech", ""),
+					}
+				)
+			items.append({"stimulus": stim, "count": len(responses), "responses": responses})
+		# Sort stimuli by name for stability
+		items.sort(key=lambda d: d["stimulus"])
+		return items, summary
+
+	notes_items, notes_summary = _build_notes_context()
+	context["notes_items"] = notes_items
+	context["notes_summary"] = notes_summary
 
 	# Build the template text: use provided --md paths as the full template,
 	# otherwise fall back to the default packaged template.
