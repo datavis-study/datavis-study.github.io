@@ -9,6 +9,12 @@ import seaborn as sns
 from jinja2 import Template
 
 from . import util
+from charts.group_counts import plot_group_counts
+from charts.time_distributions import plot_time_distributions
+from charts.total_time_hist import plot_total_time_hist
+from charts.likert_beehive import plot_likert_beehive
+
+import json
 
 
 def _timestamp() -> str:
@@ -17,74 +23,6 @@ def _timestamp() -> str:
 
 def _human_timestamp() -> str:
 	return dt.datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
-
-
-def _figure_path(out_dir: pathlib.Path, name: str) -> pathlib.Path:
-	return out_dir / "figures" / f"{name}.png"
-
-
-def _save_current_fig(path: pathlib.Path, dpi: int = 160) -> None:
-	path.parent.mkdir(parents=True, exist_ok=True)
-	plt.tight_layout()
-	plt.savefig(path, dpi=dpi, bbox_inches="tight")
-	plt.close()
-
-
-def _plot_group_counts(participants: pd.DataFrame, out_dir: pathlib.Path) -> Optional[pathlib.Path]:
-	if participants is None or "group" not in participants.columns:
-		return None
-	fig_name = "f1_group_counts"
-	plt.figure(figsize=(5, 3))
-	ax = sns.countplot(data=participants, x="group", order=sorted(participants["group"].dropna().unique()))
-	ax.set_title("Participants by group")
-	ax.set_xlabel("Group")
-	ax.set_ylabel("Count")
-	path = _figure_path(out_dir, fig_name)
-	_save_current_fig(path)
-	return path
-
-
-def _plot_time_distributions(time_df: pd.DataFrame, out_dir: pathlib.Path, component_cols: List[str]) -> List[pathlib.Path]:
-	paths: List[pathlib.Path] = []
-	if time_df is None or "group" not in time_df.columns:
-		return paths
-	for col in component_cols:
-		if col not in time_df.columns:
-			continue
-		df = time_df.loc[time_df[col].notna() & (time_df[col] > 0)].copy()
-		if df.empty:
-			continue
-		fig_name = f"time_{col.replace(' ', '_').replace('(', '').replace(')', '').replace('-', '_')}"
-		plt.figure(figsize=(6, 3.5))
-		ax = sns.violinplot(data=df, x="group", y=col, inner=None, cut=0)
-		sns.boxplot(data=df, x="group", y=col, showcaps=True, boxprops={"facecolor": "white", "alpha": 0.6}, showfliers=False, width=0.25)
-		ax.set_title(f"Time spent: {col}")
-		ax.set_xlabel("Group")
-		ax.set_ylabel("Seconds (log scale)")
-		ax.set_yscale("log")
-		path = _figure_path(out_dir, fig_name)
-		_save_current_fig(path)
-		paths.append(path)
-	return paths
-
-
-def _plot_total_time_hist(time_df: pd.DataFrame, out_dir: pathlib.Path, col: str = "total (s)") -> Optional[pathlib.Path]:
-	if time_df is None or "group" not in time_df.columns or col not in time_df.columns:
-		return None
-	df = time_df.loc[time_df[col].notna() & (time_df[col] > 0)].copy()
-	if df.empty:
-		return None
-	upper = df[col].quantile(0.95)
-	df = df.loc[df[col] <= upper].copy()
-	plt.figure(figsize=(6, 3.5))
-	ax = sns.histplot(data=df, x=col, hue="group", bins=20, element="step", stat="density", common_norm=False, alpha=0.5)
-	sns.kdeplot(data=df, x=col, hue="group", common_norm=False, legend=False)
-	ax.set_title("Total session time (trimmed at 95th percentile)")
-	ax.set_xlabel("Seconds")
-	ax.set_ylabel("Density")
-	path = _figure_path(out_dir, "f_total_time_hist")
-	_save_current_fig(path)
-	return path
 
 
 def _read_markdown_files(md_paths: List[str]) -> str:
@@ -121,7 +59,14 @@ def _build_markdown(report_title: str, timestamp: str, intro_lines: List[str], n
 	return "\n".join(lines).rstrip() + "\n"
 
 
-def generate_report(data_dir: str, out_dir: str, run_id: Optional[str] = None, md_paths: Optional[List[str]] = None) -> pathlib.Path:
+def generate_report(
+	data_dir: str,
+	out_dir: str,
+	run_id: Optional[str] = None,
+	md_paths: Optional[List[str]] = None,
+	likert_questions_badge_md: Optional[str] = None,
+	likert_questions_footnote_md: Optional[str] = None,
+) -> pathlib.Path:
 	sns.set_theme(style="whitegrid")
 	plt.rcParams["font.family"] = "DejaVu Sans"
 	data = util.load_all_data(data_dir)
@@ -133,7 +78,7 @@ def generate_report(data_dir: str, out_dir: str, run_id: Optional[str] = None, m
 
 	figure_paths: List[pathlib.Path] = []
 
-	p1 = _plot_group_counts(data.participants, root_out)
+	p1 = plot_group_counts(data.participants, root_out)
 	if p1 is not None:
 		figure_paths.append(p1)
 
@@ -142,10 +87,15 @@ def generate_report(data_dir: str, out_dir: str, run_id: Optional[str] = None, m
 		for col in ["global-warming-projection (s)", "co2-emissions (s)", "total (s)"]:
 			if col in data.time_per_component.columns:
 				component_cols.append(col)
-		figure_paths.extend(_plot_time_distributions(data.time_per_component, root_out, component_cols))
-		p_total_hist = _plot_total_time_hist(data.time_per_component, root_out, col="total (s)")
+		figure_paths.extend(plot_time_distributions(data.time_per_component, root_out, component_cols))
+		p_total_hist = plot_total_time_hist(data.time_per_component, root_out, col="total (s)")
 		if p_total_hist is not None:
 			figure_paths.append(p_total_hist)
+	# Likert beehive plot
+	if data.likert_scores is not None:
+		p_likert_bee = plot_likert_beehive(data.likert_scores, root_out)
+		if p_likert_bee is not None:
+			figure_paths.append(p_likert_bee)
 
 	n_participants = (
 		int(data.participants["participantId"].nunique())
@@ -240,12 +190,73 @@ def generate_report(data_dir: str, out_dir: str, run_id: Optional[str] = None, m
 		"n_badge_rows": n_badge_rows,
 		"n_badge_labels": n_badge_labels,
 		"n_stimuli_with_badges": n_stimuli_with_badges,
+		"dimension_labels": {
+			"saliency": "Saliency",
+			"clutter": "Clutter",
+			"interpretability": "Interpretability",
+			"usefulness": "Usefulness",
+			"trust": "Trust",
+			"standardization": "Standardization",
+		},
+		"dimension_questions": [
+			{"key": "saliency", "label": "Saliency", "question": "How noticeable were the visual cues/elements?"},
+			{"key": "clutter", "label": "Clutter", "question": "How cluttered or visually busy did it feel?"},
+			{"key": "interpretability", "label": "Interpretability", "question": "How easy was it to interpret and understand the visualization?"},
+			{"key": "usefulness", "label": "Usefulness", "question": "How useful was the added information for your task?"},
+			{"key": "trust", "label": "Trust", "question": "How much did you trust the presented information?"},
+			{"key": "standardization", "label": "Standardization", "question": "How consistent/standardized did the presentation feel?"},
+		],
+		"likert_questions_badge_md": likert_questions_badge_md,
+		"likert_questions_footnote_md": likert_questions_footnote_md,
 	}
 
 	narrative_md = None
 	if md_paths:
 		md_text = _read_markdown_files(md_paths)
 		narrative_md = _render_md_template(md_text, context) if md_text else None
+
+	# Auto-load study Likert question texts if not provided
+	def _auto_load_likert_md() -> tuple[Optional[str], Optional[str]]:
+		try_paths = []
+		# Attempt to locate project root (study/) from this file path
+		this_file = pathlib.Path(__file__).resolve()
+		# analysis/src/reporting/generate_report.py → project root is parent of "analysis"
+		candidate_root = this_file.parents[2].parent  # .../study
+		try_paths.append(candidate_root / "public" / "mind-the-badge" / "config.json")
+		for p in try_paths:
+			if p.exists():
+				try:
+					cfg = json.loads(p.read_text(encoding="utf-8"))
+					components = cfg.get("components", {})
+					def _build_md(key: str, label_prefix: str) -> Optional[str]:
+						comp = components.get(key)
+						if not isinstance(comp, dict):
+							return None
+						items = comp.get("response", [])
+						likerts = [it for it in items if isinstance(it, dict) and it.get("type") == "likert"]
+						if not likerts:
+							return None
+						left = likerts[0].get("leftLabel", "Strongly Disagree")
+						right = likerts[0].get("rightLabel", "Strongly Agree")
+						lines = [f"_Scale: 1 = {left}, 5 = {right}_", ""]
+						for it in likerts:
+							item_id = it.get("id", "")
+							prompt = it.get("prompt", "")
+							lines.append(f"- **{item_id}**: {prompt}")
+						return "\n".join(lines)
+					badge_md = _build_md("badge-questionaire-2", "Badges")
+					foot_md = _build_md("footnote-questionaire-2", "Footnotes")
+					return badge_md, foot_md
+				except Exception:
+					continue
+		return None, None
+
+	if not likert_questions_badge_md or not likert_questions_footnote_md:
+		auto_badge_md, auto_foot_md = _auto_load_likert_md()
+		if not likert_questions_badge_md and auto_badge_md:
+			context["likert_questions_badge_md"] = auto_badge_md
+		if not likert_questions_footnote_md and auto_foot_md:
+			context["likert_questions_footnote_md"] = auto_foot_md
 
 	md_out = _build_markdown(
 		report_title="Mind the Badge – Automated Report",
@@ -265,12 +276,30 @@ def parse_args() -> argparse.Namespace:
 	parser.add_argument("--out-dir", type=str, default="reports", help="Directory to write the generated report into.")
 	parser.add_argument("--run-id", type=str, default=None, help="Optional custom run id to use in the output path.")
 	parser.add_argument("--md", action="append", default=[], help="Path(s) to Markdown file(s) to include as narrative (supports Jinja2 templating). Can be passed multiple times.")
+	parser.add_argument("--likert-questions-badge", type=str, default=None, help="Optional Markdown file with exact badge-group Likert question texts.")
+	parser.add_argument("--likert-questions-footnote", type=str, default=None, help="Optional Markdown file with exact footnote-group Likert question texts.")
 	return parser.parse_args()
 
 
 def main() -> None:
 	args = parse_args()
-	out_path = generate_report(data_dir=args.data_dir, out_dir=args.out_dir, run_id=args.run_id, md_paths=args.md)
+	# Read optional question files
+	likert_q_badge = None
+	likert_q_footnote = None
+	if args.likert_questions_badge and pathlib.Path(args.likert_questions_badge).exists():
+		likert_q_badge = pathlib.Path(args.likert_questions_badge).read_text(encoding="utf-8")
+	if args.likert_questions_footnote and pathlib.Path(args.likert_questions_footnote).exists():
+		likert_q_footnote = pathlib.Path(args.likert_questions_footnote).read_text(encoding="utf-8")
+	# Generate report
+	out_path = generate_report(
+		data_dir=args.data_dir,
+		out_dir=args.out_dir,
+		run_id=args.run_id,
+		md_paths=args.md,
+		likert_questions_badge_md=likert_q_badge,
+		likert_questions_footnote_md=likert_q_footnote,
+	)
+	# Append info about where to place question files if missing (context is used during rendering already if supplied)
 	print(f"Report written to: {out_path}")
 
 

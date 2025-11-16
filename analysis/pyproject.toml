@@ -17,21 +17,21 @@ dependencies = [
 ]
 
 [project.scripts]
-mtb-clean = "mtb.clean:main"
-mtb-export-time = "mtb.export_time_spent:main"
-mtb-export-notes = "mtb.export_speech:main"
-mtb-export-likert = "mtb.export_questionnaire_likert:main"
-mtb-export-open = "mtb.export_questionnaire_open:main"
-mtb-export-badges = "mtb.export_badge_stats:main"
-mtb-export-participants = "mtb.export_participant_meta:main"
-mtb-export-all = "mtb:main_run_all"
+mtb-export-time = "data_prep.export_time_spent:main"
+mtb-export-notes = "data_prep.export_speech:main"
+mtb-export-likert = "data_prep.export_questionnaire_likert:main"
+mtb-export-open = "data_prep.export_questionnaire_open:main"
+mtb-export-badges = "data_prep.export_badge_stats:main"
+mtb-export-participants = "data_prep.export_participant_meta:main"
+mtb-export-all = "data_prep:main_run_all"
+mtb-generate-report = "reporting.generate_report:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["mtb*"]
+include = ["data_prep*", "reporting*", "charts*"]
 
 
 

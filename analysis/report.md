@@ -51,6 +51,31 @@ This is a clean example figure generated automatically (total session time, trim
 > Total time figure is not available (missing `participant_time_per_component.csv`).
 {% endif %}
 
+### Likert beehive (compact)
+
+{% set lb = (figures | selectattr('name','equalto','f_likert_beehive') | list | first) %}
+{% if lb %}
+![Likert beehive]({{ lb.path }})
+<sub>Scale: 1 = low, 5 = high. Each panel shows one group (Footnotes vs Badges). X-axis shows the Likert score; Y-axis lists the qualitative dimensions.</sub>
+{% else %}
+> Likert beehive figure is not available (missing `questionnaire_likert_scores.csv`).
+{% endif %}
+
+#### Likert questions (for reference)
+
+{% if likert_questions_footnote_md or likert_questions_badge_md %}
+**Footnotes group (exact wording):**
+{% if likert_questions_footnote_md %}{{ likert_questions_footnote_md }}{% else %}_Not provided._{% endif %}
+
+**Badges group (exact wording):**
+{% if likert_questions_badge_md %}{{ likert_questions_badge_md }}{% else %}_Not provided._{% endif %}
+{% else %}
+{% if dimension_questions %}
+{% for dq in dimension_questions %}- **{{ dq.label }}**: {{ dq.question }}
+{% endfor %}
+{% else %}- Saliency, Clutter, Interpretability, Usefulness, Trust, Standardization (1–5)
+{% endif %}
+{% endif %}
 ```text
 Example fenced code block (appears styled in the report).
 ```
