@@ -19,6 +19,23 @@ Generated at: `{{ generated_at }}`
 > Likert beehive figure is not available (missing `questionnaire_likert_scores.csv`).
 {% endif %}
 
+### Open-ended answers
+
+{% if open_questions and open_questions|length > 0 %}
+{% for q in open_questions %}
+<details>
+<summary><strong>{{ q.label }}</strong> — {{ q.count }} responses</summary>
+
+{% for r in q.responses %}
+- <em>{{ r.group }}</em> ({{ r.participant }}): {{ r.text }}
+{% endfor %}
+
+</details>
+{% endfor %}
+{% else %}
+> No open-ended responses available.
+{% endif %}
+
 ### Likert – mean bar chart
 
 {% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars') | list | first) %}

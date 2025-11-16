@@ -207,6 +207,58 @@ def generate_report(
 		"group_line": group_line,
 	}
 
+	# Build open-ended responses summary for collapsible display
+	def _build_open_questions_context() -> list[dict]:
+		if data.open_responses is None or data.open_responses.empty:
+			return []
+		df = data.open_responses.copy()
+		# Friendly group names
+		title_map = {"footnote": "Footnotes", "badge": "Badges"}
+		if "group" in df.columns:
+			df["group_friendly"] = df["group"].map(lambda g: title_map.get(str(g).lower(), str(g).title()))
+		else:
+			df["group_friendly"] = "Unknown"
+		# Known question columns and labels
+		label_map = {
+			"notice-comments": "Notice comments",
+			"experience-with-badges": "Experience with badges",
+			"ease-of-understanding": "Ease of understanding",
+			"considered-in-notes": "Considered in notes",
+			"most-least-useful": "Most/least useful",
+			"overall-help": "Overall help",
+			"final-comments": "Final comments",
+		}
+		questions: list[dict] = []
+		for col, label in label_map.items():
+			if col not in df.columns:
+				continue
+			sub = df[[c for c in ["participantId", "group_friendly", col] if c in df.columns]].copy()
+			sub[col] = sub[col].fillna("").astype(str).str.strip()
+			sub = sub[sub[col] != ""]
+			if sub.empty:
+				continue
+			responses = []
+			for _, row in sub.iterrows():
+				pid = str(row.get("participantId", ""))[:8]
+				responses.append(
+					{
+						"participant": pid,
+						"group": row.get("group_friendly", "Unknown"),
+						"text": row[col],
+					}
+				)
+			questions.append(
+				{
+					"key": col,
+					"label": label,
+					"count": len(responses),
+					"responses": responses,
+				}
+			)
+		return questions
+
+	context["open_questions"] = _build_open_questions_context()
+
 	# Build the template text: use provided --md paths as the full template,
 	# otherwise fall back to the default packaged template.
 	md_template_text = ""
