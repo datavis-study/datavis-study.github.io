@@ -1,3 +1,4 @@
+README.md
 pyproject.toml
 src/mtb/__init__.py
 src/mtb/export_badge_stats.py
@@ -11,4 +12,5 @@ src/mtb_analysis.egg-info/PKG-INFO
 src/mtb_analysis.egg-info/SOURCES.txt
 src/mtb_analysis.egg-info/dependency_links.txt
 src/mtb_analysis.egg-info/entry_points.txt
+src/mtb_analysis.egg-info/requires.txt
 src/mtb_analysis.egg-info/top_level.txt

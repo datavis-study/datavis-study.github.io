@@ -7,7 +7,14 @@ name = "mtb-analysis"
 version = "0.0.1"
 description = "Lowkey Analysis tools for Mind the Badge study"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+	"pandas>=2.1",
+	"matplotlib>=3.8",
+	"seaborn>=0.13",
+	"numpy>=1.26",
+	"scipy>=1.11",
+	"jinja2>=3.1"
+]
 
 [project.scripts]
 mtb-clean = "mtb.clean:main"
