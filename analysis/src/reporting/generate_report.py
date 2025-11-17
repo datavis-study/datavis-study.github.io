@@ -17,6 +17,11 @@ from charts.likert_beehive import plot_likert_beehive
 from charts.likert_diverging_bars import plot_likert_diverging_bars
 from charts.likert_dot_ci import plot_likert_dot_ci
 from charts.likert_mean_bars import plot_likert_mean_bars
+from charts.badge_hover_counts import (
+	plot_badge_hover_counts,
+	plot_badge_hover_times,
+	plot_badge_hover_duration_stats,
+)
 
 import json
 
@@ -109,6 +114,33 @@ def generate_report(
 		if p_likert_bar is not None:
 			figure_paths.append(p_likert_bar)
 
+	# Badge hover-count & hover-time charts (Altair)
+	badge_hover_chart: Optional[dict] = None
+	badge_hover_time_chart: Optional[dict] = None
+	badge_hover_duration_chart: Optional[dict] = None
+	if data.badge_metrics is not None:
+		badge_counts_fig = plot_badge_hover_counts(data.badge_metrics, root_out)
+		if badge_counts_fig is not None:
+			figure_paths.append(badge_counts_fig)
+			badge_hover_chart = {
+				"name": badge_counts_fig.stem,
+				"path": f"figures/{badge_counts_fig.name}",
+			}
+		badge_time_fig = plot_badge_hover_times(data.badge_metrics, root_out)
+		if badge_time_fig is not None:
+			figure_paths.append(badge_time_fig)
+			badge_hover_time_chart = {
+				"name": badge_time_fig.stem,
+				"path": f"figures/{badge_time_fig.name}",
+			}
+		badge_dur_fig = plot_badge_hover_duration_stats(data.badge_metrics, root_out)
+		if badge_dur_fig is not None:
+			figure_paths.append(badge_dur_fig)
+			badge_hover_duration_chart = {
+				"name": badge_dur_fig.stem,
+				"path": f"figures/{badge_dur_fig.name}",
+			}
+
 	n_participants = (
 		int(data.participants["participantId"].nunique())
 		if data.participants is not None and "participantId" in data.participants.columns
@@ -197,6 +229,9 @@ def generate_report(
 		"n_badge_rows": n_badge_rows,
 		"n_badge_labels": n_badge_labels,
 		"n_stimuli_with_badges": n_stimuli_with_badges,
+		"badge_hover_chart": badge_hover_chart,
+		"badge_hover_time_chart": badge_hover_time_chart,
+		"badge_hover_duration_chart": badge_hover_duration_chart,
 		"dimension_labels": {
 			"saliency": "Saliency",
 			"clutter": "Clutter",

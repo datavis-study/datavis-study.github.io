@@ -1,0 +1,9 @@
+[console_scripts]
+mtb-export-all = data_prep:main_run_all
+mtb-export-badges = data_prep.export_badge_stats:main
+mtb-export-likert = data_prep.export_questionnaire_likert:main
+mtb-export-notes = data_prep.export_speech:main
+mtb-export-open = data_prep.export_questionnaire_open:main
+mtb-export-participants = data_prep.export_participant_meta:main
+mtb-export-time = data_prep.export_time_spent:main
+mtb-generate-report = reporting.generate_report:main

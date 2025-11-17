@@ -1,5 +1,16 @@
 Generated at: `{{ generated_at }}`
 
+### Badge interactions – hover metrics
+
+{% if badge_hover_chart or badge_hover_time_chart or badge_hover_duration_chart %}
+| {% if badge_hover_chart %}Hover counts{% endif %} | {% if badge_hover_time_chart %}Total hover time{% endif %} | {% if badge_hover_duration_chart %}Duration stats{% endif %} |
+| :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
+| {% if badge_hover_chart %}![Hover counts per stimulus]({{ badge_hover_chart.path }}){% endif %} | {% if badge_hover_time_chart %}![Hover times per stimulus]({{ badge_hover_time_chart.path }}){% endif %} | {% if badge_hover_duration_chart %}![Hover duration statistics per stimulus]({{ badge_hover_duration_chart.path }}){% endif %} |
+| {% if badge_hover_chart %}<sub>Total hover counts per stimulus (shared y-axis labelled “Hover Count”).</sub>{% endif %} | {% if badge_hover_time_chart %}<sub>Total hover time per badge (bars), facetted by stimulus.</sub>{% endif %} | {% if badge_hover_duration_chart %}<sub>Mean hover time per badge (bars), facetted by stimulus.</sub>{% endif %} |
+{% else %}
+> No badge interaction metrics available (missing `stimulus_badge_metrics.csv` or hover counts).
+{% endif %}
+
 ### Stimulus notes
 
 {% if notes_summary and notes_items and notes_items|length > 0 %}

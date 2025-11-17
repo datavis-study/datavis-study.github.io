@@ -41,9 +41,9 @@ ensure_venv() {
 		echo "Creating virtual environment at ${VENV_DIR}..."
 		"$PYTHON_BIN" -m venv "$VENV_DIR"
 		"$VENV_PY" -m pip install --upgrade pip setuptools wheel
-		# Install this package in editable mode to get CLI deps
-		"$VENV_PY" -m pip install -e "${SCRIPT_DIR}"
 	fi
+	# (Re)install this package in editable mode to pick up any new dependencies
+	"$VENV_PY" -m pip install -e "${SCRIPT_DIR}"
 }
 
 has_arg() {
@@ -57,8 +57,8 @@ has_arg() {
 	return 1
 }
 
-# If matplotlib isn't available in the current Python, fall back to the venv
-if ! "$PYTHON_BIN" -c 'import matplotlib' >/dev/null 2>&1; then
+# If required analysis deps (Altair) aren't available, fall back to the managed venv
+if ! "$PYTHON_BIN" -c 'import altair' >/dev/null 2>&1; then
 	ensure_venv
 	PYTHON_BIN="$VENV_PY"
 fi

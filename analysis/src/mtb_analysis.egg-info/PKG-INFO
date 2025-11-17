@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: mtb-analysis
+Version: 0.0.1
+Summary: Lowkey Analysis tools for Mind the Badge study
+Requires-Python: >=3.10
+Requires-Dist: pandas>=2.1
+Requires-Dist: matplotlib>=3.8
+Requires-Dist: seaborn>=0.13
+Requires-Dist: numpy>=1.26
+Requires-Dist: scipy>=1.11
+Requires-Dist: jinja2>=3.1
+Requires-Dist: altair>=5.0
+Requires-Dist: altair_saver>=0.5
+Requires-Dist: vl-convert-python>=1.0
