@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
 
 from .io import DEFAULT_INPUT_PATH, load_completed_participants
+from reporting.name_pool import NAMES as NAME_POOL
 
 
 def _load_db(path: Path | str) -> Iterable[Dict[str, Any]]:
@@ -90,7 +91,36 @@ def export_participant_meta(
 
     participants = load_completed_participants(src_path)
 
+    # Build stable mapping participantId -> readableId like U001, U002 (by participantIndex if available)
+    def _build_mapping(recs: Iterable[Dict[str, Any]]) -> Dict[str, str]:
+        # Deterministic assignment from a fixed name pool.
+        # Order by participantIndex if available; otherwise by participantId.
+        items: list[tuple[int | None, str]] = []
+        for r in recs:
+            pid = r.get("participantId")
+            if not pid:
+                continue
+            try:
+                idx = int(r.get("participantIndex")) if r.get("participantIndex") is not None else None
+            except Exception:
+                idx = None
+            items.append((idx, str(pid)))
+        items.sort(key=lambda t: (t[0] is None, -1 if t[0] is None else t[0], t[1]))
+        mapping: Dict[str, str] = {}
+        used: set[str] = set()
+        for i, (_, pid) in enumerate(items):
+            base = NAME_POOL[i % len(NAME_POOL)]
+            # If pool wraps, append a small numeric suffix starting from 2
+            suffix = (i // len(NAME_POOL)) + 1
+            name = base if (suffix == 1 and base not in used) else f"{base}{suffix if suffix > 1 else ''}"
+            used.add(name)
+            mapping[pid] = name
+        return mapping
+
+    id_map = _build_mapping(participants)
+
     fieldnames = [
+        "readableId",
         "participantGroup",
         "participantId",
         "participantIndex",
@@ -127,6 +157,7 @@ def export_participant_meta(
 
             writer.writerow(
                 {
+                    "readableId": id_map.get(participant_id),
                     "participantGroup": participant_group,
                     "participantId": participant_id,
                     "participantIndex": participant_index,
@@ -139,6 +170,14 @@ def export_participant_meta(
                     "resolutionHeight": height,
                 }
             )
+
+    # Also write a standalone mapping CSV for convenience
+    map_path = dst_path.parent / "participant_id_map.csv"
+    with open(map_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["participantId", "readableId"])
+        writer.writeheader()
+        for pid, rid in id_map.items():
+            writer.writerow({"participantId": pid, "readableId": rid})
 
     return dst_path
 

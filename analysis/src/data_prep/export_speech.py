@@ -21,7 +21,23 @@ def _normalize_stimulus(name: str) -> Tuple[str, str | None]:
     return name, None
 
 
+def _load_id_map(csv_path: Path) -> dict:
+    try:
+        import csv  # local import to avoid top-level circularities
+        mapping = {}
+        with open(csv_path, "r", encoding="utf-8", newline="") as f:
+            for i, row in enumerate(csv.DictReader(f)):
+                pid = row.get("participantId")
+                rid = row.get("readableId")
+                if pid and rid:
+                    mapping[str(pid)] = str(rid)
+        return mapping
+    except Exception:
+        return {}
+
+
 def _iter_rows(data: List[Dict[str, Any]]):
+    id_map = _load_id_map(DEFAULT_INPUT_PATH.parent / "participants.csv")
     for rec in data:
         participant_id = rec.get("participantId")
         answers: Dict[str, Any] = rec.get("answers", {})
@@ -51,6 +67,7 @@ def _iter_rows(data: List[Dict[str, Any]]):
             yield {
                 "group": participant_group or grp or "unknown",
                 "participantId": participant_id,
+                "readableId": id_map.get(str(participant_id)),
                 "stimulusId": base,
                 "speech": text,
             }
@@ -69,7 +86,7 @@ def export_speech(
 
     rows = list(_iter_rows(data))
 
-    fieldnames = ["group", "participantId", "stimulusId", "speech"]
+    fieldnames = ["group", "participantId", "readableId", "stimulusId", "speech"]
     with open(dst_path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()

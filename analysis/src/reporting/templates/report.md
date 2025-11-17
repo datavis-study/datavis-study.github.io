@@ -68,3 +68,20 @@ Generated at: `{{ generated_at }}`
 > Mean bars figure is not available.
 {% endif %}
 
+### Participant ID mapping
+
+{% if participant_id_map and participant_id_map|length > 0 %}
+<details>
+<summary><strong>Show participant ID mapping</strong></summary>
+
+| Readable ID | Participant GUID | Group |
+|---|---|---|
+{% for m in participant_id_map -%}
+| {{ m.readableId }} | `{{ m.participantId }}` | {{ m.group }} |
+{% endfor %}
+
+</details>
+{% else %}
+> No participant mapping available.
+{% endif %}
+

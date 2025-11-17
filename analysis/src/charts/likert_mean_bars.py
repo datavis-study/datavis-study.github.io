@@ -51,7 +51,7 @@ def plot_likert_mean_bars(likert: pd.DataFrame, out_dir: Path) -> Optional[Path]
 	df["dimension_label"] = pd.Categorical(df["dimension_label"], categories=label_order, ordered=True)
 	# Aggregates
 	stats = (
-		df.groupby(["group", "dimension_label"])["score"]
+		df.groupby(["group", "dimension_label"], observed=True)["score"]
 		.mean()
 		.reset_index(name="mean_score")
 	)

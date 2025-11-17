@@ -27,7 +27,23 @@ def _iter_participants(data: Iterable[Dict[str, Any]]):
         yield record
 
 
+def _load_id_map(csv_path: Path) -> dict:
+    try:
+        import csv  # local import to avoid top-level circularities
+        mapping = {}
+        with open(csv_path, "r", encoding="utf-8", newline="") as f:
+            for i, row in enumerate(csv.DictReader(f)):
+                pid = row.get("participantId")
+                rid = row.get("readableId")
+                if pid and rid:
+                    mapping[str(pid)] = str(rid)
+        return mapping
+    except Exception:
+        return {}
+
+
 def _iter_open_rows(data: List[Dict[str, Any]]):
+    id_map = _load_id_map(DEFAULT_INPUT_PATH.parent / "participants.csv")
     for rec in _iter_participants(data):
         participant_id = rec.get("participantId")
         answers: Dict[str, Any] = rec.get("answers", {})
@@ -57,7 +73,7 @@ def _iter_open_rows(data: List[Dict[str, Any]]):
         if group is None:
             continue
 
-        row: Dict[str, Any] = {"group": group, "participantId": participant_id}
+        row: Dict[str, Any] = {"group": group, "participantId": participant_id, "readableId": id_map.get(str(participant_id))}
         row.update(open_values)
         yield row
 
@@ -73,7 +89,7 @@ def export_questionnaire_open(
 
     data = load_completed_participants(src_path)
 
-    fieldnames = ["group", "participantId"] + OPEN_TEXT_KEYS
+    fieldnames = ["group", "participantId", "readableId"] + OPEN_TEXT_KEYS
     with open(dst_path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()

@@ -218,6 +218,23 @@ def generate_report(
 		"group_line": group_line,
 	}
 
+	# Participant readable ID mapping
+	participant_id_map: dict[str, str] = {}
+	participant_map_records: list[dict] = []
+	if data.participants is not None:
+		dfp = data.participants
+		if "participantId" in dfp.columns and "readableId" in dfp.columns:
+			for _, row in dfp.iterrows():
+				pid = str(row["participantId"])
+				rid = None if pd.isna(row["readableId"]) else str(row["readableId"])
+				if pid and rid:
+					participant_id_map[pid] = rid
+					participant_map_records.append({
+						"participantId": pid,
+						"readableId": rid,
+						"group": str(row.get("group", "")) if "group" in dfp.columns else "",
+					})
+
 	# Build open-ended responses summary for collapsible display
 	def _build_open_questions_context() -> list[dict]:
 		if data.open_responses is None or data.open_responses.empty:
@@ -250,10 +267,12 @@ def generate_report(
 				continue
 			responses = []
 			for _, row in sub.iterrows():
-				pid = str(row.get("participantId", ""))[:8]
+				pid = str(row.get("participantId", ""))
+				rid = participant_id_map.get(pid)
+				disp_id = rid or (pid[:8] if pid else "")
 				responses.append(
 					{
-						"participant": pid,
+						"participant": disp_id,
 						"group": row.get("group_friendly", "Unknown"),
 						"text": row[col],
 					}
@@ -309,10 +328,12 @@ def generate_report(
 		for stim, sub in dfn.groupby("stimulus_label", dropna=False):
 			responses = []
 			for _, row in sub.iterrows():
-				pid = str(row.get("participantId", ""))[:8]
+				pid = str(row.get("participantId", ""))
+				rid = participant_id_map.get(pid)
+				disp_id = rid or (pid[:8] if pid else "")
 				responses.append(
 					{
-						"participant": pid,
+						"participant": disp_id,
 						"group": row.get("group_friendly", "Unknown"),
 						"words": int(row.get("word_count", 0)),
 						"text": row.get("speech", ""),
@@ -326,6 +347,7 @@ def generate_report(
 	notes_items, notes_summary = _build_notes_context()
 	context["notes_items"] = notes_items
 	context["notes_summary"] = notes_summary
+	context["participant_id_map"] = participant_map_records
 
 	# Build the template text: use provided --md paths as the full template,
 	# otherwise fall back to the default packaged template.
