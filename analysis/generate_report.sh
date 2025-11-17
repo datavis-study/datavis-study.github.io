@@ -3,12 +3,14 @@ set -euo pipefail
 
 # Simple helper to generate the study report.
 # Defaults:
-#   --data-dir:   ./data
-#   --out-dir:    ./reports
+#   --data-dir:       ./data
+#   --out-dir:        ./reports
+#   --skip-dataprep:  skip running the data export pipeline before report generation
 #
 # Usage examples:
 #   ./generate_report.sh
 #   ./generate_report.sh --data-dir path/to/data --out-dir path/to/reports --md notes.md
+#   ./generate_report.sh --skip-dataprep  # reuse already-exported CSVs
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
@@ -44,11 +46,6 @@ ensure_venv() {
 	fi
 }
 
-# If matplotlib isn't available in the current Python, fall back to the venv
-if ! "$PYTHON_BIN" -c 'import matplotlib' >/dev/null 2>&1; then
-	ensure_venv
-	PYTHON_BIN="$VENV_PY"
-fi
 has_arg() {
 	local term="$1"
 	shift || true
@@ -59,6 +56,31 @@ has_arg() {
 	done
 	return 1
 }
+
+# If matplotlib isn't available in the current Python, fall back to the venv
+if ! "$PYTHON_BIN" -c 'import matplotlib' >/dev/null 2>&1; then
+	ensure_venv
+	PYTHON_BIN="$VENV_PY"
+fi
+
+# Handle optional --skip-dataprep flag (shell-only; not forwarded to Python)
+RUN_DATAPREP=1
+if has_arg "--skip-dataprep" "${ARGS[@]-}"; then
+	RUN_DATAPREP=0
+	# Remove the flag from ARGS so it isn't passed to the Python CLI
+	declare -a tmp_args=()
+	for a in "${ARGS[@]}"; do
+		if [[ "$a" == "--skip-dataprep" ]]; then
+			continue
+		fi
+		tmp_args+=("$a")
+	done
+	if ((${#tmp_args[@]} > 0)); then
+		ARGS=("${tmp_args[@]}")
+	else
+		ARGS=()
+	fi
+fi
 
 if ! has_arg "--data-dir" "${ARGS[@]-}"; then
 	ARGS+=("--data-dir" "$DATA_DIR_DEFAULT")
@@ -77,17 +99,21 @@ if ! has_arg "--md" "${ARGS[@]-}"; then
 	fi
 fi
 
-# Run full data preparation pipeline before report generation
-echo "Exporting study data (participants, time, questionnaires, notes, badges)..."
-"$PYTHON_BIN" -m data_prep.export_participant_meta >/dev/null
-"$PYTHON_BIN" -m data_prep.export_time_spent >/dev/null
-"$PYTHON_BIN" -m data_prep.export_questionnaire_likert >/dev/null
-"$PYTHON_BIN" -m data_prep.export_questionnaire_open >/dev/null
-"$PYTHON_BIN" -m data_prep.export_speech >/dev/null
-"$PYTHON_BIN" -m data_prep.export_badge_stats >/dev/null
+# Run full data preparation pipeline before report generation (unless skipped)
+if [ "$RUN_DATAPREP" -eq 1 ]; then
+	echo "Exporting study data (participants, time, questionnaires, notes, badges)..."
+	"$PYTHON_BIN" -m data_prep.export_participant_meta >/dev/null
+	"$PYTHON_BIN" -m data_prep.export_time_spent >/dev/null
+	"$PYTHON_BIN" -m data_prep.export_questionnaire_likert >/dev/null
+	"$PYTHON_BIN" -m data_prep.export_questionnaire_open >/dev/null
+	"$PYTHON_BIN" -m data_prep.export_speech >/dev/null
+	"$PYTHON_BIN" -m data_prep.export_badge_stats >/dev/null
+else
+	echo "Skipping data preparation (per --skip-dataprep); using existing CSV exports."
+fi
 
 mkdir -p "$OUT_DIR_DEFAULT"
 
-exec "$PYTHON_BIN" -m reporting.generate_report "${ARGS[@]-}"
+exec "$PYTHON_BIN" -m reporting.generate_report "${ARGS[@]}"
 
 
