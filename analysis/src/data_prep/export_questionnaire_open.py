@@ -19,6 +19,8 @@ OPEN_TEXT_KEYS: List[str] = [
     "most-least-useful",
     "overall-help",
     "final-comments",
+    # Append noticed flag captured in raw db.json into the same CSV for convenience
+    "noticed-in-task",
 ]
 
 

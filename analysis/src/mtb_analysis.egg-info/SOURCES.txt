@@ -4,9 +4,11 @@ src/charts/__init__.py
 src/charts/badge_hover_counts.py
 src/charts/group_counts.py
 src/charts/likert_beehive.py
+src/charts/likert_distribution_median.py
 src/charts/likert_diverging_bars.py
 src/charts/likert_dot_ci.py
 src/charts/likert_mean_bars.py
+src/charts/likert_mean_bars_altair.py
 src/charts/time_distributions.py
 src/charts/total_time_hist.py
 src/data_prep/__init__.py

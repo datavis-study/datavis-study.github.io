@@ -17,6 +17,8 @@ from charts.likert_beehive import plot_likert_beehive
 from charts.likert_diverging_bars import plot_likert_diverging_bars
 from charts.likert_dot_ci import plot_likert_dot_ci
 from charts.likert_mean_bars import plot_likert_mean_bars
+from charts.likert_mean_bars_altair import plot_likert_mean_bars_altair
+from charts.likert_distribution_median import plot_likert_distribution_median
 from charts.badge_hover_counts import (
 	plot_badge_hover_counts,
 	plot_badge_hover_times,
@@ -113,6 +115,14 @@ def generate_report(
 		p_likert_bar = plot_likert_mean_bars(data.likert_scores, root_out)
 		if p_likert_bar is not None:
 			figure_paths.append(p_likert_bar)
+		# Altair version of Likert mean bars
+		p_likert_bar_alt = plot_likert_mean_bars_altair(data.likert_scores, root_out)
+		if p_likert_bar_alt is not None:
+			figure_paths.append(p_likert_bar_alt)
+		# Likert distributions + medians (Altair)
+		p_likert_dist = plot_likert_distribution_median(data.likert_scores, root_out)
+		if p_likert_dist is not None:
+			figure_paths.append(p_likert_dist)
 
 	# Badge hover-count & hover-time charts (Altair)
 	badge_hover_chart: Optional[dict] = None

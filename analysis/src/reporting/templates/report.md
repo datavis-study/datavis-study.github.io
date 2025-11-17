@@ -52,6 +52,16 @@ Generated at: `{{ generated_at }}`
 > Likert beehive figure is not available (missing `questionnaire_likert_scores.csv`).
 {% endif %}
 
+### Likert – distributions and medians
+
+{% set ldist = (figures | selectattr('name','equalto','f_likert_distribution_median') | list | first) %}
+{% if ldist %}
+![Likert distributions and medians]({{ ldist.path }})
+<sub>Per-dimension Likert score distributions (circle size = number of ratings), faceted by group (Footnotes vs Badges). Scale: 1 = Strongly Disagree, 5 = Strongly Agree.</sub>
+{% else %}
+> Distributions/medians figure is not available.
+{% endif %}
+
 ### Open-ended answers
 
 {% if open_questions and open_questions|length > 0 %}
@@ -71,7 +81,11 @@ Generated at: `{{ generated_at }}`
 
 ### Likert – mean bar chart
 
-{% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars') | list | first) %}
+{# Prefer Altair version if available; otherwise fall back to matplotlib version #}
+{% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars_altair') | list | first) %}
+{% if not lbar %}
+  {% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars') | list | first) %}
+{% endif %}
 {% if lbar %}
 ![Likert mean bars]({{ lbar.path }})
 <sub>Grouped vertical bars: Footnotes (grey) and Badges (blue) per dimension. Values shown above bars.</sub>
