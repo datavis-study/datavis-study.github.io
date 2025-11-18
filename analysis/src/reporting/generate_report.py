@@ -26,7 +26,6 @@ from charts.badge_hover_counts import (
 )
 from charts.badge_click_counts import plot_badge_click_counts
 from charts.badge_drawer_times import (
-	plot_badge_drawer_open_counts,
 	plot_badge_drawer_open_times,
 	plot_badge_drawer_duration_stats,
 )
@@ -135,7 +134,6 @@ def generate_report(
 	badge_hover_time_chart: Optional[dict] = None
 	badge_hover_duration_chart: Optional[dict] = None
 	badge_click_chart: Optional[dict] = None
-	badge_drawer_open_chart: Optional[dict] = None
 	badge_drawer_time_chart: Optional[dict] = None
 	badge_drawer_duration_chart: Optional[dict] = None
 	if data.badge_metrics is not None:
@@ -165,11 +163,7 @@ def generate_report(
 		if click_fig is not None:
 			figure_paths.append(click_fig)
 			badge_click_chart = {"name": click_fig.stem, "path": f"figures/{click_fig.name}"}
-		# Drawer open metrics
-		drawer_count_fig = plot_badge_drawer_open_counts(data.badge_metrics, root_out)
-		if drawer_count_fig is not None:
-			figure_paths.append(drawer_count_fig)
-			badge_drawer_open_chart = {"name": drawer_count_fig.stem, "path": f"figures/{drawer_count_fig.name}"}
+		# Drawer open metrics (time + mean duration)
 		drawer_time_fig = plot_badge_drawer_open_times(data.badge_metrics, root_out)
 		if drawer_time_fig is not None:
 			figure_paths.append(drawer_time_fig)
@@ -272,7 +266,6 @@ def generate_report(
 		"badge_hover_time_chart": badge_hover_time_chart,
 		"badge_hover_duration_chart": badge_hover_duration_chart,
 		"badge_click_chart": badge_click_chart,
-		"badge_drawer_open_chart": badge_drawer_open_chart,
 		"badge_drawer_time_chart": badge_drawer_time_chart,
 		"badge_drawer_duration_chart": badge_drawer_duration_chart,
 		"demographics_rows": [],
@@ -435,6 +428,30 @@ def generate_report(
 		demo_path = pathlib.Path(data_dir) / "demographics.csv"
 		if demo_path.exists():
 			dfd = pd.read_csv(demo_path)
+			# Build compact summary (top values per category)
+			label_map_demo = {
+				"gender": "Gender",
+				"age": "Age",
+				"education": "Education",
+				"field-of-study": "Field",
+				"chart-reading-frequency": "Reads charts",
+				"chart-creation-frequency": "Creates charts",
+				"color-vision": "Color vision",
+			}
+			summary_items: list[dict] = []
+			for col, label in label_map_demo.items():
+				if col not in dfd.columns:
+					continue
+				series = dfd[col].dropna().astype(str).str.strip()
+				if series.empty:
+					continue
+				vc = series.value_counts()
+				top = vc.head(3).items()
+				values = [{"value": k, "count": int(v)} for k, v in top]
+				total = int(series.shape[0])
+				summary_items.append({"label": label, "top_values": values, "total": total})
+			if summary_items:
+				context["demographics_summary"] = summary_items
 			preferred = [
 				"readableId",
 				"gender",

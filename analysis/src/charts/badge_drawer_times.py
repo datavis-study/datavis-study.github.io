@@ -45,13 +45,8 @@ def plot_badge_drawer_open_counts(badge_metrics: pd.DataFrame, out_dir: Path) ->
 	df = badge_metrics.copy()
 	if "drawerOpenCount" not in df.columns:
 		return None
-	df = df[df["drawerOpenCount"].notna()].copy()
-	if df.empty:
-		return None
-	df["drawerOpenCount"] = pd.to_numeric(df["drawerOpenCount"], errors="coerce")
-	df = df[df["drawerOpenCount"].notna()].copy()
-	if df.empty:
-		return None
+	# Treat missing as zeros
+	df["drawerOpenCount"] = pd.to_numeric(df["drawerOpenCount"], errors="coerce").fillna(0)
 	df = _with_display_labels(df)
 	if df.empty:
 		return None
@@ -67,7 +62,7 @@ def plot_badge_drawer_open_counts(badge_metrics: pd.DataFrame, out_dir: Path) ->
 		.mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
 		.encode(
 			x=alt.X("badgeLabelDisplay:N", sort=badge_order, axis=alt.Axis(title=None)),
-			y=alt.Y("drawerOpenCount:Q", title="Drawer open count"),
+			y=alt.Y("drawerOpenCount:Q", title="Drawer open count", scale=alt.Scale(domain=(0, 10))),
 		)
 		.facet(column=alt.Column("stimulus_label:N", title=None))
 		.resolve_scale(x="independent", y="shared")
@@ -85,13 +80,8 @@ def plot_badge_drawer_open_times(badge_metrics: pd.DataFrame, out_dir: Path) -> 
 	df = badge_metrics.copy()
 	if "totalDrawerOpenTime" not in df.columns:
 		return None
-	df = df[df["totalDrawerOpenTime"].notna()].copy()
-	if df.empty:
-		return None
-	df["totalDrawerOpenTime"] = pd.to_numeric(df["totalDrawerOpenTime"], errors="coerce")
-	df = df[df["totalDrawerOpenTime"].notna()].copy()
-	if df.empty:
-		return None
+	# Treat missing as zeros
+	df["totalDrawerOpenTime"] = pd.to_numeric(df["totalDrawerOpenTime"], errors="coerce").fillna(0)
 	df = _with_display_labels(df)
 	if df.empty:
 		return None
@@ -126,14 +116,9 @@ def plot_badge_drawer_duration_stats(badge_metrics: pd.DataFrame, out_dir: Path)
 	for col in ["drawerOpenCount", "totalDrawerOpenTime"]:
 		if col not in df.columns:
 			return None
-	df = df[(df["drawerOpenCount"].notna()) | (df["totalDrawerOpenTime"].notna())].copy()
-	if df.empty:
-		return None
-	df["drawerOpenCount"] = pd.to_numeric(df["drawerOpenCount"], errors="coerce")
-	df["totalDrawerOpenTime"] = pd.to_numeric(df["totalDrawerOpenTime"], errors="coerce")
-	df = df[(df["drawerOpenCount"].notna()) & (df["totalDrawerOpenTime"].notna())].copy()
-	if df.empty:
-		return None
+	# Treat missing as zeros to compute mean as 0 when no opens
+	df["drawerOpenCount"] = pd.to_numeric(df["drawerOpenCount"], errors="coerce").fillna(0)
+	df["totalDrawerOpenTime"] = pd.to_numeric(df["totalDrawerOpenTime"], errors="coerce").fillna(0)
 	df = _with_display_labels(df)
 	if df.empty:
 		return None
@@ -144,10 +129,8 @@ def plot_badge_drawer_duration_stats(badge_metrics: pd.DataFrame, out_dir: Path)
 	)
 	if agg.empty:
 		return None
-	agg = agg[agg["drawerOpenCount"] > 0].copy()
-	if agg.empty:
-		return None
-	agg["meanDrawerOpenTime"] = agg["totalDrawerOpenTime"] / agg["drawerOpenCount"]
+	# Compute mean; avoid division by zero by using where + fillna(0)
+	agg["meanDrawerOpenTime"] = (agg["totalDrawerOpenTime"] / agg["drawerOpenCount"].where(agg["drawerOpenCount"] != 0)).fillna(0)
 	badge_order = _badge_sort_order(agg["badgeLabelDisplay"])
 	chart = (
 		alt.Chart(agg)

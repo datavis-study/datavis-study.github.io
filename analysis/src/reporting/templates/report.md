@@ -2,14 +2,27 @@ Generated at: `{{ generated_at }}`
 
 ### Demographics
 
+{% if demographics_summary and demographics_summary|length > 0 %}
+| Category | Top values |
+|---|---|
+{% for item in demographics_summary -%}
+| {{ item.label }} | {% for v in item.top_values %}{{ v.value }} ({{ v.count }}){% if not loop.last %}, {% endif %}{% endfor %} |
+{% endfor %}
+{% else %}
+> No demographics available.
+{% endif %}
+
 {% if demographics_rows and demographics_rows|length > 0 %}
+<details>
+<summary><strong>Show full demographics table</strong></summary>
+
 | Participant | Gender | Age | Education | Field | Reads charts | Creates charts | Color vision |
 |---|---|---|---|---|---|---|---|
 {% for r in demographics_rows -%}
 | {{ r.readableId or '' }} | {{ r['gender'] or '' }} | {{ r['age'] or '' }} | {{ r['education'] or '' }} | {{ r['field-of-study'] or '' }} | {{ r['chart-reading-frequency'] or '' }} | {{ r['chart-creation-frequency'] or '' }} | {{ r['color-vision'] or '' }} |
 {% endfor %}
-{% else %}
-> No demographics available.
+
+</details>
 {% endif %}
 
 ### Badge interactions – hover metrics
@@ -25,10 +38,10 @@ Generated at: `{{ generated_at }}`
 
 ### Badge interactions – clicks and drawer metrics
 
-| Click counts | Drawer opens | Total open time | Mean open duration |
-| :----------: | :----------: | :-------------: | :----------------: |
-| {% if badge_click_chart %}![Click counts per stimulus]({{ badge_click_chart.path }}){% endif %} | {% if badge_drawer_open_chart %}![Drawer open counts per stimulus]({{ badge_drawer_open_chart.path }}){% endif %} | {% if badge_drawer_time_chart %}![Total drawer open time per stimulus]({{ badge_drawer_time_chart.path }}){% endif %} | {% if badge_drawer_duration_chart %}![Mean drawer open time per stimulus]({{ badge_drawer_duration_chart.path }}){% endif %} |
-| <sub>{% if badge_click_chart %}Total click counts per badge, facetted by stimulus.{% endif %}</sub> | <sub>{% if badge_drawer_open_chart %}Number of times the drawer was opened per badge.{% endif %}</sub> | <sub>{% if badge_drawer_time_chart %}Total time drawers were open per badge (s).{% endif %}</sub> | <sub>{% if badge_drawer_duration_chart %}Average open time per open event (s) per badge.{% endif %}</sub> |
+| Click counts | Total open time | Mean open duration |
+| :----------: | :-------------: | :----------------: |
+| {% if badge_click_chart %}![Click counts per stimulus]({{ badge_click_chart.path }}){% endif %} | {% if badge_drawer_time_chart %}![Total drawer open time per stimulus]({{ badge_drawer_time_chart.path }}){% endif %} | {% if badge_drawer_duration_chart %}![Mean drawer open time per stimulus]({{ badge_drawer_duration_chart.path }}){% endif %} |
+| <sub>{% if badge_click_chart %}Total click counts per badge, facetted by stimulus.{% endif %}</sub> | <sub>{% if badge_drawer_time_chart %}Total time drawers were open per badge (s).{% endif %}</sub> | <sub>{% if badge_drawer_duration_chart %}Average open time per open event (s) per badge.{% endif %}</sub> |
 
 ### Stimulus notes
 
