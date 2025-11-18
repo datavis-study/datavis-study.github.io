@@ -13,6 +13,7 @@ src/charts/time_distributions.py
 src/charts/total_time_hist.py
 src/data_prep/__init__.py
 src/data_prep/export_badge_stats.py
+src/data_prep/export_demographics.py
 src/data_prep/export_participant_meta.py
 src/data_prep/export_questionnaire_likert.py
 src/data_prep/export_questionnaire_open.py

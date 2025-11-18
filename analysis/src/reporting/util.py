@@ -15,6 +15,11 @@ class LoadedData:
 	open_responses: Optional[pd.DataFrame]
 	badge_metrics: Optional[pd.DataFrame]
 	notes: Optional[pd.DataFrame]
+	demographics: Optional[pd.DataFrame]
+	demographics: Optional[pd.DataFrame]
+	demographics: Optional[pd.DataFrame]
+	demographics: Optional[pd.DataFrame]
+	demographics: Optional[pd.DataFrame]
 
 
 def _read_csv_safe(path: str | os.PathLike, dtype: Optional[Dict[str, str]] = None) -> Optional[pd.DataFrame]:

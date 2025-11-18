@@ -1,5 +1,17 @@
 Generated at: `{{ generated_at }}`
 
+### Demographics
+
+{% if demographics_rows and demographics_rows|length > 0 %}
+| Participant | Gender | Age | Education | Field | Reads charts | Creates charts | Color vision |
+|---|---|---|---|---|---|---|---|
+{% for r in demographics_rows -%}
+| {{ r.readableId or '' }} | {{ r['gender'] or '' }} | {{ r['age'] or '' }} | {{ r['education'] or '' }} | {{ r['field-of-study'] or '' }} | {{ r['chart-reading-frequency'] or '' }} | {{ r['chart-creation-frequency'] or '' }} | {{ r['color-vision'] or '' }} |
+{% endfor %}
+{% else %}
+> No demographics available.
+{% endif %}
+
 ### Badge interactions – hover metrics
 
 {% if badge_hover_chart or badge_hover_time_chart or badge_hover_duration_chart %}

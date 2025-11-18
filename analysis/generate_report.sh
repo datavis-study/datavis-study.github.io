@@ -108,6 +108,7 @@ if [ "$RUN_DATAPREP" -eq 1 ]; then
 	"$PYTHON_BIN" -m data_prep.export_questionnaire_open >/dev/null
 	"$PYTHON_BIN" -m data_prep.export_speech >/dev/null
 	"$PYTHON_BIN" -m data_prep.export_badge_stats >/dev/null
+	"$PYTHON_BIN" -m data_prep.export_demographics >/dev/null
 else
 	echo "Skipping data preparation (per --skip-dataprep); using existing CSV exports."
 fi

@@ -192,6 +192,7 @@ def generate_report(
 		"open_responses": data.open_responses is not None,
 		"badge_metrics": data.badge_metrics is not None,
 		"notes": data.notes is not None,
+		"demographics": False,
 	}
 
 	time_components: list[str] = []
@@ -242,6 +243,7 @@ def generate_report(
 		"badge_hover_chart": badge_hover_chart,
 		"badge_hover_time_chart": badge_hover_time_chart,
 		"badge_hover_duration_chart": badge_hover_duration_chart,
+		"demographics_rows": [],
 		"dimension_labels": {
 			"saliency": "Saliency",
 			"clutter": "Clutter",
@@ -393,6 +395,33 @@ def generate_report(
 	context["notes_items"] = notes_items
 	context["notes_summary"] = notes_summary
 	context["participant_id_map"] = participant_map_records
+
+	# Build the template text: use provided --md paths as the full template,
+	# otherwise fall back to the default packaged template.
+	# Demographics table rows (read directly from CSV to avoid coupling)
+	try:
+		demo_path = pathlib.Path(data_dir) / "demographics.csv"
+		if demo_path.exists():
+			dfd = pd.read_csv(demo_path)
+			preferred = [
+				"readableId",
+				"gender",
+				"age",
+				"education",
+				"field-of-study",
+				"chart-reading-frequency",
+				"chart-creation-frequency",
+				"color-vision",
+			]
+			cols = [c for c in preferred if c in dfd.columns]
+			if cols:
+				dfd = dfd[cols]
+			if "readableId" in dfd.columns:
+				dfd = dfd.sort_values("readableId")
+			context["demographics_rows"] = dfd.to_dict(orient="records")
+			files_present["demographics"] = True
+	except Exception:
+		pass
 
 	# Build the template text: use provided --md paths as the full template,
 	# otherwise fall back to the default packaged template.

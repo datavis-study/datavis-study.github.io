@@ -1,0 +1,7 @@
+participantId,readableId,gender,gender-other,age,education,education-other,field-of-study,field-of-study-other,chart-reading-frequency,chart-creation-frequency,color-vision,color-vision-type
+9a73ce92-5365-411d-a81d-1db38ff72f4e,echo,Woman,,25-34 years,Master's degree,,Computer Science / Information Technology,,Regularly (few times per week),Occasionally (few times per month),No,
+2b69160b-3a1e-4ad9-9039-f3758f20b569,foxtrot,Man,,25-34 years,Master's degree,,Computer Science / Information Technology,,Regularly (few times per week),Regularly (few times per week),No,
+37b66c79-da74-498e-9567-c79c5d7efd41,delta,Woman,,25-34 years,"Doctorate (e.g., PhD, EdD)",,Computer Science / Information Technology,,Frequently (daily or almost daily),Occasionally (few times per month),No,
+4798e3dc-4588-41b2-8e23-9f43d695c79e,charlie,Man,,25-34 years,Master's degree,,Computer Science / Information Technology,,Occasionally (few times per month),Never,No,
+0b6ad5e0-be61-411e-980c-c773e0482c66,bravo,Non-binary,,35-44 years,"Doctorate (e.g., PhD, EdD)",,Arts / Design,,Frequently (daily or almost daily),Rarely (few times per year),No,
+6a223d18-f389-4312-a78f-38ca9bbbd583,alpha,Woman,,25-34 years,"Doctorate (e.g., PhD, EdD)",,Computer Science / Information Technology,,Regularly (few times per week),Occasionally (few times per month),No,
