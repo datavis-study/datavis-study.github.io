@@ -1,6 +1,8 @@
 README.md
 pyproject.toml
 src/charts/__init__.py
+src/charts/badge_click_counts.py
+src/charts/badge_drawer_times.py
 src/charts/badge_hover_counts.py
 src/charts/group_counts.py
 src/charts/likert_beehive.py

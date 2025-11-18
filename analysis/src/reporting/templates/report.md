@@ -23,6 +23,13 @@ Generated at: `{{ generated_at }}`
 > No badge interaction metrics available (missing `stimulus_badge_metrics.csv` or hover counts).
 {% endif %}
 
+### Badge interactions – clicks and drawer metrics
+
+| Click counts | Drawer opens | Total open time | Mean open duration |
+| :----------: | :----------: | :-------------: | :----------------: |
+| {% if badge_click_chart %}![Click counts per stimulus]({{ badge_click_chart.path }}){% endif %} | {% if badge_drawer_open_chart %}![Drawer open counts per stimulus]({{ badge_drawer_open_chart.path }}){% endif %} | {% if badge_drawer_time_chart %}![Total drawer open time per stimulus]({{ badge_drawer_time_chart.path }}){% endif %} | {% if badge_drawer_duration_chart %}![Mean drawer open time per stimulus]({{ badge_drawer_duration_chart.path }}){% endif %} |
+| <sub>{% if badge_click_chart %}Total click counts per badge, facetted by stimulus.{% endif %}</sub> | <sub>{% if badge_drawer_open_chart %}Number of times the drawer was opened per badge.{% endif %}</sub> | <sub>{% if badge_drawer_time_chart %}Total time drawers were open per badge (s).{% endif %}</sub> | <sub>{% if badge_drawer_duration_chart %}Average open time per open event (s) per badge.{% endif %}</sub> |
+
 ### Stimulus notes
 
 {% if notes_summary and notes_items and notes_items|length > 0 %}

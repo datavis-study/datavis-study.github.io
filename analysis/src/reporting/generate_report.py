@@ -24,6 +24,12 @@ from charts.badge_hover_counts import (
 	plot_badge_hover_times,
 	plot_badge_hover_duration_stats,
 )
+from charts.badge_click_counts import plot_badge_click_counts
+from charts.badge_drawer_times import (
+	plot_badge_drawer_open_counts,
+	plot_badge_drawer_open_times,
+	plot_badge_drawer_duration_stats,
+)
 
 import json
 
@@ -128,6 +134,10 @@ def generate_report(
 	badge_hover_chart: Optional[dict] = None
 	badge_hover_time_chart: Optional[dict] = None
 	badge_hover_duration_chart: Optional[dict] = None
+	badge_click_chart: Optional[dict] = None
+	badge_drawer_open_chart: Optional[dict] = None
+	badge_drawer_time_chart: Optional[dict] = None
+	badge_drawer_duration_chart: Optional[dict] = None
 	if data.badge_metrics is not None:
 		badge_counts_fig = plot_badge_hover_counts(data.badge_metrics, root_out)
 		if badge_counts_fig is not None:
@@ -150,6 +160,24 @@ def generate_report(
 				"name": badge_dur_fig.stem,
 				"path": f"figures/{badge_dur_fig.name}",
 			}
+		# Click counts (per badge, per stimulus)
+		click_fig = plot_badge_click_counts(data.badge_metrics, root_out)
+		if click_fig is not None:
+			figure_paths.append(click_fig)
+			badge_click_chart = {"name": click_fig.stem, "path": f"figures/{click_fig.name}"}
+		# Drawer open metrics
+		drawer_count_fig = plot_badge_drawer_open_counts(data.badge_metrics, root_out)
+		if drawer_count_fig is not None:
+			figure_paths.append(drawer_count_fig)
+			badge_drawer_open_chart = {"name": drawer_count_fig.stem, "path": f"figures/{drawer_count_fig.name}"}
+		drawer_time_fig = plot_badge_drawer_open_times(data.badge_metrics, root_out)
+		if drawer_time_fig is not None:
+			figure_paths.append(drawer_time_fig)
+			badge_drawer_time_chart = {"name": drawer_time_fig.stem, "path": f"figures/{drawer_time_fig.name}"}
+		drawer_dur_fig = plot_badge_drawer_duration_stats(data.badge_metrics, root_out)
+		if drawer_dur_fig is not None:
+			figure_paths.append(drawer_dur_fig)
+			badge_drawer_duration_chart = {"name": drawer_dur_fig.stem, "path": f"figures/{drawer_dur_fig.name}"}
 
 	n_participants = (
 		int(data.participants["participantId"].nunique())
@@ -243,6 +271,10 @@ def generate_report(
 		"badge_hover_chart": badge_hover_chart,
 		"badge_hover_time_chart": badge_hover_time_chart,
 		"badge_hover_duration_chart": badge_hover_duration_chart,
+		"badge_click_chart": badge_click_chart,
+		"badge_drawer_open_chart": badge_drawer_open_chart,
+		"badge_drawer_time_chart": badge_drawer_time_chart,
+		"badge_drawer_duration_chart": badge_drawer_duration_chart,
 		"demographics_rows": [],
 		"dimension_labels": {
 			"saliency": "Saliency",
