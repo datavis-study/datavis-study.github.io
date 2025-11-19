@@ -33,15 +33,45 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
-| <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="320" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="320" /> |
+| <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="420" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="420" /> |
 | <sub>CO₂ emissions projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
+
+{% if notes_items and notes_items|length > 0 %}
+{% set co2_notes = (notes_items | selectattr('stimulus','equalto','CO₂ Emissions') | list | first) %}
+{% if co2_notes %}
+
+<details>
+<summary><strong>Stimulus notes – CO₂ Emissions</strong> — {{ co2_notes.count }} notes</summary>
+
+{% for r in co2_notes.responses %}
+- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{% endfor %}
+
+</details>
+{% endif %}
+{% endif %}
 
 #### Global Warming Projection
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
-| <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="320" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="320" /> |
+| <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="420" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="420" /> |
 | <sub>Global warming projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
+
+{% if notes_items and notes_items|length > 0 %}
+{% set gw_notes = (notes_items | selectattr('stimulus','equalto','Global Warming Projection') | list | first) %}
+{% if gw_notes %}
+
+<details>
+<summary><strong>Stimulus notes – Global Warming Projection</strong> — {{ gw_notes.count }} notes</summary>
+
+{% for r in gw_notes.responses %}
+- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{% endfor %}
+
+</details>
+{% endif %}
+{% endif %}
 
 ### Badge interactions – hover metrics
 
@@ -60,28 +90,6 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 | :----------: | :-------------: | :----------------: |
 | {% if badge_click_chart %}<img src="{{ badge_click_chart.path }}" alt="Click counts per stimulus" width="320" />{% endif %} | {% if badge_drawer_time_chart %}<img src="{{ badge_drawer_time_chart.path }}" alt="Total drawer open time per stimulus" width="320" />{% endif %} | {% if badge_drawer_duration_chart %}<img src="{{ badge_drawer_duration_chart.path }}" alt="Mean drawer open time per stimulus" width="320" />{% endif %} |
 | <sub>{% if badge_click_chart %}Total click counts per badge, facetted by stimulus.{% endif %}</sub> | <sub>{% if badge_drawer_time_chart %}Total time drawers were open per badge (s).{% endif %}</sub> | <sub>{% if badge_drawer_duration_chart %}Average open time per open event (s) per badge.{% endif %}</sub> |
-
-### Stimulus notes
-
-{% if notes_summary and notes_items and notes_items|length > 0 %}
-- Total entries: {{ notes_summary.total }}
-- Median words: {{ notes_summary.median_words }}
-- Mean words: {{ notes_summary.mean_words }}
-- By group: {% for g, c in notes_summary.counts_by_group.items() %}{{ g }}: {{ c }}{% if not loop.last %}; {% endif %}{% endfor %}
-
-{% for s in notes_items %}
-<details>
-<summary><strong>{{ s.stimulus }}</strong> — {{ s.count }} notes</summary>
-
-{% for r in s.responses %}
-- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
-{% endfor %}
-
-</details>
-{% endfor %}
-{% else %}
-> No stimulus notes available.
-{% endif %}
 
 ### Likert questions
 
