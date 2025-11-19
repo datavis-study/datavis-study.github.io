@@ -188,3 +188,20 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 > No participant mapping available.
 {% endif %}
 
+### Time spent per component
+
+{% if time_detail_rows and time_detail_rows|length > 0 %}
+<details>
+<summary><strong>Show participant time per component (Footnotes vs Badges)</strong></summary>
+
+| Participant | Group | Global warming figure (s) | CO₂ emissions figure (s) | Total session (s) |
+|---|---|---|---|---|
+{% for r in time_detail_rows %}
+| {{ r.display_id }} | {{ r.group_friendly }} | {{ r["global-warming-projection (s)"] }} | {{ r["co2-emissions (s)"] }} | {{ r["total (s)"] }} |
+{% endfor %}
+
+</details>
+{% else %}
+> No participant time-per-component data available.
+{% endif %}
+
