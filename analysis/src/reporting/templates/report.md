@@ -131,7 +131,6 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% endif %}
 {% if lbar %}
 <img src="{{ lbar.path }}" alt="Likert mean bars" width="720" />
-<sub>Small multiples in a single row: one facet per dimension with two bars (Footnotes = grey, Badges = blue). Values shown above bars.</sub>
 {% else %}
 > Mean bars figure is not available.
 {% endif %}
