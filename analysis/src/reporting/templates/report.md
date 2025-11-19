@@ -42,7 +42,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_foot and co2_foot|length > 0 %}
 <details>
-<summary><strong>Participants Responses: CO₂ Emissions (Footnotes)</strong> — {{ co2_foot|length }} notes</summary>
+<summary><strong>Participants Responses: CO₂ Emissions (<span style="color:#007bff;">Footnotes</span>)</strong> — {{ co2_foot|length }} notes</summary>
 
 {% for r in co2_foot %}
 {# Footnote group: blue ID + label #}
@@ -55,7 +55,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_badge and co2_badge|length > 0 %}
 <details>
-<summary><strong>Participants Responses: CO₂ Emissions (Badges)</strong> — {{ co2_badge|length }} notes</summary>
+<summary><strong>Participants Responses: CO₂ Emissions (<span style="color:#28a745;">Badges</span>)</strong> — {{ co2_badge|length }} notes</summary>
 
 {% for r in co2_badge %}
 {# Badge group: green ID + label #}
@@ -82,7 +82,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_foot and gw_foot|length > 0 %}
 <details>
-<summary><strong>Participants Responses: Global Warming Projection (Footnotes)</strong> — {{ gw_foot|length }} notes</summary>
+<summary><strong>Participants Responses: Global Warming Projection (<span style="color:#007bff;">Footnotes</span>)</strong> — {{ gw_foot|length }} notes</summary>
 
 {% for r in gw_foot %}
 {# Footnote group: blue ID + label #}
@@ -95,7 +95,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_badge and gw_badge|length > 0 %}
 <details>
-<summary><strong>Participants Responses: Global Warming Projection (Badges)</strong> — {{ gw_badge|length }} notes</summary>
+<summary><strong>Participants Responses: Global Warming Projection (<span style="color:#28a745;">Badges</span>)</strong> — {{ gw_badge|length }} notes</summary>
 
 {% for r in gw_badge %}
 {# Badge group: green ID + label #}
@@ -147,16 +147,40 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <details>
 <summary><strong>{{ q.label }}</strong> — {{ q.count }} responses</summary>
 
-{% for r in q.responses %}
-{% if r.group == "Footnotes" %}
-- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
-{% elif r.group == "Badges" %}
-- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
-{% else %}
-- <strong>{{ r.participant }}</strong> ({{ r.group }}): {{ r.text }}
+{% if q.prompt_footnotes %}
+<span style="color:#007bff;"><strong>Footnotes question</strong></span><br />
+<em>{{ q.prompt_footnotes }}</em>
+<br />
 {% endif %}
+
+{% if q.responses_footnotes and q.responses_footnotes|length > 0 %}
+{% for r in q.responses_footnotes %}
+- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
 <br />
 {% endfor %}
+{% endif %}
+
+{% if q.prompt_badges %}
+<span style="color:#28a745;"><strong>Badges question</strong></span><br />
+<em>{{ q.prompt_badges }}</em>
+<br />
+{% endif %}
+
+{% if q.responses_badges and q.responses_badges|length > 0 %}
+{% for r in q.responses_badges %}
+- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
+<br />
+{% endfor %}
+<br />
+{% endif %}
+
+{% if q.responses_other and q.responses_other|length > 0 %}
+<span><strong>Other / Unknown group</strong></span><br />
+{% for r in q.responses_other %}
+- <strong>{{ r.participant }}</strong> ({{ r.group }}): {{ r.text }}
+<br />
+{% endfor %}
+{% endif %}
 
 </details>
 {% endfor %}

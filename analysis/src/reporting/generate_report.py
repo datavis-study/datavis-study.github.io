@@ -337,16 +337,53 @@ def generate_report(
 			df["group_friendly"] = df["group"].map(lambda g: title_map.get(str(g).lower(), str(g).title()))
 		else:
 			df["group_friendly"] = "Unknown"
-		# Known question columns and labels
+		# Known question columns – neutral, comparable dimension labels
 		label_map = {
-			"notice-comments": "Notice comments",
-			"experience-with-badges": "Experience with badges",
-			"ease-of-understanding": "Ease of understanding",
-			"considered-in-notes": "Considered in notes",
-			"most-least-useful": "Most/least useful",
-			"overall-help": "Overall help",
-			"final-comments": "Final comments",
+			# Noticing / attention
+			"notice-comments": "Noticing and interactivity",
+			"noticed-in-task": "Noticing and interactivity",
+			# How annotations influenced reading
+			"experience-with-badges": "How annotations influenced reading",
+			# Shared dimensions (same ids in both groups)
+			"ease-of-understanding": "Ease of understanding annotations",
+			"considered-in-notes": "Use of annotations in the main task",
+			"most-least-useful": "Most and least useful annotations",
+			"overall-help": "Overall helpfulness of annotations",
+			# Catch‑all comments
+			"final-comments": "Additional comments",
 		}
+
+		# Load the exact question prompts from the study config so we can
+		# reuse the real wording in the report (rather than short labels).
+		badge_prompts: dict[str, str] = {}
+		foot_prompts: dict[str, str] = {}
+		try:
+			this_file = pathlib.Path(__file__).resolve()
+			project_root = this_file.parents[2].parent  # .../study
+			cfg_path = project_root / "public" / "mind-the-badge" / "config.json"
+			if cfg_path.exists():
+				with cfg_path.open("r", encoding="utf-8") as f:
+					cfg = json.load(f)
+				components = cfg.get("components", {})
+				for comp_id, target_dict in [
+					("badge-questionaire-1", badge_prompts),
+					("footnote-questionaire-1", foot_prompts),
+				]:
+					comp = components.get(comp_id)
+					if not isinstance(comp, dict):
+						continue
+					for item in comp.get("response", []):
+						if not isinstance(item, dict):
+							continue
+						if item.get("type") != "longText":
+							continue
+						qid = str(item.get("id", "")).strip()
+						prompt = str(item.get("prompt", "")).strip()
+						if qid and prompt:
+							target_dict[qid] = prompt
+		except Exception:
+			pass
+
 		questions: list[dict] = []
 		for col, label in label_map.items():
 			if col not in df.columns:
@@ -356,7 +393,7 @@ def generate_report(
 			sub = sub[sub[col] != ""]
 			if sub.empty:
 				continue
-			responses = []
+			responses: list[dict] = []
 			for _, row in sub.iterrows():
 				pid = str(row.get("participantId", ""))
 				rid = participant_id_map.get(pid)
@@ -368,12 +405,21 @@ def generate_report(
 						"text": row[col],
 					}
 				)
+			# Split responses by group for separate Footnotes/Badges drawers
+			foot_responses = [r for r in responses if r.get("group") == "Footnotes"]
+			badge_responses = [r for r in responses if r.get("group") == "Badges"]
+			other_responses = [r for r in responses if r.get("group") not in {"Footnotes", "Badges"}]
 			questions.append(
 				{
 					"key": col,
 					"label": label,
 					"count": len(responses),
 					"responses": responses,
+					"responses_footnotes": foot_responses,
+					"responses_badges": badge_responses,
+					"responses_other": other_responses,
+					"prompt_footnotes": foot_prompts.get(col),
+					"prompt_badges": badge_prompts.get(col),
 				}
 			)
 		return questions
