@@ -42,12 +42,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_foot and co2_foot|length > 0 %}
 <details>
-<summary><strong>Participants Responses: CO₂ Emissions (<span style="color:#007bff;">Footnotes</span>)</strong> — {{ co2_foot|length }} notes</summary>
+<summary><strong>Participants Responses: CO₂ Emissions 🔹 Footnotes</strong> — {{ co2_foot|length }} notes</summary>
 
 {% for r in co2_foot %}
-{# Footnote group: blue ID + label #}
-- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
-<br />
+🔹 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -55,12 +53,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_badge and co2_badge|length > 0 %}
 <details>
-<summary><strong>Participants Responses: CO₂ Emissions (<span style="color:#28a745;">Badges</span>)</strong> — {{ co2_badge|length }} notes</summary>
+<summary><strong>Participants Responses: CO₂ Emissions 🔸 Badges</strong> — {{ co2_badge|length }} notes</summary>
 
 {% for r in co2_badge %}
-{# Badge group: green ID + label #}
-- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
-<br />
+🔸 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -82,12 +78,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_foot and gw_foot|length > 0 %}
 <details>
-<summary><strong>Participants Responses: Global Warming Projection (<span style="color:#007bff;">Footnotes</span>)</strong> — {{ gw_foot|length }} notes</summary>
+<summary><strong>Participants Responses: Global Warming Projection 🔹 Footnotes</strong> — {{ gw_foot|length }} notes</summary>
 
 {% for r in gw_foot %}
-{# Footnote group: blue ID + label #}
-- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
-<br />
+🔹 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -95,12 +89,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_badge and gw_badge|length > 0 %}
 <details>
-<summary><strong>Participants Responses: Global Warming Projection (<span style="color:#28a745;">Badges</span>)</strong> — {{ gw_badge|length }} notes</summary>
+<summary><strong>Participants Responses: Global Warming Projection 🔸 Badges</strong> — {{ gw_badge|length }} notes</summary>
 
 {% for r in gw_badge %}
-{# Badge group: green ID + label #}
-- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
-<br />
+🔸 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -144,41 +136,58 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if open_questions and open_questions|length > 0 %}
 {% for q in open_questions %}
+{% if q.key == "noticed-in-task" %}
+<details>
+<summary><strong>{{ q.label }}</strong> — {{ q.count }} responses</summary>
+
+| Group | Responses |
+|---|---|
+{% set ns = q.noticed_summary %}
+{% if ns is iterable %}
+{% for row in ns %}
+| {{ row.group }} | {% for v in row.options %}{{ v.label }} ({{ v.count }}){% if not loop.last %}, {% endif %}{% endfor %} |
+{% endfor %}
+{% else %}
+| Footnotes | — |
+| Badges | — |
+{% endif %}
+
+</details>
+{% else %}
 <details>
 <summary><strong>{{ q.label }}</strong> — {{ q.count }} responses</summary>
 
 {% if q.prompt_footnotes %}
-<span style="color:#007bff;"><strong>Footnotes question</strong></span><br />
-<em>{{ q.prompt_footnotes }}</em>
-<br />
+**Footnotes question:** {{ q.prompt_footnotes }}
+
 {% endif %}
 
 {% if q.responses_footnotes and q.responses_footnotes|length > 0 %}
 {% for r in q.responses_footnotes %}
-- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
+🔹 **{{ r.participant }}**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
 {% if q.prompt_badges %}
-<span style="color:#28a745;"><strong>Badges question</strong></span><br />
-<em>{{ q.prompt_badges }}</em>
-<br />
+**Badges question:** {{ q.prompt_badges }}
+
 {% endif %}
 
 {% if q.responses_badges and q.responses_badges|length > 0 %}
 {% for r in q.responses_badges %}
-- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
+🔸 **{{ r.participant }}**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
 {% if q.responses_other and q.responses_other|length > 0 %}
-<span><strong>Other / Unknown group</strong></span><br />
+**[Other / Unknown group]**  
 {% for r in q.responses_other %}
-- <strong>{{ r.participant }}</strong> ({{ r.group }}): {{ r.text }}
+• **{{ r.participant }}** ({{ r.group }}): {{ r.text }}
 {% endfor %}
 {% endif %}
 
 </details>
+{% endif %}
 {% endfor %}
 {% else %}
 > No open-ended responses available.

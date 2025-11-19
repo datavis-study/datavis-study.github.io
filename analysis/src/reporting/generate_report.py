@@ -409,6 +409,27 @@ def generate_report(
 			foot_responses = [r for r in responses if r.get("group") == "Footnotes"]
 			badge_responses = [r for r in responses if r.get("group") == "Badges"]
 			other_responses = [r for r in responses if r.get("group") not in {"Footnotes", "Badges"}]
+
+			noticed_summary: list[dict] | None = None
+			if col == "noticed-in-task":
+				# Compact per-group summary table for the noticing question.
+				# Fixed option order so that missing categories still appear with (0).
+				option_order = [
+					"Yes",
+					"No",
+					"Sometimes (I did not consistently check)",
+					"Not sure",
+				]
+				groups_order = ["Footnotes", "Badges"]
+				noticed_summary = []
+				for g in groups_order:
+					row_vals: list[dict] = []
+					for opt in option_order:
+						cnt = sum(1 for r in responses if r.get("group") == g and str(r.get("text", "")).strip() == opt)
+						row_vals.append({"label": opt, "count": cnt})
+					# Use key "options" instead of "values" to avoid clashing with dict.values()
+					noticed_summary.append({"group": g, "options": row_vals})
+
 			questions.append(
 				{
 					"key": col,
@@ -420,6 +441,7 @@ def generate_report(
 					"responses_other": other_responses,
 					"prompt_footnotes": foot_prompts.get(col),
 					"prompt_badges": badge_prompts.get(col),
+					"noticed_summary": noticed_summary,
 				}
 			)
 		return questions
