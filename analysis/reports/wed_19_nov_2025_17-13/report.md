@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Wed, 19 Nov 2025 17:04 CET`
+Generated at: `Wed, 19 Nov 2025 17:13 CET`
 
 **Demographics**
 
@@ -33,10 +33,10 @@ Generated at: `Wed, 19 Nov 2025 17:04 CET`
 </details>
 
 
-# Main Tasks
+# Main tasks
 Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
 
-## Stimuli 1: CO₂ Emissions
+### Stimuli 1: CO₂ Emissions
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
@@ -79,7 +79,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 
 
-## Stimuli 2: Global Warming Projection
+### Stimuli 2: Global Warming Projection
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
@@ -123,22 +123,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 
 
-### Badge interactions – hover metrics
+# Post main tasks questionaire
 
 
-| Hover counts | Total hover time | Duration stats |
-| :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
-| <img src="figures/f_badge_hover_facets.png" alt="Hover counts per stimulus" width="320" /> | <img src="figures/f_badge_hover_time_facets.png" alt="Hover times per stimulus" width="320" /> | <img src="figures/f_badge_hover_duration_stats_facets.png" alt="Hover duration statistics per stimulus" width="320" /> |
-
-
-### Badge interactions – clicks and drawer metrics
-
-| Click counts | Total open time | Mean open duration |
-| :----------: | :-------------: | :----------------: |
-| <img src="figures/f_badge_click_facets.png" alt="Click counts per stimulus" width="320" /> | <img src="figures/f_badge_drawer_time_facets.png" alt="Total drawer open time per stimulus" width="320" /> | <img src="figures/f_badge_drawer_duration_stats_facets.png" alt="Mean drawer open time per stimulus" width="320" /> |
-
-### Likert questions
-
+**Likert scale questions per dimension**
 - **Saliency** Footnotes/Badges were easy to spot.
 - **Clutter** Footnotes/Badges cluttered or distracted from the visualization.
 - **Interpretability** Footnotes/Badges were clear and easy to interpret.
@@ -146,12 +134,22 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 - **Trust** Footnotes/Badges increased my trust in the information and methodology.
 - **Standardization** Footnotes/Badges like these should be widely used alongside visualizations.
 
-### Likert – distributions and medians
+### Distributions and medians
 
 
 
-<img src="figures/f_likert_distribution_median.png" alt="Likert distributions and medians" width="640" />
+<img src="figures/f_likert_distribution_median.png" alt="Likert distributions and medians" width="720" />
 <sub>Per-dimension Likert score distributions (circle size = number of ratings), faceted by group (Footnotes vs Badges). Scale: 1 = Strongly Disagree, 5 = Strongly Agree.</sub>
+
+
+### Mean bar chart
+
+
+
+
+
+<img src="figures/f_likert_mean_bars_altair.png" alt="Likert mean bars" width="720" />
+<sub>Small multiples in a single row: one facet per dimension with two bars (Footnotes = grey, Badges = blue). Values shown above bars.</sub>
 
 
 ### Open-ended answers
@@ -296,15 +294,19 @@ I was happy to have access to this additionnal data in such a way that didn't ov
 
 
 
-### Likert – mean bar chart
+### Badge interactions – hover metrics
 
 
+| Hover counts | Total hover time | Duration stats |
+| :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
+| <img src="figures/f_badge_hover_facets.png" alt="Hover counts per stimulus" width="320" /> | <img src="figures/f_badge_hover_time_facets.png" alt="Hover times per stimulus" width="320" /> | <img src="figures/f_badge_hover_duration_stats_facets.png" alt="Hover duration statistics per stimulus" width="320" /> |
 
 
-
-<img src="figures/f_likert_mean_bars_altair.png" alt="Likert mean bars" width="640" />
-<sub>Small multiples in a single row: one facet per dimension with two bars (Footnotes = grey, Badges = blue). Values shown above bars.</sub>
-
+### Badge interactions – clicks and drawer metrics 
+_Note: No data, because nobody clicked on any badge_
+| Click counts | Total open time | Mean open duration |
+| :----------: | :-------------: | :----------------: |
+| <img src="figures/f_badge_click_facets.png" alt="Click counts per stimulus" width="320" /> | <img src="figures/f_badge_drawer_time_facets.png" alt="Total drawer open time per stimulus" width="320" /> | <img src="figures/f_badge_drawer_duration_stats_facets.png" alt="Mean drawer open time per stimulus" width="320" /> |
 
 ### Participant ID mapping
 
@@ -323,9 +325,3 @@ I was happy to have access to this additionnal data in such a way that didn't ov
 
 
 </details>
-
-
-### Time spent per component
-
-
-> No participant time-per-component data available.
