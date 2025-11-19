@@ -42,10 +42,12 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_foot and co2_foot|length > 0 %}
 <details>
-<summary><strong>Stimulus notes – CO₂ Emissions (Footnotes)</strong> — {{ co2_foot|length }} notes</summary>
+<summary><strong>Participants Responses: CO₂ Emissions (Footnotes)</strong> — {{ co2_foot|length }} notes</summary>
 
 {% for r in co2_foot %}
-- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{# Footnote group: blue ID + label #}
+- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
+<br />
 {% endfor %}
 
 </details>
@@ -53,10 +55,12 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_badge and co2_badge|length > 0 %}
 <details>
-<summary><strong>Stimulus notes – CO₂ Emissions (Badges)</strong> — {{ co2_badge|length }} notes</summary>
+<summary><strong>Participants Responses: CO₂ Emissions (Badges)</strong> — {{ co2_badge|length }} notes</summary>
 
 {% for r in co2_badge %}
-- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{# Badge group: green ID + label #}
+- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
+<br />
 {% endfor %}
 
 </details>
@@ -78,10 +82,12 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_foot and gw_foot|length > 0 %}
 <details>
-<summary><strong>Stimulus notes – Global Warming Projection (Footnotes)</strong> — {{ gw_foot|length }} notes</summary>
+<summary><strong>Participants Responses: Global Warming Projection (Footnotes)</strong> — {{ gw_foot|length }} notes</summary>
 
 {% for r in gw_foot %}
-- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{# Footnote group: blue ID + label #}
+- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
+<br />
 {% endfor %}
 
 </details>
@@ -89,10 +95,12 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_badge and gw_badge|length > 0 %}
 <details>
-<summary><strong>Stimulus notes – Global Warming Projection (Badges)</strong> — {{ gw_badge|length }} notes</summary>
+<summary><strong>Participants Responses: Global Warming Projection (Badges)</strong> — {{ gw_badge|length }} notes</summary>
 
 {% for r in gw_badge %}
-- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{# Badge group: green ID + label #}
+- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }}, {{ r.words }} words)</span>: {{ r.text }}
+<br />
 {% endfor %}
 
 </details>
@@ -140,7 +148,14 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><strong>{{ q.label }}</strong> — {{ q.count }} responses</summary>
 
 {% for r in q.responses %}
-- <em>{{ r.group }}</em> ({{ r.participant }}): {{ r.text }}
+{% if r.group == "Footnotes" %}
+- <span style="color:#007bff;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
+{% elif r.group == "Badges" %}
+- <span style="color:#28a745;"><strong>{{ r.participant }}</strong> ({{ r.group }})</span>: {{ r.text }}
+{% else %}
+- <strong>{{ r.participant }}</strong> ({{ r.group }}): {{ r.text }}
+{% endif %}
+<br />
 {% endfor %}
 
 </details>
