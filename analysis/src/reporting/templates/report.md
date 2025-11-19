@@ -117,7 +117,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% set ldist = (figures | selectattr('name','equalto','f_likert_distribution_median') | list | first) %}
 {% if ldist %}
 <img src="{{ ldist.path }}" alt="Likert distributions and medians" width="720" />
-<sub>Per-dimension Likert score distributions (circle size = number of ratings), faceted by group (Footnotes vs Badges). Scale: 1 = Strongly Disagree, 5 = Strongly Agree.</sub>
+<sub>1 = Strongly Disagree, 5 = Strongly Agree</sub>
 {% else %}
 > Distributions/medians figure is not available.
 {% endif %}
