@@ -107,8 +107,9 @@ def plot_likert_mean_bars_altair(
 		range=["#6C757D", "#2A7DE1"],
 	)
 
-	# Keep width 100; set height to 100
-	base = alt.Chart(stats).properties(width=100, height=100)
+	# Compact small-multiple panels: keep bar thickness, reduce panel height so
+	# there is almost no vertical gap between the Footnotes/Badges bars.
+	base = alt.Chart(stats).properties(width=100, height=40)
 
 	# Horizontal bars; thicker with subtle rounding; numeric axis on x (0–5)
 	bars = base.mark_bar(size=14, cornerRadiusTopRight=1, cornerRadiusBottomRight=1).encode(
@@ -116,7 +117,11 @@ def plot_likert_mean_bars_altair(
 			"mean_score:Q",
 			title="",
 			scale=alt.Scale(domain=(0, 5)),
-			axis=alt.Axis(values=[0, 1, 2, 3, 4, 5], grid=True, gridColor="#DDDDDD"),
+			axis=alt.Axis(
+				values=[1, 2, 3, 4, 5],
+				grid=True,
+				gridColor="#DDDDDD",
+			),
 		),
 		y=alt.Y(
 			"group:N",

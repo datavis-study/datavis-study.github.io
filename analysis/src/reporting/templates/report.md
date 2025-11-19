@@ -104,26 +104,23 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 
 **Likert scale questions per dimension**
-- **Saliency** Footnotes/Badges were easy to spot. (1/Strongly Disagree - 5/Strongly Agree)
-- **Clutter** Footnotes/Badges cluttered or distracted from the visualization.
-- **Interpretability** Footnotes/Badges were clear and easy to interpret.
-- **Usefulness** Information in the Footnotes/Badges was useful for understanding the visualization.
-- **Trust** Footnotes/Badges increased my trust in the information and methodology.
-- **Standardization** Footnotes/Badges like these should be widely used alongside visualizations.
+- **Saliency** Footnotes/Badges were easy to spot. (1 = Strongly Disagree, 5 = Strongly Agree)
+- **Clutter** Footnotes/Badges cluttered or distracted from the visualization. (1 = Strongly Disagree, 5 = Strongly Agree)
+- **Interpretability** Footnotes/Badges were clear and easy to interpret. (1 = Strongly Disagree, 5 = Strongly Agree)
+- **Usefulness** Information in the Footnotes/Badges was useful for understanding the visualization. (1 = Strongly Disagree, 5 = Strongly Agree)
+- **Trust** Footnotes/Badges increased my trust in the information and methodology. (1 = Strongly Disagree, 5 = Strongly Agree)
+- **Standardization** Footnotes/Badges like these should be widely used alongside visualizations. (1 = Strongly Disagree, 5 = Strongly Agree)
 
 
-### Distributions and medians
-
+**Distributions and medians**
 {% set ldist = (figures | selectattr('name','equalto','f_likert_distribution_median') | list | first) %}
 {% if ldist %}
 <img src="{{ ldist.path }}" alt="Likert distributions and medians" width="720" />
-<sub>1 = Strongly Disagree, 5 = Strongly Agree</sub>
 {% else %}
 > Distributions/medians figure is not available.
 {% endif %}
 
-### Mean bar chart
-
+**Mean bar charts**
 {# Prefer Altair version if available; otherwise fall back to matplotlib version #}
 {% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars_altair') | list | first) %}
 {% if not lbar %}
