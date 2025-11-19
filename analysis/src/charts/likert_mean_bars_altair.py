@@ -110,18 +110,19 @@ def plot_likert_mean_bars_altair(
 	# Keep width 100; set height to 100
 	base = alt.Chart(stats).properties(width=100, height=100)
 
-	# Rounded bars; round top corners for vertical bars
-	bars = base.mark_bar(cornerRadiusTopLeft=4, cornerRadiusTopRight=4).encode(
+	# Horizontal bars; thicker with subtle rounding; numeric axis on x (0–5)
+	bars = base.mark_bar(size=14, cornerRadiusTopRight=1, cornerRadiusBottomRight=1).encode(
 		x=alt.X(
-			"group:N",
-			sort=["Footnotes", "Badges"],
-			axis=alt.Axis(title=None, labelAngle=0),
-		),
-		y=alt.Y(
 			"mean_score:Q",
 			title="",
-			scale=alt.Scale(domain=(0.8, 5.2)),
-			axis=alt.Axis(values=[1, 2, 3, 4, 5]),
+			scale=alt.Scale(domain=(0, 5)),
+			axis=alt.Axis(values=[0, 1, 2, 3, 4, 5], grid=True, gridColor="#DDDDDD"),
+		),
+		y=alt.Y(
+			"group:N",
+			sort=["Footnotes", "Badges"],
+			axis=alt.Axis(title=None),
+			scale=alt.Scale(paddingInner=0.0, paddingOuter=0.0),
 		),
 		color=alt.Color(
 			"group:N",
@@ -131,10 +132,10 @@ def plot_likert_mean_bars_altair(
 		),
 	)
 
-	# Value labels above bars
-	labels = base.mark_text(dy=-3, size=7).encode(
-		x=alt.X("group:N", sort=["Footnotes", "Badges"]),
-		y="mean_score:Q",
+	# Value labels at the end of each bar
+	labels = base.mark_text(dx=4, size=7, align="left", baseline="middle").encode(
+		x="mean_score:Q",
+		y=alt.Y("group:N", sort=["Footnotes", "Badges"]),
 		text=alt.Text("mean_score:Q", format=".2f"),
 		color=alt.value("black"),
 	)
@@ -142,7 +143,7 @@ def plot_likert_mean_bars_altair(
 	# Facet into a single row: one facet per dimension
 	chart = (bars + labels).facet(
 		column=alt.Column("dimension_label:N", sort=label_order, header=alt.Header(title=None))
-	).resolve_scale(y="shared").configure_axisX(grid=False).configure_axisY(grid=True)
+	).resolve_scale(x="shared", y="shared").configure_axisX(grid=True).configure_axisY(grid=False)
 
 	path = figure_path(out_dir, "f_likert_mean_bars_altair")
 	path.parent.mkdir(parents=True, exist_ok=True)
