@@ -40,10 +40,17 @@ ensure_venv() {
 	if [ ! -x "$VENV_PY" ]; then
 		echo "Creating virtual environment at ${VENV_DIR}..."
 		"$PYTHON_BIN" -m venv "$VENV_DIR"
-		"$VENV_PY" -m pip install --upgrade pip setuptools wheel
+		# Quiet upgrade of core packaging tools
+		if ! "$VENV_PY" -m pip install --upgrade pip setuptools wheel --disable-pip-version-check --no-input -q >/dev/null 2>&1; then
+			# Fallback to verbose output if the quiet install fails
+			"$VENV_PY" -m pip install --upgrade pip setuptools wheel --disable-pip-version-check --no-input
+		fi
 	fi
 	# (Re)install this package in editable mode to pick up any new dependencies
-	"$VENV_PY" -m pip install -e "${SCRIPT_DIR}"
+	if ! "$VENV_PY" -m pip install -e "${SCRIPT_DIR}" --disable-pip-version-check --no-input -q >/dev/null 2>&1; then
+		# Fallback to verbose output if the quiet install fails
+		"$VENV_PY" -m pip install -e "${SCRIPT_DIR}" --disable-pip-version-check --no-input
+	fi
 }
 
 has_arg() {

@@ -74,16 +74,6 @@ Generated at: `{{ generated_at }}`
 - **Trust** Footnotes/Badges increased my trust in the information and methodology.
 - **Standardization** Footnotes/Badges like these should be widely used alongside visualizations.
 
-### Likert beehive (compact)
-
-{% set lb = (figures | selectattr('name','equalto','f_likert_beehive') | list | first) %}
-{% if lb %}
-![Likert beehive]({{ lb.path }})
-<sub>Scale: 1 = {{ likert_scale_left or 'Strongly disagree' }}, 5 = {{ likert_scale_right or 'Strongly agree' }}. Facets show Group: Footnotes and Group: Badges. Colors indicate dimensions.</sub>
-{% else %}
-> Likert beehive figure is not available (missing `questionnaire_likert_scores.csv`).
-{% endif %}
-
 ### Likert – distributions and medians
 
 {% set ldist = (figures | selectattr('name','equalto','f_likert_distribution_median') | list | first) %}
@@ -120,7 +110,7 @@ Generated at: `{{ generated_at }}`
 {% endif %}
 {% if lbar %}
 ![Likert mean bars]({{ lbar.path }})
-<sub>Grouped vertical bars: Footnotes (grey) and Badges (blue) per dimension. Values shown above bars.</sub>
+<sub>Small multiples in a single row: one facet per dimension with two bars (Footnotes = grey, Badges = blue). Values shown above bars.</sub>
 {% else %}
 > Mean bars figure is not available.
 {% endif %}

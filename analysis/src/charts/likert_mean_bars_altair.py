@@ -14,10 +14,11 @@ def plot_likert_mean_bars_altair(
 	out_dir: Path,
 ) -> Optional[Path]:
 	"""
-	Altair implementation of the grouped Likert mean bar chart.
+	Altair implementation of the Likert mean bar chart.
 
-	Two vertical bars per dimension (Footnotes vs Badges), shared y-scale [1, 5],
-	value labels above bars, and only vertical grid lines (on the score axis).
+	Refactored to small multiples in a single row:
+	one facet per dimension with two bars (Footnotes vs Badges),
+	shared y-scale [1, 5], and value labels above bars.
 	"""
 	if likert is None or "group" not in likert.columns:
 		return None
@@ -100,65 +101,46 @@ def plot_likert_mean_bars_altair(
 	if not groups:
 		return None
 
-	# Grouped bars: color/offset by group
+	# Small-multiple bars per dimension: color by group
 	color_scale = alt.Scale(
 		domain=["Footnotes", "Badges"],
 		range=["#6C757D", "#2A7DE1"],
 	)
 
-	base = alt.Chart(stats)
+	base = alt.Chart(stats).properties(width=140, height=220)
 
-	bars = (
-		base.mark_bar()
-		.encode(
-			x=alt.X(
-				"dimension_label:N",
-				sort=label_order,
-				axis=alt.Axis(title=None, labelAngle=20),
-			),
-			xOffset="group:N",
-			y=alt.Y(
-				"mean_score:Q",
-				title="",
-				scale=alt.Scale(domain=(0.8, 5.2)),
-				axis=alt.Axis(
-					values=[1, 2, 3, 4, 5],
-					grid=False,
-				),
-			),
-			color=alt.Color(
-				"group:N",
-				title=None,
-				scale=color_scale,
-				legend=alt.Legend(orient="right"),
-			),
-		)
+	bars = base.mark_bar().encode(
+		x=alt.X(
+			"group:N",
+			sort=["Footnotes", "Badges"],
+			axis=alt.Axis(title=None, labelAngle=0),
+		),
+		y=alt.Y(
+			"mean_score:Q",
+			title="",
+			scale=alt.Scale(domain=(0.8, 5.2)),
+			axis=alt.Axis(values=[1, 2, 3, 4, 5]),
+		),
+		color=alt.Color(
+			"group:N",
+			title=None,
+			scale=color_scale,
+			legend=alt.Legend(orient="right"),
+		),
 	)
 
 	# Value labels above bars
-	labels = (
-		base.mark_text(dy=-4, size=9)
-		.encode(
-			x=alt.X(
-				"dimension_label:N",
-				sort=label_order,
-			),
-			xOffset="group:N",
-			y="mean_score:Q",
-			text=alt.Text("mean_score:Q", format=".2f"),
-			color=alt.value("black"),
-		)
+	labels = base.mark_text(dy=-4, size=9).encode(
+		x=alt.X("group:N", sort=["Footnotes", "Badges"]),
+		y="mean_score:Q",
+		text=alt.Text("mean_score:Q", format=".2f"),
+		color=alt.value("black"),
 	)
 
-	chart = (
-		(bars + labels)
-		.properties(
-			width=max(320, 60 * len(label_order)),
-			height=260,
-		)
-		.configure_axisX(grid=True)  # only vertical grid lines
-		.configure_axisY(grid=False)
-	)
+	# Facet into a single row: one facet per dimension
+	chart = (bars + labels).facet(
+		column=alt.Column("dimension_label:N", sort=label_order, header=alt.Header(title=None))
+	).resolve_scale(y="shared").configure_axisX(grid=False).configure_axisY(grid=True)
 
 	path = figure_path(out_dir, "f_likert_mean_bars_altair")
 	path.parent.mkdir(parents=True, exist_ok=True)

@@ -13,7 +13,6 @@ from . import text_clean
 from charts.group_counts import plot_group_counts
 from charts.time_distributions import plot_time_distributions
 from charts.total_time_hist import plot_total_time_hist
-from charts.likert_beehive import plot_likert_beehive
 from charts.likert_diverging_bars import plot_likert_diverging_bars
 from charts.likert_dot_ci import plot_likert_dot_ci
 from charts.likert_mean_bars import plot_likert_mean_bars
@@ -108,9 +107,6 @@ def generate_report(
 			figure_paths.append(p_total_hist)
 	# Likert beehive plot
 	if data.likert_scores is not None:
-		p_likert_bee = plot_likert_beehive(data.likert_scores, root_out)
-		if p_likert_bee is not None:
-			figure_paths.append(p_likert_bee)
 		# Likert diverging bars (100% stacked)
 		# p_likert_div = plot_likert_diverging_bars(data.likert_scores, root_out)
 		# if p_likert_div is not None:

@@ -93,6 +93,10 @@ def plot_likert_distribution_median(
 			values=[1, 2, 3, 4, 5],
 			format="d",  # show 1,2,3,4,5 (no decimals)
 			title=None,
+			offset=10,
+			labelPadding=8,
+			labelFontSize=12,
+			tickSize=4,
 		),
 	)
 	y_enc = alt.Y(
@@ -108,7 +112,8 @@ def plot_likert_distribution_median(
 		),
 	)
 
-	base = alt.Chart(values)
+	# Slightly increase cell size to create more horizontal spacing between x ticks
+	base = alt.Chart(values).properties(width=360, height=220)
 
 	# Circle layer: distributions, size by count
 	circles = (
