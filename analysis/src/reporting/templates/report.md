@@ -1,6 +1,7 @@
+# Mind the Badge - Study Data Report
 Generated at: `{{ generated_at }}`
 
-### Demographics
+**Demographics**
 
 {% if demographics_summary and demographics_summary|length > 0 %}
 | Category | Top values |
@@ -25,17 +26,14 @@ Generated at: `{{ generated_at }}`
 </details>
 {% endif %}
 
-### Stimuli – Footnotes vs Badges
+# Main Tasks
+Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
 
-Below are the exact stimuli used in the study for each condition (Footnotes vs Badges).
-
-#### CO₂ Emissions
+## Stimuli 1: CO₂ Emissions
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
 | <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="420" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="420" /> |
-| <sub>CO₂ emissions projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
-
 {% if notes_items and notes_items|length > 0 %}
 {% set co2_notes = (notes_items | selectattr('stimulus','equalto','CO₂ Emissions') | list | first) %}
 {% if co2_notes %}
@@ -66,12 +64,11 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 {% endif %}
 {% endif %}
 
-#### Global Warming Projection
+## Stimuli 2: Global Warming Projection
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
 | <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="420" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="420" /> |
-| <sub>Global warming projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
 
 {% if notes_items and notes_items|length > 0 %}
 {% set gw_notes = (notes_items | selectattr('stimulus','equalto','Global Warming Projection') | list | first) %}
@@ -109,17 +106,15 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 | {% if badge_hover_chart %}Hover counts{% endif %} | {% if badge_hover_time_chart %}Total hover time{% endif %} | {% if badge_hover_duration_chart %}Duration stats{% endif %} |
 | :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
 | {% if badge_hover_chart %}<img src="{{ badge_hover_chart.path }}" alt="Hover counts per stimulus" width="320" />{% endif %} | {% if badge_hover_time_chart %}<img src="{{ badge_hover_time_chart.path }}" alt="Hover times per stimulus" width="320" />{% endif %} | {% if badge_hover_duration_chart %}<img src="{{ badge_hover_duration_chart.path }}" alt="Hover duration statistics per stimulus" width="320" />{% endif %} |
-| {% if badge_hover_chart %}<sub>Total hover counts per stimulus (shared y-axis labelled “Hover Count”).</sub>{% endif %} | {% if badge_hover_time_chart %}<sub>Total hover time per badge (bars), facetted by stimulus.</sub>{% endif %} | {% if badge_hover_duration_chart %}<sub>Mean hover time per badge (bars), facetted by stimulus.</sub>{% endif %} |
 {% else %}
 > No badge interaction metrics available (missing `stimulus_badge_metrics.csv` or hover counts).
 {% endif %}
 
-### Badge interactions – clicks and drawer metrics
-
+### Badge interactions – clicks and drawer metrics 
+_Note: No data, because nobody clicked on any badge_
 | Click counts | Total open time | Mean open duration |
 | :----------: | :-------------: | :----------------: |
 | {% if badge_click_chart %}<img src="{{ badge_click_chart.path }}" alt="Click counts per stimulus" width="320" />{% endif %} | {% if badge_drawer_time_chart %}<img src="{{ badge_drawer_time_chart.path }}" alt="Total drawer open time per stimulus" width="320" />{% endif %} | {% if badge_drawer_duration_chart %}<img src="{{ badge_drawer_duration_chart.path }}" alt="Mean drawer open time per stimulus" width="320" />{% endif %} |
-| <sub>{% if badge_click_chart %}Total click counts per badge, facetted by stimulus.{% endif %}</sub> | <sub>{% if badge_drawer_time_chart %}Total time drawers were open per badge (s).{% endif %}</sub> | <sub>{% if badge_drawer_duration_chart %}Average open time per open event (s) per badge.{% endif %}</sub> |
 
 ### Likert questions
 

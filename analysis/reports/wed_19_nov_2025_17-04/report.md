@@ -1,6 +1,7 @@
-Generated at: `Wed, 19 Nov 2025 16:55 CET`
+# Mind the Badge - Study Data Report
+Generated at: `Wed, 19 Nov 2025 17:04 CET`
 
-### Demographics
+**Demographics**
 
 
 | Category | Top values |
@@ -32,17 +33,14 @@ Generated at: `Wed, 19 Nov 2025 16:55 CET`
 </details>
 
 
-### Stimuli – Footnotes vs Badges
+# Main Tasks
+Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
 
-Below are the exact stimuli used in the study for each condition (Footnotes vs Badges).
-
-#### CO₂ Emissions
+## Stimuli 1: CO₂ Emissions
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
 | <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="420" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="420" /> |
-| <sub>CO₂ emissions projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
-
 
 
 
@@ -81,12 +79,11 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 
 
 
-#### Global Warming Projection
+## Stimuli 2: Global Warming Projection
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
 | <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="420" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="420" /> |
-| <sub>Global warming projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
 
 
 
@@ -132,7 +129,6 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 | Hover counts | Total hover time | Duration stats |
 | :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
 | <img src="figures/f_badge_hover_facets.png" alt="Hover counts per stimulus" width="320" /> | <img src="figures/f_badge_hover_time_facets.png" alt="Hover times per stimulus" width="320" /> | <img src="figures/f_badge_hover_duration_stats_facets.png" alt="Hover duration statistics per stimulus" width="320" /> |
-| <sub>Total hover counts per stimulus (shared y-axis labelled “Hover Count”).</sub> | <sub>Total hover time per badge (bars), facetted by stimulus.</sub> | <sub>Mean hover time per badge (bars), facetted by stimulus.</sub> |
 
 
 ### Badge interactions – clicks and drawer metrics
@@ -140,7 +136,6 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 | Click counts | Total open time | Mean open duration |
 | :----------: | :-------------: | :----------------: |
 | <img src="figures/f_badge_click_facets.png" alt="Click counts per stimulus" width="320" /> | <img src="figures/f_badge_drawer_time_facets.png" alt="Total drawer open time per stimulus" width="320" /> | <img src="figures/f_badge_drawer_duration_stats_facets.png" alt="Mean drawer open time per stimulus" width="320" /> |
-| <sub>Total click counts per badge, facetted by stimulus.</sub> | <sub>Total time drawers were open per badge (s).</sub> | <sub>Average open time per open event (s) per badge.</sub> |
 
 ### Likert questions
 
@@ -333,23 +328,4 @@ I was happy to have access to this additionnal data in such a way that didn't ov
 ### Time spent per component
 
 
-<details>
-<summary><strong>Show participant time per component (Footnotes vs Badges)</strong></summary>
-
-| Participant | Group | Global warming figure (s) | CO₂ emissions figure (s) | Total session (s) |
-|---|---|---|---|---|
-
-| echo | Footnotes | 396.594 | 494.618 | 2506.2529999999997 |
-
-| foxtrot | Footnotes | 705.509 | 575.727 | 1717.018 |
-
-| delta | Badges | 904.777 | 2316.331 | 14540.869 |
-
-| charlie | Footnotes | 710.944 | 689.012 | 2911.516 |
-
-| bravo | Badges | 311.733 | 137.847 | 828.484 |
-
-| alpha | Badges | 239002.358 | 212.345 | 241297.583 |
-
-
-</details>
+> No participant time-per-component data available.
