@@ -107,7 +107,7 @@ def plot_badge_hover_counts(
 				axis=alt.Axis(title=None),
 			),
 			y=alt.Y("hoverCount:Q", title="Hover Count", scale=alt.Scale(domain=(0, 10))),
-		)
+		).properties(width=100, height=100)
 	)
 	chart = (
 		base.facet(column=alt.Column("stimulus_label:N", title=None))
@@ -205,7 +205,7 @@ def plot_badge_hover_times(
 			"totalHoverTime:Q",
 			title="Total hover time (s)",
 		),
-	)
+	).properties(width=100, height=100)
 
 	chart = (
 		bars.facet(column=alt.Column("stimulus_label:N", title=None))
@@ -303,7 +303,7 @@ def plot_badge_hover_duration_stats(
 			axis=alt.Axis(title=None),
 		),
 		y=alt.Y("meanHoverTime:Q", title="Mean hover time (s)"),
-	)
+	).properties(width=100, height=100)
 
 	chart = bars.facet(column=alt.Column("stimulus_label:N", title=None)).resolve_scale(
 		x="independent", y="shared"

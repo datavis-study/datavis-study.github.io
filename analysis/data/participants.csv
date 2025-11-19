@@ -1,7 +1,7 @@
 readableId,participantGroup,participantId,participantIndex,completed,ip,country,language,userAgent,resolutionWidth,resolutionHeight
-echo,footnote-group,9a73ce92-5365-411d-a81d-1db38ff72f4e,10,True,194.199.1.36,France,en-GB,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0.1 Safari/605.1.15",1512,982
-foxtrot,footnote-group,2b69160b-3a1e-4ad9-9039-f3758f20b569,11,True,194.199.1.36,France,fr,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0,1536,960
-delta,badge-group,37b66c79-da74-498e-9567-c79c5d7efd41,8,True,194.199.1.52,France,fr,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0,1920,1080
-charlie,footnote-group,4798e3dc-4588-41b2-8e23-9f43d695c79e,7,True,193.50.110.58,France,en,Mozilla/5.0 (X11; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0,1920,1080
-bravo,badge-group,0b6ad5e0-be61-411e-980c-c773e0482c66,5,True,193.50.110.227,France,fr-FR,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",1920,1080
-alpha,badge-group,6a223d18-f389-4312-a78f-38ca9bbbd583,2,True,154.16.27.125,United States,en-US,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",1440,900
+echo,footnote-group,9a73ce92-5365-411d-a81d-1db38ff72f4e,10,True,194.199.1.36,FR,en-GB,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0.1 Safari/605.1.15",1512,982
+foxtrot,footnote-group,2b69160b-3a1e-4ad9-9039-f3758f20b569,11,True,194.199.1.36,FR,fr,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0,1536,960
+delta,badge-group,37b66c79-da74-498e-9567-c79c5d7efd41,8,True,194.199.1.52,FR,fr,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0,1920,1080
+charlie,footnote-group,4798e3dc-4588-41b2-8e23-9f43d695c79e,7,True,193.50.110.58,FR,en,Mozilla/5.0 (X11; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0,1920,1080
+bravo,badge-group,0b6ad5e0-be61-411e-980c-c773e0482c66,5,True,193.50.110.227,FR,fr-FR,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",1920,1080
+alpha,badge-group,6a223d18-f389-4312-a78f-38ca9bbbd583,2,True,154.16.27.125,US,en-US,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36",1440,900

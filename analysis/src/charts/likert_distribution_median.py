@@ -112,8 +112,8 @@ def plot_likert_distribution_median(
 		),
 	)
 
-	# Slightly increase cell size to create more horizontal spacing between x ticks
-	base = alt.Chart(values).properties(width=360, height=220)
+	# Make each facet smaller to reduce overall footprint
+	base = alt.Chart(values).properties(width=300, height=180)
 
 	# Circle layer: distributions, size by count
 	circles = (

@@ -63,7 +63,7 @@ def plot_badge_drawer_open_counts(badge_metrics: pd.DataFrame, out_dir: Path) ->
 		.encode(
 			x=alt.X("badgeLabelDisplay:N", sort=badge_order, axis=alt.Axis(title=None)),
 			y=alt.Y("drawerOpenCount:Q", title="Drawer open count", scale=alt.Scale(domain=(0, 10))),
-		)
+		).properties(width=100, height=100)
 		.facet(column=alt.Column("stimulus_label:N", title=None))
 		.resolve_scale(x="independent", y="shared")
 		.configure_axis(labelFontSize=11, titleFontSize=12)
@@ -98,7 +98,7 @@ def plot_badge_drawer_open_times(badge_metrics: pd.DataFrame, out_dir: Path) -> 
 		.encode(
 			x=alt.X("badgeLabelDisplay:N", sort=badge_order, axis=alt.Axis(title=None)),
 			y=alt.Y("totalDrawerOpenTime:Q", title="Total drawer open time (s)"),
-		)
+		).properties(width=100, height=100)
 		.facet(column=alt.Column("stimulus_label:N", title=None))
 		.resolve_scale(x="independent", y="shared")
 		.configure_axis(labelFontSize=11, titleFontSize=12)
@@ -138,7 +138,7 @@ def plot_badge_drawer_duration_stats(badge_metrics: pd.DataFrame, out_dir: Path)
 		.encode(
 			x=alt.X("badgeLabelDisplay:N", sort=badge_order, axis=alt.Axis(title=None)),
 			y=alt.Y("meanDrawerOpenTime:Q", title="Mean drawer open time (s)"),
-		)
+		).properties(width=100, height=100)
 		.facet(column=alt.Column("stimulus_label:N", title=None))
 		.resolve_scale(x="independent", y="shared")
 		.configure_axis(labelFontSize=11, titleFontSize=12)

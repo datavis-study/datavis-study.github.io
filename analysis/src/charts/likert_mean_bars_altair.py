@@ -107,9 +107,11 @@ def plot_likert_mean_bars_altair(
 		range=["#6C757D", "#2A7DE1"],
 	)
 
-	base = alt.Chart(stats).properties(width=140, height=220)
+	# Keep width 100; set height to 100
+	base = alt.Chart(stats).properties(width=100, height=100)
 
-	bars = base.mark_bar().encode(
+	# Rounded bars; round top corners for vertical bars
+	bars = base.mark_bar(cornerRadiusTopLeft=4, cornerRadiusTopRight=4).encode(
 		x=alt.X(
 			"group:N",
 			sort=["Footnotes", "Badges"],
@@ -130,7 +132,7 @@ def plot_likert_mean_bars_altair(
 	)
 
 	# Value labels above bars
-	labels = base.mark_text(dy=-4, size=9).encode(
+	labels = base.mark_text(dy=-3, size=7).encode(
 		x=alt.X("group:N", sort=["Footnotes", "Badges"]),
 		y="mean_score:Q",
 		text=alt.Text("mean_score:Q", format=".2f"),

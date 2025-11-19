@@ -30,7 +30,7 @@ Generated at: `{{ generated_at }}`
 {% if badge_hover_chart or badge_hover_time_chart or badge_hover_duration_chart %}
 | {% if badge_hover_chart %}Hover counts{% endif %} | {% if badge_hover_time_chart %}Total hover time{% endif %} | {% if badge_hover_duration_chart %}Duration stats{% endif %} |
 | :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
-| {% if badge_hover_chart %}![Hover counts per stimulus]({{ badge_hover_chart.path }}){% endif %} | {% if badge_hover_time_chart %}![Hover times per stimulus]({{ badge_hover_time_chart.path }}){% endif %} | {% if badge_hover_duration_chart %}![Hover duration statistics per stimulus]({{ badge_hover_duration_chart.path }}){% endif %} |
+| {% if badge_hover_chart %}<img src="{{ badge_hover_chart.path }}" alt="Hover counts per stimulus" width="320" />{% endif %} | {% if badge_hover_time_chart %}<img src="{{ badge_hover_time_chart.path }}" alt="Hover times per stimulus" width="320" />{% endif %} | {% if badge_hover_duration_chart %}<img src="{{ badge_hover_duration_chart.path }}" alt="Hover duration statistics per stimulus" width="320" />{% endif %} |
 | {% if badge_hover_chart %}<sub>Total hover counts per stimulus (shared y-axis labelled “Hover Count”).</sub>{% endif %} | {% if badge_hover_time_chart %}<sub>Total hover time per badge (bars), facetted by stimulus.</sub>{% endif %} | {% if badge_hover_duration_chart %}<sub>Mean hover time per badge (bars), facetted by stimulus.</sub>{% endif %} |
 {% else %}
 > No badge interaction metrics available (missing `stimulus_badge_metrics.csv` or hover counts).
@@ -40,7 +40,7 @@ Generated at: `{{ generated_at }}`
 
 | Click counts | Total open time | Mean open duration |
 | :----------: | :-------------: | :----------------: |
-| {% if badge_click_chart %}![Click counts per stimulus]({{ badge_click_chart.path }}){% endif %} | {% if badge_drawer_time_chart %}![Total drawer open time per stimulus]({{ badge_drawer_time_chart.path }}){% endif %} | {% if badge_drawer_duration_chart %}![Mean drawer open time per stimulus]({{ badge_drawer_duration_chart.path }}){% endif %} |
+| {% if badge_click_chart %}<img src="{{ badge_click_chart.path }}" alt="Click counts per stimulus" width="320" />{% endif %} | {% if badge_drawer_time_chart %}<img src="{{ badge_drawer_time_chart.path }}" alt="Total drawer open time per stimulus" width="320" />{% endif %} | {% if badge_drawer_duration_chart %}<img src="{{ badge_drawer_duration_chart.path }}" alt="Mean drawer open time per stimulus" width="320" />{% endif %} |
 | <sub>{% if badge_click_chart %}Total click counts per badge, facetted by stimulus.{% endif %}</sub> | <sub>{% if badge_drawer_time_chart %}Total time drawers were open per badge (s).{% endif %}</sub> | <sub>{% if badge_drawer_duration_chart %}Average open time per open event (s) per badge.{% endif %}</sub> |
 
 ### Stimulus notes
@@ -78,7 +78,7 @@ Generated at: `{{ generated_at }}`
 
 {% set ldist = (figures | selectattr('name','equalto','f_likert_distribution_median') | list | first) %}
 {% if ldist %}
-![Likert distributions and medians]({{ ldist.path }})
+<img src="{{ ldist.path }}" alt="Likert distributions and medians" width="640" />
 <sub>Per-dimension Likert score distributions (circle size = number of ratings), faceted by group (Footnotes vs Badges). Scale: 1 = Strongly Disagree, 5 = Strongly Agree.</sub>
 {% else %}
 > Distributions/medians figure is not available.
@@ -109,7 +109,7 @@ Generated at: `{{ generated_at }}`
   {% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars') | list | first) %}
 {% endif %}
 {% if lbar %}
-![Likert mean bars]({{ lbar.path }})
+<img src="{{ lbar.path }}" alt="Likert mean bars" width="640" />
 <sub>Small multiples in a single row: one facet per dimension with two bars (Footnotes = grey, Badges = blue). Values shown above bars.</sub>
 {% else %}
 > Mean bars figure is not available.

@@ -57,7 +57,7 @@ def plot_badge_click_counts(badge_metrics: pd.DataFrame, out_dir: Path) -> Optio
 		.encode(
 			x=alt.X("badgeLabelDisplay:N", sort=badge_order, axis=alt.Axis(title=None)),
 			y=alt.Y("clickCount:Q", title="Click Count", scale=alt.Scale(domain=(0, 10))),
-		)
+		).properties(width=100, height=100)
 	)
 	chart = (
 		base.facet(column=alt.Column("stimulus_label:N", title=None))
