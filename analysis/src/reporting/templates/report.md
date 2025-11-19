@@ -25,6 +25,24 @@ Generated at: `{{ generated_at }}`
 </details>
 {% endif %}
 
+### Stimuli – Footnotes vs Badges
+
+Below are the exact stimuli used in the study for each condition (Footnotes vs Badges).
+
+#### CO₂ Emissions
+
+| Footnotes condition | Badges condition |
+| :-----------------: | :--------------: |
+| <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="320" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="320" /> |
+| <sub>CO₂ emissions projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
+
+#### Global Warming Projection
+
+| Footnotes condition | Badges condition |
+| :-----------------: | :--------------: |
+| <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="320" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="320" /> |
+| <sub>Global warming projection with traditional footnote annotations.</sub> | <sub>Same visualization with Mind-the-Badge overlays (badge condition).</sub> |
+
 ### Badge interactions – hover metrics
 
 {% if badge_hover_chart or badge_hover_time_chart or badge_hover_duration_chart %}

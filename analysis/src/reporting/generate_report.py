@@ -92,6 +92,29 @@ def generate_report(
 
 	figure_paths: List[pathlib.Path] = []
 
+	# Copy static stimulus assets (actual study stimuli) into the figures folder
+	# so they can be referenced from the Markdown template via "figures/...".
+	try:
+		import shutil
+
+		assets_dir = pathlib.Path(__file__).with_name("assets")
+		stimulus_assets = [
+			"stimuli_co2_emissions_badges.jpg",
+			"stimuli_co2_emissions_footnotes.jpg",
+			"stimuli_global_warming_badges.jpg",
+			"stimuli_global_warming_footnotes.jpg",
+		]
+		for fname in stimulus_assets:
+			src = assets_dir / fname
+			if not src.exists():
+				continue
+			dst = fig_out / fname
+			if not dst.exists():
+				shutil.copy(src, dst)
+	except Exception:
+		# If anything goes wrong here, we still want the rest of the report to render.
+		pass
+
 	p1 = plot_group_counts(data.participants, root_out)
 	if p1 is not None:
 		figure_paths.append(p1)
