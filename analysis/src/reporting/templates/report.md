@@ -39,15 +39,30 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 {% if notes_items and notes_items|length > 0 %}
 {% set co2_notes = (notes_items | selectattr('stimulus','equalto','CO₂ Emissions') | list | first) %}
 {% if co2_notes %}
+{% set co2_foot = co2_notes.responses | selectattr('group','equalto','Footnotes') | list %}
+{% set co2_badge = co2_notes.responses | selectattr('group','equalto','Badges') | list %}
 
+{% if co2_foot and co2_foot|length > 0 %}
 <details>
-<summary><strong>Stimulus notes – CO₂ Emissions</strong> — {{ co2_notes.count }} notes</summary>
+<summary><strong>Stimulus notes – CO₂ Emissions (Footnotes)</strong> — {{ co2_foot|length }} notes</summary>
 
-{% for r in co2_notes.responses %}
+{% for r in co2_foot %}
 - <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
+{% endif %}
+
+{% if co2_badge and co2_badge|length > 0 %}
+<details>
+<summary><strong>Stimulus notes – CO₂ Emissions (Badges)</strong> — {{ co2_badge|length }} notes</summary>
+
+{% for r in co2_badge %}
+- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{% endfor %}
+
+</details>
+{% endif %}
 {% endif %}
 {% endif %}
 
@@ -61,15 +76,30 @@ Below are the exact stimuli used in the study for each condition (Footnotes vs B
 {% if notes_items and notes_items|length > 0 %}
 {% set gw_notes = (notes_items | selectattr('stimulus','equalto','Global Warming Projection') | list | first) %}
 {% if gw_notes %}
+{% set gw_foot = gw_notes.responses | selectattr('group','equalto','Footnotes') | list %}
+{% set gw_badge = gw_notes.responses | selectattr('group','equalto','Badges') | list %}
 
+{% if gw_foot and gw_foot|length > 0 %}
 <details>
-<summary><strong>Stimulus notes – Global Warming Projection</strong> — {{ gw_notes.count }} notes</summary>
+<summary><strong>Stimulus notes – Global Warming Projection (Footnotes)</strong> — {{ gw_foot|length }} notes</summary>
 
-{% for r in gw_notes.responses %}
+{% for r in gw_foot %}
 - <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
+{% endif %}
+
+{% if gw_badge and gw_badge|length > 0 %}
+<details>
+<summary><strong>Stimulus notes – Global Warming Projection (Badges)</strong> — {{ gw_badge|length }} notes</summary>
+
+{% for r in gw_badge %}
+- <em>{{ r.group }}</em> ({{ r.participant }}, {{ r.words }} words): {{ r.text }}
+{% endfor %}
+
+</details>
+{% endif %}
 {% endif %}
 {% endif %}
 
