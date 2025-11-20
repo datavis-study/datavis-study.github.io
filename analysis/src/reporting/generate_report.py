@@ -454,22 +454,40 @@ def generate_report(
 			badge_responses = [r for r in responses if r.get("group") == "Badges"]
 			other_responses = [r for r in responses if r.get("group") not in {"Footnotes", "Badges"}]
 
+			# If a question was effectively only answered by a single group, make that explicit
+			# in the label so the report reflects the study design (e.g., Badges-only follow‑ups).
+			groups_with_responses = {r.get("group") for r in responses if r.get("group")}
+			if len(groups_with_responses) == 1:
+				only_group = next(iter(groups_with_responses))
+				label = f"{label} ({only_group} group only)"
+
 			noticed_summary: list[dict] | None = None
 			if col == "noticed-in-task":
 				# Compact per-group summary table for the noticing question.
-				# Fixed option order so that missing categories still appear with (0).
+				# Fixed option order so that missing categories still appear with (0),
+				# but skip groups that were never actually asked this question.
 				option_order = [
 					"Yes",
 					"No",
 					"Sometimes (I did not consistently check)",
 					"Not sure",
 				]
-				groups_order = ["Footnotes", "Badges"]
+				groups_present = {r.get("group") for r in responses}
+				default_order = ["Footnotes", "Badges"]
+				groups_order = [g for g in default_order if g in groups_present]
+				if not groups_order:
+					# Fallback: use whatever groups we saw, or the defaults if empty.
+					groups_order = sorted(groups_present) if groups_present else default_order
+
 				noticed_summary = []
 				for g in groups_order:
 					row_vals: list[dict] = []
 					for opt in option_order:
-						cnt = sum(1 for r in responses if r.get("group") == g and str(r.get("text", "")).strip() == opt)
+						cnt = sum(
+							1
+							for r in responses
+							if r.get("group") == g and str(r.get("text", "")).strip() == opt
+						)
 						row_vals.append({"label": opt, "count": cnt})
 					# Use key "options" instead of "values" to avoid clashing with dict.values()
 					noticed_summary.append({"group": g, "options": row_vals})

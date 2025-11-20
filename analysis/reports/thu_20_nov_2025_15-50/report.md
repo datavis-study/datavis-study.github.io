@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Thu, 20 Nov 2025 15:37 CET`
+Generated at: `Thu, 20 Nov 2025 15:50 CET`
 
 **Demographics**
 
@@ -155,27 +155,19 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 **Noticing and interactivity** — 6 responses
 
-| Group | Responses |
-|---|---|
-| Footnotes |Yes (3), No (0), Sometimes (I did not consistently check) (0), Not sure (0) |
-| Badges |Yes (2), No (0), Sometimes (I did not consistently check) (1), Not sure (0) |
+| Group | Yes | No | Sometimes | Not sure |
+|---|---|---|---|---|
+| Footnotes | 3 | 0 | 0 | 0 |
+| Badges | 2 | 0 | 1 | 0 |
 
 
 
 
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Noticing and interactivity</strong> — 6 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Noticing and interactivity (Badges group only)</strong> — 2 responses</span></summary>
 
 
-
-
-
-- **echo** (1 words): nan
-
-- **foxtrot** (1 words): nan
-
-- **charlie** (1 words): nan
 
 
 
@@ -189,8 +181,6 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 - **delta** (22 words): I spontaneously hovered over the warning badges much more often than the informative ones.
 My attention was more focused on the data.
 
-- **bravo** (1 words): nan
-
 - **alpha** (9 words): I only noticed the interactivity until the last chart.
 
 
@@ -200,17 +190,9 @@ My attention was more focused on the data.
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>How annotations influenced reading</strong> — 6 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>How annotations influenced reading (Badges group only)</strong> — 3 responses</span></summary>
 
 
-
-
-
-- **echo** (1 words): nan
-
-- **foxtrot** (1 words): nan
-
-- **charlie** (1 words): nan
 
 
 
@@ -309,17 +291,9 @@ For the second example, a lot of context information should have been present ah
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Most and least useful annotations</strong> — 6 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Most and least useful annotations (Badges group only)</strong> — 3 responses</span></summary>
 
 
-
-
-
-- **echo** (1 words): nan
-
-- **foxtrot** (1 words): nan
-
-- **charlie** (1 words): nan
 
 
 
@@ -381,7 +355,7 @@ I was happy to have access to this additionnal data in such a way that didn't ov
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Additional comments</strong> — 6 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Additional comments (Footnotes group only)</strong> — 2 responses</span></summary>
 
 
 
@@ -389,21 +363,11 @@ I was happy to have access to this additionnal data in such a way that didn't ov
 
 - **echo** (23 words): generally speaking I believe more contextual information is better than nothing at all that's why I gave a 4 for the last question.
 
-- **foxtrot** (1 words): nan
-
 - **charlie** (39 words): Footnotes are only useful to their destined audience. If the goal is to help people from any background understand it, it should hold all the disambiguation needed to even comprehend the footnote itself. Otherwise it just excludes the profanes.
 
 
 
 
-
-
-
-- **delta** (1 words): nan
-
-- **bravo** (1 words): nan
-
-- **alpha** (1 words): nan
 
 
 

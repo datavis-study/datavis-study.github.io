@@ -138,16 +138,16 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% for q in open_questions if q.key == "noticed-in-task" %}
 **{{ q.label }}** — {{ q.count }} responses
 
-| Group | Responses |
-|---|---|
+| Group | Yes | No | Sometimes | Not sure |
+|---|---|---|---|---|
 {%- set ns = q.noticed_summary %}
 {%- if ns is iterable %}
 {%- for row in ns %}
-| {{ row.group }} | {%- for v in row.options -%}{{ v.label }} ({{ v.count }}){%- if not loop.last %}, {% endif %}{%- endfor %} |
+| {{ row.group }} | {{ row.options[0].count }} | {{ row.options[1].count }} | {{ row.options[2].count }} | {{ row.options[3].count }} |
 {%- endfor %}
 {%- else %}
-| Footnotes | — |
-| Badges | — |
+| Footnotes | 0 | 0 | 0 | 0 |
+| Badges | 0 | 0 | 0 | 0 |
 {%- endif %}
 
 {% endfor %}

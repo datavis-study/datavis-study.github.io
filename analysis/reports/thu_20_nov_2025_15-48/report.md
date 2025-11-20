@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Thu, 20 Nov 2025 15:35 CET`
+Generated at: `Thu, 20 Nov 2025 15:48 CET`
 
 **Demographics**
 
@@ -155,16 +155,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 **Noticing and interactivity** — 6 responses
 
-| Group | Responses |
-|---|---|
-
-
-
-| Footnotes |Yes (3), No (0), Sometimes (I did not consistently check) (0), Not sure (0) |
-
-| Badges |Yes (2), No (0), Sometimes (I did not consistently check) (1), Not sure (0) |
-
-
+| Group | Yes | No | Sometimes | Not sure |
+|---|---|---|---|---|
+| Footnotes | 3 | 0 | 0 | 0 |
+| Badges | 2 | 0 | 1 | 0 |
 
 
 
