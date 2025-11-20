@@ -326,6 +326,46 @@ def generate_report(
 						"group": str(row.get("group", "")) if "group" in dfp.columns else "",
 					})
 
+	# Attach per-component timing to the participant mapping records (converted to minutes)
+	time_columns_map: list[dict] = []
+	if data.time_per_component is not None and "participantId" in data.time_per_component.columns:
+		time_df = data.time_per_component
+		# Use all component columns (seconds) except identifiers; this includes questionnaires, intros, etc.
+		time_components_for_map = [c for c in time_df.columns if c not in {"participantId", "group"}]
+		time_lookup: dict[str, pd.Series] = {
+			str(row["participantId"]): row for _, row in time_df.iterrows()
+			if not pd.isna(row.get("participantId"))
+		}
+
+		for rec in participant_map_records:
+			row = time_lookup.get(rec["participantId"])
+			if row is None:
+				# Still include keys so the template can render empty cells safely
+				for col in time_components_for_map:
+					rec[col] = ""
+				continue
+			for col in time_components_for_map:
+				val = row.get(col)
+				if pd.isna(val):
+					rec[col] = ""
+				else:
+					# Convert seconds → minutes and round to 1 decimal place for display
+					try:
+						minutes = float(val) / 60.0
+						rec[col] = round(minutes, 1)
+					except Exception:
+						rec[col] = val
+
+		def _pretty_time_label(col: str) -> str:
+			# Strip raw "(s)" suffix if present and annotate as minutes for clarity
+			if col.endswith(" (s)"):
+				base = col[:-4]
+			else:
+				base = col
+			return f"{base} (min)"
+
+		time_columns_map = [{"key": col, "label": _pretty_time_label(col)} for col in time_components_for_map]
+
 	# Build open-ended responses summary for collapsible display
 	def _build_open_questions_context() -> list[dict]:
 		if data.open_responses is None or data.open_responses.empty:
@@ -507,6 +547,7 @@ def generate_report(
 	context["notes_items"] = notes_items
 	context["notes_summary"] = notes_summary
 	context["participant_id_map"] = participant_map_records
+	context["time_columns_map"] = time_columns_map
 
 	# Build the template text: use provided --md paths as the full template,
 	# otherwise fall back to the default packaged template.

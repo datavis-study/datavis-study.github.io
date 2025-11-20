@@ -15,7 +15,7 @@ Generated at: `{{ generated_at }}`
 
 {% if demographics_rows and demographics_rows|length > 0 %}
 <details>
-<summary><strong>Show full demographics table</strong></summary>
+<summary><span style="font-size: 1.1em;"><strong>Show full demographics table</strong></span></summary>
 
 | Participant | Gender | Age | Education | Field | Reads charts | Creates charts | Color vision |
 |---|---|---|---|---|---|---|---|
@@ -42,10 +42,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_foot and co2_foot|length > 0 %}
 <details>
-<summary><strong>Participants Responses: CO₂ Emissions 🔹 Footnotes</strong> — {{ co2_foot|length }} notes</summary>
+<summary><span style="font-size: 1.1em;"><strong>Participants Responses: CO₂ Emissions 🟦 Footnotes</strong> — {{ co2_foot|length }} notes</strong></span></summary>
 
 {% for r in co2_foot %}
-🔹 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟦 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -53,10 +53,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if co2_badge and co2_badge|length > 0 %}
 <details>
-<summary><strong>Participants Responses: CO₂ Emissions 🔸 Badges</strong> — {{ co2_badge|length }} notes</summary>
+<summary><span style="font-size: 1.1em;"><strong>Participants Responses: CO₂ Emissions 🟩 Badges</strong> — {{ co2_badge|length }} notes</span></summary>
 
 {% for r in co2_badge %}
-🔸 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟩 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -78,10 +78,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_foot and gw_foot|length > 0 %}
 <details>
-<summary><strong>Participants Responses: Global Warming Projection 🔹 Footnotes</strong> — {{ gw_foot|length }} notes</summary>
+<summary><span style="font-size: 1.1em;"><strong>Participants Responses: Global Warming Projection 🟦 Footnotes</strong> — {{ gw_foot|length }} notes</span></summary>
 
 {% for r in gw_foot %}
-🔹 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟦 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -89,10 +89,10 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if gw_badge and gw_badge|length > 0 %}
 <details>
-<summary><strong>Participants Responses: Global Warming Projection 🔸 Badges</strong> — {{ gw_badge|length }} notes</summary>
+<summary><span style="font-size: 1.1em;"><strong>Participants Responses: Global Warming Projection 🟩 Badges</strong> — {{ gw_badge|length }} notes</span></summary>
 
 {% for r in gw_badge %}
-🔸 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟩 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -100,8 +100,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% endif %}
 {% endif %}
 
-# Post main tasks questionaire
-
+# Post-questionaire
 
 **Likert scale questions per dimension**
 - **Saliency** Footnotes/Badges were easy to spot. (1 = Strongly Disagree, 5 = Strongly Agree)
@@ -138,7 +137,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% for q in open_questions %}
 {% if q.key == "noticed-in-task" %}
 <details>
-<summary><strong>{{ q.label }}</strong> — {{ q.count }} responses</summary>
+<summary><span style="font-size: 1.1em;"><strong>{{ q.label }}</strong> — {{ q.count }} responses</strong></span></summary>
 
 | Group | Responses |
 |---|---|
@@ -155,7 +154,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 </details>
 {% else %}
 <details>
-<summary><strong>{{ q.label }}</strong> — {{ q.count }} responses</summary>
+<summary><span style="font-size: 1.1em;"><strong>{{ q.label }}</strong> — {{ q.count }} responses</span></summary>
 
 {% if q.prompt_footnotes %}
 **Footnotes question:** {{ q.prompt_footnotes }}
@@ -164,7 +163,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if q.responses_footnotes and q.responses_footnotes|length > 0 %}
 {% for r in q.responses_footnotes %}
-🔹 **{{ r.participant }}**: {{ r.text }}
+🟦 **{{ r.participant }}**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
@@ -175,7 +174,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if q.responses_badges and q.responses_badges|length > 0 %}
 {% for r in q.responses_badges %}
-🔸 **{{ r.participant }}**: {{ r.text }}
+🟩 **{{ r.participant }}**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
@@ -204,21 +203,25 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% endif %}
 
 ### Badge interactions – clicks and drawer metrics 
+
 _Note: No data, because nobody clicked on any badge_
+
 | Click counts | Total open time | Mean open duration |
 | :----------: | :-------------: | :----------------: |
 | {% if badge_click_chart %}<img src="{{ badge_click_chart.path }}" alt="Click counts per stimulus" width="320" />{% endif %} | {% if badge_drawer_time_chart %}<img src="{{ badge_drawer_time_chart.path }}" alt="Total drawer open time per stimulus" width="320" />{% endif %} | {% if badge_drawer_duration_chart %}<img src="{{ badge_drawer_duration_chart.path }}" alt="Mean drawer open time per stimulus" width="320" />{% endif %} |
 
-### Participant ID mapping
+### Participant ID mapping and time per component
 
 {% if participant_id_map and participant_id_map|length > 0 %}
 <details>
-<summary><strong>Show participant ID mapping</strong></summary>
+<summary><span style="font-size: 1.1em;"><strong>Show participant ID mapping and time per component (minutes)</strong></span></summary>
 
-| Readable ID | Participant GUID | Group |
-|---|---|---|
+_Times per component are shown in minutes (rounded to 1 decimal)._
+
+| Readable ID | Participant GUID | Group{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %} | {{ col.label }}{% endfor %}{% endif %} |
+|---|---|---{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %}|---{% endfor %}{% endif %}|
 {% for m in participant_id_map -%}
-| {{ m.readableId }} | `{{ m.participantId }}` | {{ m.group }} |
+| {{ m.readableId }} | `{{ m.participantId }}` | {{ m.group }}{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %} | {{ m.get(col.key, "") }}{% endfor %}{% endif %} |
 {% endfor %}
 
 </details>
