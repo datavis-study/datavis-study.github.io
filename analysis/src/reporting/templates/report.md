@@ -134,59 +134,59 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 ### Open-ended answers
 
 {% if open_questions and open_questions|length > 0 %}
-{% for q in open_questions %}
-{% if q.key == "noticed-in-task" %}
-<details>
-<summary><span style="font-size: 1.1em;"><strong>{{ q.label }}</strong> — {{ q.count }} responses</strong></span></summary>
+{# First, show the noticing summary table (not collapsed) #}
+{% for q in open_questions if q.key == "noticed-in-task" %}
+**{{ q.label }}** — {{ q.count }} responses
 
 | Group | Responses |
 |---|---|
-{% set ns = q.noticed_summary %}
-{% if ns is iterable %}
-{% for row in ns %}
-| {{ row.group }} | {% for v in row.options %}{{ v.label }} ({{ v.count }}){% if not loop.last %}, {% endif %}{% endfor %} |
-{% endfor %}
-{% else %}
+{%- set ns = q.noticed_summary %}
+{%- if ns is iterable %}
+{%- for row in ns %}
+| {{ row.group }} | {%- for v in row.options -%}{{ v.label }} ({{ v.count }}){%- if not loop.last %}, {% endif %}{%- endfor %} |
+{%- endfor %}
+{%- else %}
 | Footnotes | — |
 | Badges | — |
-{% endif %}
+{%- endif %}
 
-</details>
-{% else %}
+{% endfor %}
+
+{# Then, show all other open-ended questions in collapsible sections #}
+{% for q in open_questions if q.key != "noticed-in-task" %}
 <details>
 <summary><span style="font-size: 1.1em;"><strong>{{ q.label }}</strong> — {{ q.count }} responses</span></summary>
 
 {% if q.prompt_footnotes %}
-**Footnotes question:** {{ q.prompt_footnotes }}
+**🟦 Footnotes question:** {{ q.prompt_footnotes }}
 
 {% endif %}
 
 {% if q.responses_footnotes and q.responses_footnotes|length > 0 %}
 {% for r in q.responses_footnotes %}
-🟦 **{{ r.participant }}**: {{ r.text }}
+- **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 {% endif %}
 
 {% if q.prompt_badges %}
-**Badges question:** {{ q.prompt_badges }}
+**🟩 Badges question:** {{ q.prompt_badges }}
 
 {% endif %}
 
 {% if q.responses_badges and q.responses_badges|length > 0 %}
 {% for r in q.responses_badges %}
-🟩 **{{ r.participant }}**: {{ r.text }}
+- **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 {% endif %}
 
 {% if q.responses_other and q.responses_other|length > 0 %}
 **[Other / Unknown group]**  
 {% for r in q.responses_other %}
-• **{{ r.participant }}** ({{ r.group }}): {{ r.text }}
+• **{{ r.participant }}** ({{ r.group }}, {{ r.words }} words): {{ r.text }}
 {% endfor %}
 {% endif %}
 
 </details>
-{% endif %}
 {% endfor %}
 {% else %}
 > No open-ended responses available.

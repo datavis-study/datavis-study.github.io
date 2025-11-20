@@ -438,11 +438,15 @@ def generate_report(
 				pid = str(row.get("participantId", ""))
 				rid = participant_id_map.get(pid)
 				disp_id = rid or (pid[:8] if pid else "")
+				text = str(row[col])
+				# Simple word count for display (aligned with stimulus notes)
+				words = len(text.split()) if text else 0
 				responses.append(
 					{
 						"participant": disp_id,
 						"group": row.get("group_friendly", "Unknown"),
-						"text": row[col],
+						"text": text,
+						"words": int(words),
 					}
 				)
 			# Split responses by group for separate Footnotes/Badges drawers
