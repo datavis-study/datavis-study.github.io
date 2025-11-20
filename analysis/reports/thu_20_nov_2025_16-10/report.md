@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Thu, 20 Nov 2025 15:50 CET`
+Generated at: `Thu, 20 Nov 2025 16:10 CET`
 
 **Demographics**
 
