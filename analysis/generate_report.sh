@@ -106,16 +106,15 @@ if ! has_arg "--md" "${ARGS[@]-}"; then
 	fi
 fi
 
-# Run full data preparation pipeline before report generation (unless skipped)
+# Run full data preparation + archiving pipeline before report generation (unless skipped)
 if [ "$RUN_DATAPREP" -eq 1 ]; then
-	echo "Exporting study data (participants, time, questionnaires, notes, badges)..."
-	"$PYTHON_BIN" -m data_prep.export_participant_meta >/dev/null
-	"$PYTHON_BIN" -m data_prep.export_time_spent >/dev/null
-	"$PYTHON_BIN" -m data_prep.export_questionnaire_likert >/dev/null
-	"$PYTHON_BIN" -m data_prep.export_questionnaire_open >/dev/null
-	"$PYTHON_BIN" -m data_prep.export_speech >/dev/null
-	"$PYTHON_BIN" -m data_prep.export_badge_stats >/dev/null
-	"$PYTHON_BIN" -m data_prep.export_demographics >/dev/null
+	echo "Exporting and archiving study data (participants, time, questionnaires, notes, badges)..."
+	# Reuse the consolidated export + archive pipeline in data_prep.run_all_exports
+	"$PYTHON_BIN" - << 'PY'
+from data_prep import run_all_exports
+
+run_all_exports()
+PY
 else
 	echo "Skipping data preparation (per --skip-dataprep); using existing CSV exports."
 fi
