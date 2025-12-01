@@ -22,9 +22,9 @@
     "withProgressBar": true,
     "autoDownloadStudy": false,
     "sidebar": true,
-    "studyEndMsg": "Thanks for participating—your time and insights really help us!",
-    "hideStudyBrowser": false
-
+      "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [https://app.prolific.com/submissions/complete?cc=CM90O1D9](https://app.prolific.com/submissions/complete?cc=CM90O1D9)",
+      "hideStudyBrowser": false,
+      "urlParticipantIdParam": "PROLIFIC_PID"
   },
   "importedLibraries": [
     "demographics",
