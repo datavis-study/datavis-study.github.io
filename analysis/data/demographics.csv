@@ -1,4 +1,9 @@
 participantId,readableId,gender,gender-other,age,education,education-other,field-of-study,field-of-study-other,chart-reading-frequency,chart-creation-frequency,color-vision,color-vision-type
+67d088ccec81d322ccede723,juliet,Woman,,45-54 years,"Doctorate (e.g., PhD, EdD)",,Data Science / Statistics,,Rarely (few times per year),Occasionally (few times per month),No,
+67f9613e658e3cf579bf5c25,india,Man,,55-64 years,Master's degree,,Computer Science / Information Technology,,Rarely (few times per year),Rarely (few times per year),No,
+66e4e41d14e1d19d88229740,hotel,Woman,,25-34 years,Bachelor's degree,,Healthcare / Medicine,,Rarely (few times per year),Occasionally (few times per month),No,
+676578e9b3ad38588f8808ba,golf,Woman,,45-54 years,Bachelor's degree,,Humanities,,Rarely (few times per year),Rarely (few times per year),No,
+662e66138060bf4a9db8c159,foxtrot,Man,,45-54 years,Bachelor's degree,,Engineering,,Regularly (few times per week),Never,No,
 60cf0d251a90eb823bc9b740,echo,Man,,25-34 years,Bachelor's degree,,other,Landscaping,Occasionally (few times per month),Rarely (few times per year),No,
 6369700320bc7dd22e733009,delta,Woman,,65+ years,Bachelor's degree,,"Social Sciences (Psychology, Sociology, etc.)",,Rarely (few times per year),Never,No,
 7b88dea0-0445-4362-b670-01be60f5195b,charlie,Man,,55-64 years,Master's degree,,Arts / Design,,Occasionally (few times per month),Occasionally (few times per month),No,

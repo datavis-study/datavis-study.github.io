@@ -5,6 +5,6 @@ co2-emissions,definition-co2-emissions__co2-emissions,Definition: CO₂ emission
 co2-emissions,missing-data__co2-emissions,Missing Data,3,0,5,3,5.837,3.793,0.066,52.206,43.705,1.157
 global-warming-projection,actual-time-offset__global-warming-projection,Actual Time Offset,3,1,5,3,5.054,3.881,0.05,10.236,3.911,3.128
 global-warming-projection,contains-predictions__global-warming-projection,Contains Predictions,3,0,3,3,5.084,4.265,0.307,7.906,3.826,1.544
-global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,4,0,7,4,6.285,2.354,0.053,22.171,13.568,0.955
-global-warming-projection,multiple-data-sources__global-warming-projection,Multiple Data Sources,5,1,13,5,10.467,2.476,0.017,78.572,29.081,5.386
-global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,3,0,9,3,3.01,0.881,0.016,7.257,4.698,1.19
+global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,4,0,9,4,7.388,2.354,0.021,22.171,13.568,0.955
+global-warming-projection,multiple-data-sources__global-warming-projection,Multiple Data Sources,5,1,14,5,40.338,29.871,0.017,78.572,29.081,5.386
+global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,3,0,10,3,3.575,0.881,0.016,7.257,4.698,1.19
