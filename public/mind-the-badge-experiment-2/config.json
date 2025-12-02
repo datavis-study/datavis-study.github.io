@@ -1,0 +1,135 @@
+{
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "Mind the Badge – Experiment 2",
+    "version": "0.0.1",
+    "authors": [
+      "Valentin Edelsbrunner"
+    ],
+    "date": "2025-12-02",
+    "description": "Complementary follow-up study for 'Mind the Badge'.",
+    "organizations": [
+      "inria",
+      "University of Bordeaux",
+      "University of Edinburgh",
+      "University of Oxford"
+    ]
+  },
+  "uiConfig": {
+    "contactEmail": "valentin.edelsbrunner@inria.fr",
+    "logoPath": "revisitAssets/badge-logo.png",
+    "withProgressBar": false,
+    "sidebar": false
+  },
+  "importedLibraries": [],
+  "baseComponents": {
+    "stimuliWithBadge": {
+      "description": "A static visualization with one to many interactive visualization badges placed bottom right",
+      "type": "react-component",
+      "path": "mind-the-badge/assets/StimuliWithBadge.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "sidebar",
+      "response": []
+    }
+  },
+  "components": {
+    "introduction": {
+      "type": "markdown",
+      "path": "mind-the-badge-experiment-2/assets/introduction.md",
+      "nextButtonText": "Continue",
+      "response": []
+    },
+    "consent": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/consent.md",
+      "nextButtonText": "Accept and Continue",
+      "response": []
+    },
+    "task-truncated-axis-badges": {
+      "baseComponent": "stimuliWithBadge",
+      "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
+      "parameters": {
+        "imageSrc": "mind-the-badge-experiment-2/assets/truncated-axis/grp-badges/source.png",
+        "detailedInformation": "/mind-the-badge-experiment-2/assets/truncated-axis/grp-badges/visualization-badges.json"
+      },
+      "response": [
+        {
+          "id": "truncated-axis-estimate",
+          "prompt": "Based on the chart, by what **percentage** is the revenue of Company B larger than Company A?",
+          "type": "shortText",
+          "required": true,
+          "placeholder": "Enter a percentage, e.g., 25"
+        }
+      ]
+    },
+    "task-truncated-axis-footnotes": {
+      "type": "image",
+      "path": "mind-the-badge-experiment-2/assets/truncated-axis/grp-footnotes/source.png",
+      "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
+      "instructionLocation": "sidebar",
+      "nextButtonLocation": "sidebar",
+      "response": [
+        {
+          "id": "truncated-axis-estimate",
+          "prompt": "Based on the chart, by what **percentage** is the revenue of Company B larger than Company A?",
+          "type": "shortText",
+          "required": true,
+          "placeholder": "Enter a percentage, e.g., 25"
+        }
+      ]
+    },
+    "task-truncated-axis-control": {
+      "type": "image",
+      "path": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
+      "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
+      "instructionLocation": "sidebar",
+      "nextButtonLocation": "sidebar",
+      "response": [
+        {
+          "id": "truncated-axis-estimate",
+          "prompt": "Based on the chart, by what **percentage** is the revenue of Company B larger than Company A?",
+          "type": "shortText",
+          "required": true,
+          "placeholder": "Enter a percentage, e.g., 25"
+        }
+      ]
+    }
+  },
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "introduction",
+      "consent",
+      {
+        "id": "group-assignment",
+        "order": "latinSquare",
+        "numSamples": 1,
+        "components": [
+          {
+            "id": "badge-group",
+            "order": "fixed",
+            "components": [
+              "task-truncated-axis-badges"
+            ]
+          },
+          {
+            "id": "footnote-group",
+            "order": "fixed",
+            "components": [
+              "task-truncated-axis-footnotes"
+            ]
+          },
+          {
+            "id": "control-group",
+            "order": "fixed",
+            "components": [
+              "task-truncated-axis-control"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+
