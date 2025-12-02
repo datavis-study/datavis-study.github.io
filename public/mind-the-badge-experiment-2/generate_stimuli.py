@@ -46,51 +46,35 @@ def make_truncated_axis_chart(
   return output_path
 
 
+def generate_all_stimuli() -> None:
+  """
+  Generate all image stimuli for Mind‑the‑Badge Experiment 2.
+
+  Currently:
+    - Truncated‑axis bar chart (control)
+    - Copies of the same chart for badge and footnote groups as placeholders
+  """
+  root = pathlib.Path(__file__).resolve().parent
+
+  # Base directories for this task
+  base = root / "assets" / "truncated-axis"
+  control_path = base / "source.png"
+  badges_path = base / "grp-badges" / "source.png"
+  footnotes_path = base / "grp-footnotes" / "source.png"
+
+  print("Generating truncated‑axis stimuli...")
+  make_truncated_axis_chart(control_path)
+  # For now, use the same chart as a starting point for all three variants.
+  make_truncated_axis_chart(badges_path)
+  make_truncated_axis_chart(footnotes_path)
+
+  print("  control :", control_path)
+  print("  badges  :", badges_path)
+  print("  footnotes:", footnotes_path)
+  print("Done.")
+
+
 if __name__ == "__main__":
-  import argparse
-
-  parser = argparse.ArgumentParser(
-    description="Generate a deceptive truncated‑axis bar chart stimulus.",
-  )
-  parser.add_argument(
-    "--out",
-    type=str,
-    default="public/mind-the-badge-experiment-2/assets/truncated-axis/source.png",
-    help="Output PNG path (default: public/.../truncated-axis/source.png)",
-  )
-  parser.add_argument(
-    "--a",
-    type=float,
-    default=96.0,
-    help="Value for Company A (default: 96.0)",
-  )
-  parser.add_argument(
-    "--b",
-    type=float,
-    default=100.0,
-    help="Value for Company B (default: 100.0)",
-  )
-  parser.add_argument(
-    "--ymin",
-    type=float,
-    default=90.0,
-    help="Y‑axis minimum (default: 90.0)",
-  )
-  parser.add_argument(
-    "--ymax",
-    type=float,
-    default=105.0,
-    help="Y‑axis maximum (default: 105.0)",
-  )
-
-  args = parser.parse_args()
-  out_path = make_truncated_axis_chart(
-    output_path=args.out,
-    company_a=args.a,
-    company_b=args.b,
-    ymin=args.ymin,
-    ymax=args.ymax,
-  )
-  print(f"Saved truncated‑axis stimulus to: {out_path}")
+  generate_all_stimuli()
 
 
