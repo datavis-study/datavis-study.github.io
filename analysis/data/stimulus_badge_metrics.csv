@@ -1,10 +1,10 @@
 stimulusId,badgeId,badgeLabel,clickCount,firstBadgeClickCount,hoverCount,drawerOpenCount,totalHoverTime,maxHoverTime,minHoverTime,totalDrawerOpenTime,maxDrawerOpenTime,minDrawerOpenTime
-co2-emissions,cc-by-licence__co2-emissions,CC BY Licence,2,0,9,2,2.877,1.113,0.016,18.708,16.827,1.881
-co2-emissions,data-source-disclosed__co2-emissions,Data Source Disclosed,2,2,5,2,8.044,5.237,0.016,28.742,26.112,2.63
-co2-emissions,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,2,0,10,2,3.027,1.754,0.016,34.132,33.083,1.049
+co2-emissions,cc-by-licence__co2-emissions,CC BY Licence,2,0,10,2,4.293,1.416,0.016,18.708,16.827,1.881
+co2-emissions,data-source-disclosed__co2-emissions,Data Source Disclosed,2,2,6,2,8.058,5.237,0.014,28.742,26.112,2.63
+co2-emissions,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,2,0,12,2,6.07,2.993,0.016,34.132,33.083,1.049
 co2-emissions,missing-data__co2-emissions,Missing Data,3,0,5,3,5.837,3.793,0.066,52.206,43.705,1.157
-global-warming-projection,actual-time-offset__global-warming-projection,Actual Time Offset,3,1,5,3,5.054,3.881,0.05,10.236,3.911,3.128
-global-warming-projection,contains-predictions__global-warming-projection,Contains Predictions,3,0,3,3,5.084,4.265,0.307,7.906,3.826,1.544
-global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,4,0,9,4,7.388,2.354,0.021,22.171,13.568,0.955
-global-warming-projection,multiple-data-sources__global-warming-projection,Multiple Data Sources,5,1,14,5,40.338,29.871,0.017,78.572,29.081,5.386
-global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,3,0,10,3,3.575,0.881,0.016,7.257,4.698,1.19
+global-warming-projection,actual-time-offset__global-warming-projection,Actual Time Offset,3,1,16,3,20.84,5.383,0.017,10.236,3.911,3.128
+global-warming-projection,contains-predictions__global-warming-projection,Contains Predictions,4,0,10,4,14.805,4.265,0.033,28.299,20.393,1.544
+global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,7,1,16,7,90.19,64.385,0.016,69.969,24.544,0.955
+global-warming-projection,multiple-data-sources__global-warming-projection,Multiple Data Sources,5,1,26,5,67.68,29.871,0.011,78.572,29.081,5.386
+global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,4,0,18,4,16.031,4.271,0.016,27.177,19.92,1.19
