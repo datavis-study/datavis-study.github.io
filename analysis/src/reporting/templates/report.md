@@ -45,7 +45,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: CO₂ Emissions 🟦 Footnotes</strong> — {{ co2_foot|length }} notes</strong></span></summary>
 
 {% for r in co2_foot %}
-🟦 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟦 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -81,7 +81,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: Global Warming Projection 🟦 Footnotes</strong> — {{ gw_foot|length }} notes</span></summary>
 
 {% for r in gw_foot %}
-🟦 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟦 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -92,7 +92,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: Global Warming Projection 🟩 Badges</strong> — {{ gw_badge|length }} notes</span></summary>
 
 {% for r in gw_badge %}
-🟩 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟩 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
@@ -164,7 +164,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if q.responses_footnotes and q.responses_footnotes|length > 0 %}
 {% for r in q.responses_footnotes %}
-- **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+- **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 {% endif %}
 
@@ -175,14 +175,14 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if q.responses_badges and q.responses_badges|length > 0 %}
 {% for r in q.responses_badges %}
-- **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+- **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 {% endif %}
 
 {% if q.responses_other and q.responses_other|length > 0 %}
 **[Other / Unknown group]**  
 {% for r in q.responses_other %}
-• **{{ r.participant }}** ({{ r.group }}, {{ r.words }} words): {{ r.text }}
+• **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.group }}, {{ r.words }} words): {{ r.text }}
 {% endfor %}
 {% endif %}
 
@@ -218,10 +218,10 @@ _Note: No data, because nobody clicked on any badge_
 
 _Times per component are shown in minutes (rounded to 1 decimal)._
 
-| Readable ID | Participant GUID | Group{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %} | {{ col.label }}{% endfor %}{% endif %} |
-|---|---|---{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %}|---{% endfor %}{% endif %}|
+| Readable ID | Participant GUID | Group | Prolific?{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %} | {{ col.label }}{% endfor %}{% endif %} |
+|---|---|---|---{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %}|---{% endfor %}{% endif %}|
 {% for m in participant_id_map -%}
-| {{ m.readableId }} | `{{ m.participantId }}` | {{ m.group }}{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %} | {{ m.get(col.key, "") }}{% endfor %}{% endif %} |
+| {{ m.readableId }} | `{{ m.participantId }}` | {{ m.group }} | {% if m.isProlific %}Yes{% else %}No{% endif %}{% if time_columns_map and time_columns_map|length > 0 %}{% for col in time_columns_map %} | {{ m.get(col.key, "") }}{% endfor %}{% endif %} |
 {% endfor %}
 
 </details>

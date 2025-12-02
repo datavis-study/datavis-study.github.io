@@ -123,6 +123,7 @@ def export_participant_meta(
         "readableId",
         "participantGroup",
         "participantId",
+        "isProlific",
         "participantIndex",
         "completed",
         "ip",
@@ -145,6 +146,13 @@ def export_participant_meta(
             participant_index = rec.get("participantIndex")
             completed = rec.get("completed", False)
 
+            # Mark whether this participant came via Prolific (True/False)
+            search_params = rec.get("searchParams", {})
+            if isinstance(search_params, dict):
+                is_prolific = bool(search_params.get("PROLIFIC_PID"))
+            else:
+                is_prolific = False
+
             metadata = rec.get("metadata", {}) if isinstance(rec.get("metadata"), dict) else {}
             language = metadata.get("language")
             user_agent = metadata.get("userAgent")
@@ -160,6 +168,7 @@ def export_participant_meta(
                     "readableId": id_map.get(participant_id),
                     "participantGroup": participant_group,
                     "participantId": participant_id,
+                    "isProlific": is_prolific,
                     "participantIndex": participant_index,
                     "completed": completed,
                     "ip": ip,
@@ -174,10 +183,29 @@ def export_participant_meta(
     # Also write a standalone mapping CSV for convenience
     map_path = dst_path.parent / "participant_id_map.csv"
     with open(map_path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["participantId", "readableId"])
+        writer = csv.DictWriter(f, fieldnames=["participantId", "readableId", "isProlific"])
         writer.writeheader()
+        # Build a lookup from participantId to a simple True/False flag for Prolific
+        is_prolific_by_pid: Dict[str, bool] = {}
+        for rec in participants:
+            pid = rec.get("participantId")
+            if not pid:
+                continue
+            search_params = rec.get("searchParams", {})
+            if isinstance(search_params, dict):
+                is_prolific = bool(search_params.get("PROLIFIC_PID"))
+            else:
+                is_prolific = False
+            is_prolific_by_pid[str(pid)] = is_prolific
+
         for pid, rid in id_map.items():
-            writer.writerow({"participantId": pid, "readableId": rid})
+            writer.writerow(
+                {
+                    "participantId": pid,
+                    "readableId": rid,
+                    "isProlific": is_prolific_by_pid.get(pid, False),
+                }
+            )
 
     return dst_path
 

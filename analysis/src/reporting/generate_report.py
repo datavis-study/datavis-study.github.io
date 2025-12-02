@@ -309,21 +309,26 @@ def generate_report(
 		"group_line": group_line,
 	}
 
-	# Participant readable ID mapping
+	# Participant readable ID mapping (+ Prolific flag)
 	participant_id_map: dict[str, str] = {}
+	participant_is_prolific: dict[str, bool] = {}
 	participant_map_records: list[dict] = []
 	if data.participants is not None:
 		dfp = data.participants
+		has_prolific = "isProlific" in dfp.columns
 		if "participantId" in dfp.columns and "readableId" in dfp.columns:
 			for _, row in dfp.iterrows():
 				pid = str(row["participantId"])
 				rid = None if pd.isna(row["readableId"]) else str(row["readableId"])
 				if pid and rid:
 					participant_id_map[pid] = rid
+					if has_prolific:
+						participant_is_prolific[pid] = bool(row.get("isProlific"))
 					participant_map_records.append({
 						"participantId": pid,
 						"readableId": rid,
 						"group": str(row.get("group", "")) if "group" in dfp.columns else "",
+						"isProlific": bool(row.get("isProlific")) if has_prolific else False,
 					})
 
 	# Attach per-component timing to the participant mapping records (converted to minutes)
@@ -437,6 +442,7 @@ def generate_report(
 			for _, row in sub.iterrows():
 				pid = str(row.get("participantId", ""))
 				rid = participant_id_map.get(pid)
+				is_prolific = participant_is_prolific.get(pid, False)
 				disp_id = rid or (pid[:8] if pid else "")
 				text = str(row[col])
 				# Simple word count for display (aligned with stimulus notes)
@@ -444,6 +450,7 @@ def generate_report(
 				responses.append(
 					{
 						"participant": disp_id,
+						"isProlific": is_prolific,
 						"group": row.get("group_friendly", "Unknown"),
 						"text": text,
 						"words": int(words),
@@ -551,10 +558,12 @@ def generate_report(
 			for _, row in sub.iterrows():
 				pid = str(row.get("participantId", ""))
 				rid = participant_id_map.get(pid)
+				is_prolific = participant_is_prolific.get(pid, False)
 				disp_id = rid or (pid[:8] if pid else "")
 				responses.append(
 					{
 						"participant": disp_id,
+						"isProlific": is_prolific,
 						"group": row.get("group_friendly", "Unknown"),
 						"words": int(row.get("word_count", 0)),
 						"text": row.get("speech", ""),

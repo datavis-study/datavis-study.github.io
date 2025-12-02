@@ -1,4 +1,6 @@
-participantId,readableId
-5101b146-ce6f-4f61-8818-118229a2308b,alpha
-782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo
-7b88dea0-0445-4362-b670-01be60f5195b,charlie
+participantId,readableId,isProlific
+5101b146-ce6f-4f61-8818-118229a2308b,alpha,False
+782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,False
+7b88dea0-0445-4362-b670-01be60f5195b,charlie,False
+6369700320bc7dd22e733009,delta,True
+60cf0d251a90eb823bc9b740,echo,True

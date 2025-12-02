@@ -1,4 +1,6 @@
 participantId,readableId,gender,gender-other,age,education,education-other,field-of-study,field-of-study-other,chart-reading-frequency,chart-creation-frequency,color-vision,color-vision-type
+60cf0d251a90eb823bc9b740,echo,Man,,25-34 years,Bachelor's degree,,other,Landscaping,Occasionally (few times per month),Rarely (few times per year),No,
+6369700320bc7dd22e733009,delta,Woman,,65+ years,Bachelor's degree,,"Social Sciences (Psychology, Sociology, etc.)",,Rarely (few times per year),Never,No,
 7b88dea0-0445-4362-b670-01be60f5195b,charlie,Man,,55-64 years,Master's degree,,Arts / Design,,Occasionally (few times per month),Occasionally (few times per month),No,
 782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,Man,,25-34 years,Master's degree,,Computer Science / Information Technology,,Frequently (daily or almost daily),Occasionally (few times per month),No,
 5101b146-ce6f-4f61-8818-118229a2308b,alpha,Woman,,35-44 years,"Doctorate (e.g., PhD, EdD)",,Humanities,,Occasionally (few times per month),Occasionally (few times per month),No,
