@@ -23,8 +23,8 @@ source "${VENV_DIR}/bin/activate"
 echo "[stimuli] Upgrading pip..."
 pip install --upgrade pip >/dev/null
 
-echo "[stimuli] Installing required Python packages (matplotlib, seaborn)..."
-pip install matplotlib seaborn >/dev/null
+echo "[stimuli] Installing required Python packages (altair, altair_saver, vl-convert-python, pandas)..."
+pip install altair altair_saver vl-convert-python pandas >/dev/null
 
 echo "[stimuli] Generating Experiment 2 stimuli..."
 python3 "${ROOT_DIR}/public/mind-the-badge-experiment-2/generate_stimuli.py"
