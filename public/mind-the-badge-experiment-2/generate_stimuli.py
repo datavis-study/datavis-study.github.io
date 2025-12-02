@@ -50,27 +50,19 @@ def generate_all_stimuli() -> None:
   """
   Generate all image stimuli for Mind‑the‑Badge Experiment 2.
 
-  Currently:
-    - Truncated‑axis bar chart (control)
-    - Copies of the same chart for badge and footnote groups as placeholders
+  Currently only:
+    - Truncated‑axis bar chart (single source.png used across all groups)
   """
   root = pathlib.Path(__file__).resolve().parent
 
-  # Base directories for this task
+  # Base directory for this task
   base = root / "assets" / "truncated-axis"
-  control_path = base / "source.png"
-  badges_path = base / "grp-badges" / "source.png"
-  footnotes_path = base / "grp-footnotes" / "source.png"
+  source_path = base / "source.png"
 
-  print("Generating truncated‑axis stimuli...")
-  make_truncated_axis_chart(control_path)
-  # For now, use the same chart as a starting point for all three variants.
-  make_truncated_axis_chart(badges_path)
-  make_truncated_axis_chart(footnotes_path)
+  print("Generating truncated‑axis stimulus...")
+  make_truncated_axis_chart(source_path)
 
-  print("  control :", control_path)
-  print("  badges  :", badges_path)
-  print("  footnotes:", footnotes_path)
+  print("  source :", source_path)
   print("Done.")
 
 

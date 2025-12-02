@@ -49,7 +49,7 @@
       "baseComponent": "stimuliWithBadge",
       "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
       "parameters": {
-        "imageSrc": "mind-the-badge-experiment-2/assets/truncated-axis/grp-badges/source.png",
+        "imageSrc": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
         "detailedInformation": "/mind-the-badge-experiment-2/assets/truncated-axis/grp-badges/visualization-badges.json"
       },
       "response": [
@@ -64,7 +64,7 @@
     },
     "task-truncated-axis-footnotes": {
       "type": "image",
-      "path": "mind-the-badge-experiment-2/assets/truncated-axis/grp-footnotes/source.png",
+      "path": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
       "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
       "instructionLocation": "sidebar",
       "nextButtonLocation": "sidebar",
