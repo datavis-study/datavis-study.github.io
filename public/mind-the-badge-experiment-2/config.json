@@ -19,12 +19,12 @@
     "contactEmail": "valentin.edelsbrunner@inria.fr",
     "logoPath": "revisitAssets/badge-logo.png",
     "withProgressBar": false,
-    "sidebar": false
+    "sidebar": true
   },
   "importedLibraries": [],
   "baseComponents": {
     "stimuliWithBadge": {
-      "description": "A static visualization with one to many interactive visualization badges placed bottom right",
+      "description": "TODO",
       "type": "react-component",
       "path": "mind-the-badge/assets/StimuliWithBadge.tsx",
       "nextButtonLocation": "sidebar",
@@ -46,8 +46,8 @@
       "response": []
     },
     "task-truncated-axis-badges": {
+      "instruction": "Based on the chart, by what percentage is the revenue of Company B larger than Company A?*",
       "baseComponent": "stimuliWithBadge",
-      "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
       "parameters": {
         "imageSrc": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
         "detailedInformation": "/mind-the-badge-experiment-2/assets/truncated-axis/grp-badges/visualization-badges.json"
@@ -55,42 +55,16 @@
       "response": [
         {
           "id": "truncated-axis-estimate",
-          "prompt": "Based on the chart, by what **percentage** is the revenue of Company B larger than Company A?",
-          "type": "shortText",
+          "prompt": "Choose the option that best matches your estimate:",
+          "type": "radio",
           "required": true,
-          "placeholder": "Enter a percentage, e.g., 25"
-        }
-      ]
-    },
-    "task-truncated-axis-footnotes": {
-      "type": "image",
-      "path": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
-      "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
-      "instructionLocation": "sidebar",
-      "nextButtonLocation": "sidebar",
-      "response": [
-        {
-          "id": "truncated-axis-estimate",
-          "prompt": "Based on the chart, by what **percentage** is the revenue of Company B larger than Company A?",
-          "type": "shortText",
-          "required": true,
-          "placeholder": "Enter a percentage, e.g., 25"
-        }
-      ]
-    },
-    "task-truncated-axis-control": {
-      "type": "image",
-      "path": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
-      "instruction": "You will see a bar chart comparing the yearly revenue of two companies. Answer the question below based only on what you see in the chart.",
-      "instructionLocation": "sidebar",
-      "nextButtonLocation": "sidebar",
-      "response": [
-        {
-          "id": "truncated-axis-estimate",
-          "prompt": "Based on the chart, by what **percentage** is the revenue of Company B larger than Company A?",
-          "type": "shortText",
-          "required": true,
-          "placeholder": "Enter a percentage, e.g., 25"
+          "location": "sidebar",
+          "options": [
+            "Around 4%",
+            "Around 10%",
+            "Around 25%",
+            "Around 50% or more"
+          ]
         }
       ]
     }
@@ -110,20 +84,6 @@
             "order": "fixed",
             "components": [
               "task-truncated-axis-badges"
-            ]
-          },
-          {
-            "id": "footnote-group",
-            "order": "fixed",
-            "components": [
-              "task-truncated-axis-footnotes"
-            ]
-          },
-          {
-            "id": "control-group",
-            "order": "fixed",
-            "components": [
-              "task-truncated-axis-control"
             ]
           }
         ]

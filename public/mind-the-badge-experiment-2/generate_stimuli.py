@@ -54,13 +54,14 @@ def make_truncated_axis_chart(
             ),
         )
         .properties(
-            width=250,
-            height=250,
+            width=300,
+            height=220,
             title="Yearly revenue by company",
         )
     )
 
-    chart.save(str(output_path), format="png")
+    # Use a higher scale factor so the PNG looks crisp even if displayed larger.
+    chart.save(str(output_path), scale_factor=3.0)
 
     return output_path
 
