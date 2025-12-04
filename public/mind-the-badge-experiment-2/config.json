@@ -55,7 +55,7 @@
       "response": [
         {
           "id": "truncated-axis-estimate",
-          "prompt": "Choose the option that best matches your estimate:",
+          "prompt": "",
           "type": "radio",
           "required": true,
           "location": "sidebar",
@@ -78,7 +78,7 @@
       "response": [
         {
           "id": "inverted-axis-estimate",
-          "prompt": "Based on your first impression, the crime rate is:",
+          "prompt": "",
           "type": "radio",
           "required": true,
           "location": "sidebar",
