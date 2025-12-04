@@ -1,0 +1,18 @@
+{
+  "badges": [
+    {
+      "badgeType": "BINARY",
+      "id": "area-radius-scaling__area-bubbles-task",
+      "label": "Area as Quantity (Radius Scaling)",
+      "description": "Circle sizes are based on radius instead of area, so doubling the value makes the circle look about four times bigger.",
+      "type": "DESIGN",
+      "intent": "WARNING",
+      "topics": ["Area", "Scale"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/area-radius-scaling.md"
+    }
+  ]
+}
+
+
+

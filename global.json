@@ -1,11 +1,16 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/GlobalConfigSchema.json",
   "configsList": [
-    "s1"
+    "s1",
+    "s2"
   ],
   "configs": {
     "s1": {
       "path": "mind-the-badge/config.json"
+    },
+    "s2": {
+      "path": "mind-the-badge-experiment-2/config.json"
     }
   }
 }
+

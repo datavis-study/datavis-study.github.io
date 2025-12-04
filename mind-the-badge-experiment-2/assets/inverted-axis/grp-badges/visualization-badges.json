@@ -1,0 +1,17 @@
+{
+  "badges": [
+    {
+      "badgeType": "BINARY",
+      "id": "inverted-axis__crime-task",
+      "label": "Inverted Axis",
+      "description": "The vertical axis is flipped so that lower crime values appear higher on the chart, making a decrease look like an increase.",
+      "type": "DESIGN",
+      "intent": "WARNING",
+      "topics": ["Axis", "Direction"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/inverted-axis.md"
+    }
+  ]
+}
+
+

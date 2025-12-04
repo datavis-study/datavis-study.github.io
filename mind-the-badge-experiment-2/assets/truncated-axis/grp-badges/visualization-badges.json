@@ -1,0 +1,17 @@
+{
+  "badges": [
+    {
+      "badgeType": "BINARY",
+      "id": "truncated-axis__truncated-axis-task",
+      "label": "Truncated Axis",
+      "description": "The vertical axis does not start at zero, which visually exaggerates the difference between the bars.",
+      "type": "DESIGN",
+      "intent": "WARNING",
+      "topics": ["Axis", "Scale"],
+      "link": "",
+      "detailedDescription": "detailed-badge-descriptions/truncated-axis.md"
+    }
+  ]
+}
+
+
