@@ -68,37 +68,12 @@
         }
       ]
     },
-    "task-area-bubbles-badges": {
-      "instruction": "Based on the visual size of the circles, how many times bigger is Value Y compared to Value X?*",
-      "baseComponent": "stimuliWithBadge",
-      "parameters": {
-        "imageSrc": "mind-the-badge-experiment-2/assets/area-bubbles/source.png",
-        "detailedInformation": "/mind-the-badge-experiment-2/assets/area-bubbles/grp-badges/visualization-badges.json",
-        "imageWidth": 520
-      },
-      "response": [
-        {
-          "id": "area-bubbles-estimate",
-          "prompt": "Choose the option that best matches your estimate:",
-          "type": "radio",
-          "required": true,
-          "location": "sidebar",
-          "options": [
-            "About 2× (twice as big)",
-            "About 3×",
-            "About 4×",
-            "More than 4×"
-          ]
-        }
-      ]
-    },
     "task-inverted-axis-badges": {
       "instruction": "Based on the chart, is the crime rate increasing or decreasing?*",
       "baseComponent": "stimuliWithBadge",
       "parameters": {
         "imageSrc": "mind-the-badge-experiment-2/assets/inverted-axis/source.png",
-        "detailedInformation": "/mind-the-badge-experiment-2/assets/inverted-axis/grp-badges/visualization-badges.json",
-        "imageWidth": 520
+        "detailedInformation": "/mind-the-badge-experiment-2/assets/inverted-axis/grp-badges/visualization-badges.json"
       },
       "response": [
         {
@@ -132,7 +107,6 @@
             "order": "fixed",
             "components": [
               "task-truncated-axis-badges",
-              "task-area-bubbles-badges",
               "task-inverted-axis-badges"
             ]
           }
