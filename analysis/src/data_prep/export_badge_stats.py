@@ -30,8 +30,6 @@ def export_badge_stats(
     src: Path | str = DEFAULT_INPUT_PATH.parent / "db.json",
     dst: Path | str = DEFAULT_INPUT_PATH.parent / "stimulus_badge_metrics.csv",
 ) -> Path:
-    import json
-
     src_path = Path(src)
     dst_path = Path(dst)
 
@@ -40,7 +38,12 @@ def export_badge_stats(
     # Aggregation keyed by (stimulusId, badgeId)
     rows: Dict[Tuple[str, str], Dict[str, Any]] = {}
 
+    # Track unique participants with any hover / click per stimulus
+    hover_participants_by_stimulus: Dict[str, set[str]] = {}
+    click_participants_by_stimulus: Dict[str, set[str]] = {}
+
     for rec in _iter_participants(data):
+        pid = str(rec.get("participantId", "")).strip()
         answers: Dict[str, Any] = rec.get("answers", {})
         for _, trial in answers.items():
             if not isinstance(trial, dict):
@@ -87,6 +90,11 @@ def export_badge_stats(
             tracking = ans.get("badgeTrackingData", {}).get("badgeInteractions", {})
             coverage = ans.get("badgeCoverage", {}) if isinstance(ans.get("badgeCoverage", {}), dict) else {}
 
+            # Flags for whether this participant ever hovered / clicked any badge
+            # on this stimulus in this trial
+            trial_hovered = False
+            trial_clicked = False
+
             first_click_latency_by_badge: Dict[str, float] = {}
             if isinstance(aggregates, dict):
                 for agg_id, agg in aggregates.items():
@@ -118,11 +126,18 @@ def export_badge_stats(
                         row["badgeLabel"] = badge_label
 
                     # Sum counters (convert ms to seconds for totals)
-                    row["clickCount"] += int(agg.get("clickCount", 0) or 0)
-                    row["hoverCount"] += int(agg.get("totalHoverCount", 0) or 0)
+                    click_inc = int(agg.get("clickCount", 0) or 0)
+                    hover_inc = int(agg.get("totalHoverCount", 0) or 0)
+                    row["clickCount"] += click_inc
+                    row["hoverCount"] += hover_inc
                     row["totalHoverTime"] += _seconds(agg.get("totalHoverTimeMs", 0)) or 0.0
                     row["drawerOpenCount"] += int(agg.get("drawerOpenCount", 0) or 0)
                     row["totalDrawerOpenTime"] += _seconds(agg.get("totalDrawerOpenTimeMs", 0)) or 0.0
+
+                    if click_inc > 0:
+                        trial_clicked = True
+                    if hover_inc > 0:
+                        trial_hovered = True
 
                     # Collect first click latency for per-trial first-click determination
                     fcl = agg.get("firstClickLatencyMs")
@@ -210,6 +225,12 @@ def export_badge_stats(
                                 if row["minDrawerOpenTime"] is None or sec < row["minDrawerOpenTime"]:
                                     row["minDrawerOpenTime"] = sec
 
+            # After processing this trial, record participant-level interaction flags
+            if pid and trial_hovered:
+                hover_participants_by_stimulus.setdefault(stimulus_id, set()).add(pid)
+            if pid and trial_clicked:
+                click_participants_by_stimulus.setdefault(stimulus_id, set()).add(pid)
+
     # Prepare CSV columns as requested
     fieldnames = [
         "stimulusId",
@@ -220,6 +241,9 @@ def export_badge_stats(
         "firstBadgeClickCount",
         "hoverCount",
         "drawerOpenCount",
+        # Per-stimulus unique participant counts
+        "hoverParticipantCount",
+        "clickParticipantCount",
         # Timing-related columns at the end
         "totalHoverTime",
         "maxHoverTime",
@@ -245,6 +269,10 @@ def export_badge_stats(
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for _, row in sorted(rows.items()):
+            stim = row.get("stimulusId")
+            hover_n = len(hover_participants_by_stimulus.get(stim, set()))
+            click_n = len(click_participants_by_stimulus.get(stim, set()))
+
             # If truly no data recorded, output empty/nulls
             if not _row_has_activity(row):
                 out = {
@@ -252,18 +280,22 @@ def export_badge_stats(
                     "badgeId": row.get("badgeId"),
                     "badgeLabel": row.get("badgeLabel"),
                     "clickCount": None,
+                    "firstBadgeClickCount": None,
                     "hoverCount": None,
+                    "drawerOpenCount": None,
+                    "hoverParticipantCount": hover_n,
+                    "clickParticipantCount": click_n,
                     "totalHoverTime": None,
                     "maxHoverTime": None,
                     "minHoverTime": None,
-                    "drawerOpenCount": None,
                     "totalDrawerOpenTime": None,
                     "maxDrawerOpenTime": None,
                     "minDrawerOpenTime": None,
-                    "firstBadgeClickCount": None,
                 }
             else:
                 out = {k: row.get(k) for k in fieldnames}
+                out["hoverParticipantCount"] = hover_n
+                out["clickParticipantCount"] = click_n
                 # Round seconds for readability
                 for k in [
                     "totalHoverTime",

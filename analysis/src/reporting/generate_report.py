@@ -259,6 +259,35 @@ def generate_report(
 	n_badge_labels = int(data.badge_metrics["badgeLabel"].nunique()) if data.badge_metrics is not None and "badgeLabel" in data.badge_metrics.columns else 0
 	n_stimuli_with_badges = int(data.badge_metrics["stimulusId"].nunique()) if data.badge_metrics is not None and "stimulusId" in data.badge_metrics.columns else 0
 
+	# Per-stimulus participant counts (hover / click) for badge interactions
+	badge_participant_stats: list[dict] = []
+	if (
+		data.badge_metrics is not None
+		and {"stimulusId", "hoverParticipantCount", "clickParticipantCount"}.issubset(data.badge_metrics.columns)
+	):
+		dfb = data.badge_metrics.copy()
+		stim_label_map = {
+			"co2-emissions": "CO₂ Emissions",
+			"global-warming-projection": "Global Warming Projection",
+		}
+		for stim, sub in dfb.groupby("stimulusId", dropna=False):
+			if pd.isna(stim):
+				continue
+			label = stim_label_map.get(str(stim), str(stim))
+			hover_vals = sub["hoverParticipantCount"]
+			click_vals = sub["clickParticipantCount"]
+			hover_n = int(hover_vals.max()) if not hover_vals.isna().all() else 0
+			click_n = int(click_vals.max()) if not click_vals.isna().all() else 0
+			badge_participant_stats.append(
+				{
+					"stimulusId": str(stim),
+					"label": label,
+					"hover_participants": hover_n,
+					"click_participants": click_n,
+				}
+			)
+		badge_participant_stats.sort(key=lambda d: d["label"])
+
 	context = {
 		"report_title": "Mind the Badge – Automated Report",
 		"participants_count": n_participants,
@@ -281,6 +310,7 @@ def generate_report(
 		"n_badge_rows": n_badge_rows,
 		"n_badge_labels": n_badge_labels,
 		"n_stimuli_with_badges": n_stimuli_with_badges,
+		"badge_participant_stats": badge_participant_stats,
 		"badge_hover_chart": badge_hover_chart,
 		"badge_hover_time_chart": badge_hover_time_chart,
 		"badge_hover_duration_chart": badge_hover_duration_chart,

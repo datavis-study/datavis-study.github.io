@@ -195,6 +195,14 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 ### Badge interactions – hover metrics
 
 {% if badge_hover_chart or badge_hover_time_chart or badge_hover_duration_chart %}
+{% if badge_participant_stats and badge_participant_stats|length > 0 %}
+**Per-stimulus participant coverage (hover):**
+
+{% for s in badge_participant_stats %}
+- **{{ s.label }}**: {{ s.hover_participants }} participants hovered at least one visualization badge.
+{% endfor %}
+
+{% endif %}
 | {% if badge_hover_chart %}Hover counts{% endif %} | {% if badge_hover_time_chart %}Total hover time{% endif %} | {% if badge_hover_duration_chart %}Duration stats{% endif %} |
 | :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
 | {% if badge_hover_chart %}<img src="{{ badge_hover_chart.path }}" alt="Hover counts per stimulus" width="320" />{% endif %} | {% if badge_hover_time_chart %}<img src="{{ badge_hover_time_chart.path }}" alt="Hover times per stimulus" width="320" />{% endif %} | {% if badge_hover_duration_chart %}<img src="{{ badge_hover_duration_chart.path }}" alt="Hover duration statistics per stimulus" width="320" />{% endif %} |
@@ -204,7 +212,20 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 ### Badge interactions – clicks and drawer metrics 
 
+{% if badge_participant_stats and badge_participant_stats|length > 0 %}
+**Per-stimulus participant coverage (clicks):**
+
+{% for s in badge_participant_stats %}
+- **{{ s.label }}**: {{ s.click_participants }} participants clicked at least one visualization badge.
+{% endfor %}
+
+{% set total_click_participants = badge_participant_stats | map(attribute="click_participants") | sum %}
+{% if total_click_participants == 0 %}
 _Note: No data, because nobody clicked on any badge_
+{% endif %}
+{% else %}
+_Note: No data, because nobody clicked on any badge_
+{% endif %}
 
 | Click counts | Total open time | Mean open duration |
 | :----------: | :-------------: | :----------------: |
