@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/StudyConfigSchema.json",
   "studyMetadata": {
-    "title": "Mind the Badge – Experiment 2",
+    "title": "Experiment 2",
     "version": "0.0.1",
     "authors": [
       "Valentin Edelsbrunner"
@@ -30,6 +30,14 @@
       "nextButtonLocation": "sidebar",
       "instructionLocation": "sidebar",
       "response": []
+    },
+    "stimuliWithFootnote": {
+      "description": "Static stimulus with a chart image and a single textual footnote below.",
+      "type": "react-component",
+      "path": "mind-the-badge-experiment-2/assets/StimuliWithFootnote.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "sidebar",
+      "response": []
     }
   },
   "components": {
@@ -55,7 +63,7 @@
       "response": [
         {
           "id": "truncated-axis-estimate",
-          "prompt": "Choose the option that best matches your estimate:",
+          "prompt": "Select one option.",
           "type": "radio",
           "required": true,
           "location": "sidebar",
@@ -68,26 +76,47 @@
         }
       ]
     },
-    "task-area-bubbles-badges": {
-      "instruction": "Based on the visual size of the circles, how many times bigger is Value Y compared to Value X?*",
-      "baseComponent": "stimuliWithBadge",
-      "parameters": {
-        "imageSrc": "mind-the-badge-experiment-2/assets/area-bubbles/source.png",
-        "detailedInformation": "/mind-the-badge-experiment-2/assets/area-bubbles/grp-badges/visualization-badges.json",
-        "imageWidth": 520
-      },
+    "task-truncated-axis-control": {
+      "type": "image",
+      "path": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
+      "instruction": "Based on the chart, by what percentage is the revenue of Company B larger than Company A?*",
+      "instructionLocation": "sidebar",
+      "nextButtonLocation": "sidebar",
       "response": [
         {
-          "id": "area-bubbles-estimate",
-          "prompt": "Choose the option that best matches your estimate:",
+          "id": "truncated-axis-estimate",
+          "prompt": "Select one option.",
           "type": "radio",
           "required": true,
           "location": "sidebar",
           "options": [
-            "About 2× (twice as big)",
-            "About 3×",
-            "About 4×",
-            "More than 4×"
+            "Around 4%",
+            "Around 10%",
+            "Around 25%",
+            "Around 50% or more"
+          ]
+        }
+      ]
+    },
+    "task-truncated-axis-footnote": {
+      "instruction": "Based on the chart, by what percentage is the revenue of Company B larger than Company A?*",
+      "baseComponent": "stimuliWithFootnote",
+      "parameters": {
+        "imageSrc": "mind-the-badge-experiment-2/assets/truncated-axis/source.png",
+        "footnoteText": "The vertical axis in this chart is truncated."
+      },
+      "response": [
+        {
+          "id": "truncated-axis-estimate",
+          "prompt": "Select one option.",
+          "type": "radio",
+          "required": true,
+          "location": "sidebar",
+          "options": [
+            "Around 4%",
+            "Around 10%",
+            "Around 25%",
+            "Around 50% or more"
           ]
         }
       ]
@@ -97,13 +126,57 @@
       "baseComponent": "stimuliWithBadge",
       "parameters": {
         "imageSrc": "mind-the-badge-experiment-2/assets/inverted-axis/source.png",
-        "detailedInformation": "/mind-the-badge-experiment-2/assets/inverted-axis/grp-badges/visualization-badges.json",
-        "imageWidth": 520
+        "detailedInformation": "/mind-the-badge-experiment-2/assets/inverted-axis/grp-badges/visualization-badges.json"
       },
       "response": [
         {
           "id": "inverted-axis-estimate",
-          "prompt": "Based on your first impression, the crime rate is:",
+          "prompt": "Select one option.",
+          "type": "radio",
+          "required": true,
+          "location": "sidebar",
+          "options": [
+            "Increasing",
+            "Decreasing",
+            "Staying about the same",
+            "Not sure"
+          ]
+        }
+      ]
+    },
+    "task-inverted-axis-control": {
+      "type": "image",
+      "path": "mind-the-badge-experiment-2/assets/inverted-axis/source.png",
+      "instruction": "Based on the chart, is the crime rate increasing or decreasing?*",
+      "instructionLocation": "sidebar",
+      "nextButtonLocation": "sidebar",
+      "response": [
+        {
+          "id": "inverted-axis-estimate",
+          "prompt": "Select one option.",
+          "type": "radio",
+          "required": true,
+          "location": "sidebar",
+          "options": [
+            "Increasing",
+            "Decreasing",
+            "Staying about the same",
+            "Not sure"
+          ]
+        }
+      ]
+    },
+    "task-inverted-axis-footnote": {
+      "instruction": "Based on the chart, is the crime rate increasing or decreasing?*",
+      "baseComponent": "stimuliWithFootnote",
+      "parameters": {
+        "imageSrc": "mind-the-badge-experiment-2/assets/inverted-axis/source.png",
+        "footnoteText": "The vertical axis in this chart is inverted."
+      },
+      "response": [
+        {
+          "id": "inverted-axis-estimate",
+          "prompt": "Select one option.",
           "type": "radio",
           "required": true,
           "location": "sidebar",
@@ -128,11 +201,26 @@
         "numSamples": 1,
         "components": [
           {
+            "id": "control-group",
+            "order": "fixed",
+            "components": [
+              "task-truncated-axis-control",
+              "task-inverted-axis-control"
+            ]
+          },
+          {
+            "id": "footnote-group",
+            "order": "fixed",
+            "components": [
+              "task-truncated-axis-footnote",
+              "task-inverted-axis-footnote"
+            ]
+          },
+          {
             "id": "badge-group",
             "order": "fixed",
             "components": [
               "task-truncated-axis-badges",
-              "task-area-bubbles-badges",
               "task-inverted-axis-badges"
             ]
           }
