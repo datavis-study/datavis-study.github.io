@@ -342,10 +342,12 @@ def generate_report(
 	# Participant readable ID mapping (+ Prolific flag)
 	participant_id_map: dict[str, str] = {}
 	participant_is_prolific: dict[str, bool] = {}
+	participant_first_stimulus: dict[str, str] = {}
 	participant_map_records: list[dict] = []
 	if data.participants is not None:
 		dfp = data.participants
 		has_prolific = "isProlific" in dfp.columns
+		has_first_stim = "firstStimulus" in dfp.columns
 		if "participantId" in dfp.columns and "readableId" in dfp.columns:
 			for _, row in dfp.iterrows():
 				pid = str(row["participantId"])
@@ -354,6 +356,10 @@ def generate_report(
 					participant_id_map[pid] = rid
 					if has_prolific:
 						participant_is_prolific[pid] = bool(row.get("isProlific"))
+					if has_first_stim:
+						fs = row.get("firstStimulus")
+						if isinstance(fs, str) and fs:
+							participant_first_stimulus[pid] = fs
 					participant_map_records.append({
 						"participantId": pid,
 						"readableId": rid,
@@ -628,6 +634,14 @@ def generate_report(
 				key = (sid_raw, pid) if sid_raw and pid else None
 				hovered_any = bool(key and key in hover_keys)
 				clicked_any = bool(key and key in click_keys)
+				first_stim_raw = participant_first_stimulus.get(pid)
+				if first_stim_raw and sid_raw:
+					if first_stim_raw == sid_raw:
+						stim_order_label = "First"
+					else:
+						stim_order_label = "Second"
+				else:
+					stim_order_label = None
 				responses.append(
 					{
 						"participant": disp_id,
@@ -637,6 +651,7 @@ def generate_report(
 						"text": row.get("speech", ""),
 						"hoveredAnyBadge": hovered_any,
 						"clickedAnyBadge": clicked_any,
+						"stimOrderLabel": stim_order_label,
 					}
 				)
 			items.append({"stimulus": stim, "count": len(responses), "responses": responses})

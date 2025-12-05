@@ -91,6 +91,45 @@ def export_participant_meta(
 
     participants = load_completed_participants(src_path)
 
+    # Infer, for each participant, which of the two main stimuli
+    # (CO₂ Emissions vs Global Warming Projection) was shown first/second
+    # within their assigned group (badges / footnotes).
+    def _infer_stimulus_order(rec: Dict[str, Any]) -> tuple[Optional[str], Optional[str]]:
+        answers: Dict[str, Any] = rec.get("answers", {})
+        if not isinstance(answers, dict):
+            return None, None
+        trials: list[tuple[int, str]] = []
+        for trial in answers.values():
+            if not isinstance(trial, dict):
+                continue
+            name = trial.get("componentName")
+            if not isinstance(name, str):
+                continue
+            if name.startswith("co2-emissions"):
+                stim_id = "co2-emissions"
+            elif name.startswith("global-warming-projection"):
+                stim_id = "global-warming-projection"
+            else:
+                continue
+            try:
+                order = int(trial.get("trialOrder"))
+            except (TypeError, ValueError):
+                continue
+            trials.append((order, stim_id))
+        if not trials:
+            return None, None
+        trials.sort(key=lambda t: t[0])
+        # Deduplicate in case of multiple trials per stimulus id
+        seen: list[str] = []
+        for _, sid in trials:
+            if sid not in seen:
+                seen.append(sid)
+        if not seen:
+            return None, None
+        first = seen[0]
+        second = seen[1] if len(seen) > 1 else None
+        return first, second
+
     # Build stable mapping participantId -> readableId like U001, U002 (by participantIndex if available)
     def _build_mapping(recs: Iterable[Dict[str, Any]]) -> Dict[str, str]:
         # Deterministic assignment from a fixed name pool.
@@ -132,6 +171,8 @@ def export_participant_meta(
         "userAgent",
         "resolutionWidth",
         "resolutionHeight",
+        "firstStimulus",
+        "secondStimulus",
     ]
 
     with open(dst_path, "w", encoding="utf-8", newline="") as f:
@@ -163,6 +204,8 @@ def export_participant_meta(
 
             country = _lookup_country(ip)
 
+            first_stim, second_stim = _infer_stimulus_order(rec)
+
             writer.writerow(
                 {
                     "readableId": id_map.get(participant_id),
@@ -177,6 +220,8 @@ def export_participant_meta(
                     "userAgent": user_agent,
                     "resolutionWidth": width,
                     "resolutionHeight": height,
+                    "firstStimulus": first_stim,
+                    "secondStimulus": second_stim,
                 }
             )
 
