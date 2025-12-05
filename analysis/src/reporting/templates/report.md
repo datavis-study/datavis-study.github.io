@@ -56,7 +56,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: CO₂ Emissions 🟩 Badges</strong> — {{ co2_badge|length }} notes</span></summary>
 
 {% for r in co2_badge %}
-🟩 **{{ r.participant }}** ({{ r.words }} words): {{ r.text }}
+🟩 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
 {% endfor %}
 
 </details>
