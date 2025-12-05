@@ -45,7 +45,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: CO₂ Emissions 🟦 Footnotes</strong> — {{ co2_foot|length }} notes</strong></span></summary>
 
 {% for r in co2_foot %}
-🟦 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
+🟦 **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 
 </details>
@@ -56,7 +56,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: CO₂ Emissions 🟩 Badges</strong> — {{ co2_badge|length }} notes</span></summary>
 
 {% for r in co2_badge %}
-🟩 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
+🟩 **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 
 </details>
@@ -81,7 +81,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: Global Warming Projection 🟦 Footnotes</strong> — {{ gw_foot|length }} notes</span></summary>
 
 {% for r in gw_foot %}
-🟦 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
+🟦 **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 
 </details>
@@ -92,7 +92,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 <summary><span style="font-size: 1.1em;"><strong>Participants Responses: Global Warming Projection 🟩 Badges</strong> — {{ gw_badge|length }} notes</span></summary>
 
 {% for r in gw_badge %}
-🟩 **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
+🟩 **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 
 </details>
@@ -164,7 +164,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if q.responses_footnotes and q.responses_footnotes|length > 0 %}
 {% for r in q.responses_footnotes %}
-- **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
+- **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
@@ -175,14 +175,14 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 {% if q.responses_badges and q.responses_badges|length > 0 %}
 {% for r in q.responses_badges %}
-- **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.words }} words): {{ r.text }}
+- **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
 {% if q.responses_other and q.responses_other|length > 0 %}
 **[Other / Unknown group]**  
 {% for r in q.responses_other %}
-• **{{ r.participant }}{% if r.isProlific %} (Prolific){% endif %}** ({{ r.group }}, {{ r.words }} words): {{ r.text }}
+• **{{ r.participant }} ({{ r.group }}, {{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 {% endif %}
 

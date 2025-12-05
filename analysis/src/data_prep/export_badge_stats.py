@@ -42,6 +42,9 @@ def export_badge_stats(
     hover_participants_by_stimulus: Dict[str, set[str]] = {}
     click_participants_by_stimulus: Dict[str, set[str]] = {}
 
+    # Track participant‑level coverage flags per (stimulusId, participantId)
+    participant_flags: Dict[Tuple[str, str], Dict[str, Any]] = {}
+
     for rec in _iter_participants(data):
         pid = str(rec.get("participantId", "")).strip()
         answers: Dict[str, Any] = rec.get("answers", {})
@@ -225,11 +228,28 @@ def export_badge_stats(
                                 if row["minDrawerOpenTime"] is None or sec < row["minDrawerOpenTime"]:
                                     row["minDrawerOpenTime"] = sec
 
-            # After processing this trial, record participant-level interaction flags
-            if pid and trial_hovered:
-                hover_participants_by_stimulus.setdefault(stimulus_id, set()).add(pid)
-            if pid and trial_clicked:
-                click_participants_by_stimulus.setdefault(stimulus_id, set()).add(pid)
+            # After processing this trial, record participant-level interaction flags.
+            # We only track trials where there was at least one hover or click so that
+            # non-interactive components (e.g., consent screens) do not produce rows.
+            if pid and (trial_hovered or trial_clicked):
+                if trial_hovered:
+                    hover_participants_by_stimulus.setdefault(stimulus_id, set()).add(pid)
+                if trial_clicked:
+                    click_participants_by_stimulus.setdefault(stimulus_id, set()).add(pid)
+
+                # Aggregate per-participant per-stimulus flags (OR across trials)
+                key = (stimulus_id, pid)
+                current = participant_flags.get(key, {
+                    "stimulusId": stimulus_id,
+                    "participantId": pid,
+                    "hoveredAnyBadge": False,
+                    "clickedAnyBadge": False,
+                })
+                if trial_hovered:
+                    current["hoveredAnyBadge"] = True
+                if trial_clicked:
+                    current["clickedAnyBadge"] = True
+                participant_flags[key] = current
 
     # Prepare CSV columns as requested
     fieldnames = [
@@ -308,6 +328,16 @@ def export_badge_stats(
                     if out.get(k) is not None:
                         out[k] = round(float(out[k]), 3)
             writer.writerow(out)
+
+    # Additionally, write a per-participant coverage file so that reporting
+    # can annotate individual stimulus notes with simple interaction flags.
+    flags_path = dst_path.with_name("stimulus_badge_participant_flags.csv")
+    with flags_path.open("w", encoding="utf-8", newline="") as f_flags:
+        fieldnames_flags = ["stimulusId", "participantId", "hoveredAnyBadge", "clickedAnyBadge"]
+        writer_flags = csv.DictWriter(f_flags, fieldnames=fieldnames_flags)
+        writer_flags.writeheader()
+        for _, rec in sorted(participant_flags.items()):
+            writer_flags.writerow(rec)
 
     return dst_path
 

@@ -401,6 +401,20 @@ def generate_report(
 
 		time_columns_map = [{"key": col, "label": _pretty_time_label(col)} for col in time_components_for_map]
 
+	# Participant‑level badge interaction flags (any stimulus)
+	participant_hovered_any_badge: dict[str, bool] = {}
+	participant_clicked_any_badge: dict[str, bool] = {}
+	flags_df_all = getattr(data, "badge_participant_flags", None)
+	if flags_df_all is not None and not flags_df_all.empty:
+		for _, row_f in flags_df_all.iterrows():
+			pid_f = str(row_f.get("participantId", "")).strip()
+			if not pid_f:
+				continue
+			if bool(row_f.get("hoveredAnyBadge")):
+				participant_hovered_any_badge[pid_f] = True
+			if bool(row_f.get("clickedAnyBadge")):
+				participant_clicked_any_badge[pid_f] = True
+
 	# Build open-ended responses summary for collapsible display
 	def _build_open_questions_context() -> list[dict]:
 		if data.open_responses is None or data.open_responses.empty:
@@ -477,6 +491,8 @@ def generate_report(
 				text = str(row[col])
 				# Simple word count for display (aligned with stimulus notes)
 				words = len(text.split()) if text else 0
+				hovered_any = participant_hovered_any_badge.get(pid, False)
+				clicked_any = participant_clicked_any_badge.get(pid, False)
 				responses.append(
 					{
 						"participant": disp_id,
@@ -484,6 +500,8 @@ def generate_report(
 						"group": row.get("group_friendly", "Unknown"),
 						"text": text,
 						"words": int(words),
+						"hoveredAnyBadge": hovered_any,
+						"clickedAnyBadge": clicked_any,
 					}
 				)
 			# Split responses by group for separate Footnotes/Badges drawers
@@ -564,6 +582,22 @@ def generate_report(
 			dfn["group_friendly"] = "Unknown"
 		# Word counts
 		dfn["word_count"] = dfn["speech"].str.split().map(len)
+
+		# Optional badge interaction flags per (stimulusId, participantId)
+		hover_keys: set[tuple[str, str]] = set()
+		click_keys: set[tuple[str, str]] = set()
+		flags_df = getattr(data, "badge_participant_flags", None)
+		if flags_df is not None and not flags_df.empty:
+			for _, row_f in flags_df.iterrows():
+				sid = str(row_f.get("stimulusId", "")).strip()
+				pid_f = str(row_f.get("participantId", "")).strip()
+				if not sid or not pid_f:
+					continue
+				key = (sid, pid_f)
+				if bool(row_f.get("hoveredAnyBadge")):
+					hover_keys.add(key)
+				if bool(row_f.get("clickedAnyBadge")):
+					click_keys.add(key)
 		# Pretty stimulus labels
 		stim_label = {
 			"global-warming-projection": "Global Warming Projection",
@@ -590,6 +624,10 @@ def generate_report(
 				rid = participant_id_map.get(pid)
 				is_prolific = participant_is_prolific.get(pid, False)
 				disp_id = rid or (pid[:8] if pid else "")
+				sid_raw = str(row.get("stimulusId", "")).strip()
+				key = (sid_raw, pid) if sid_raw and pid else None
+				hovered_any = bool(key and key in hover_keys)
+				clicked_any = bool(key and key in click_keys)
 				responses.append(
 					{
 						"participant": disp_id,
@@ -597,6 +635,8 @@ def generate_report(
 						"group": row.get("group_friendly", "Unknown"),
 						"words": int(row.get("word_count", 0)),
 						"text": row.get("speech", ""),
+						"hoveredAnyBadge": hovered_any,
+						"clickedAnyBadge": clicked_any,
 					}
 				)
 			items.append({"stimulus": stim, "count": len(responses), "responses": responses})
