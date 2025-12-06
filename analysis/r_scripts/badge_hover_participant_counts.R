@@ -159,6 +159,14 @@ generate_badge_hover_participant_counts_plot <- function(
     )
   ) +
     geom_col(width = 0.7) +
+    # Add per-participant hover counts as labels centered in each stacked segment
+    geom_text(
+      aes(label = hoverCount),
+      position = position_stack(vjust = 0.5),
+      color    = "white",
+      size     = 3,
+      fontface = "bold"
+    ) +
     facet_wrap(
       ~ stimulus_label,
       ncol   = 1,
