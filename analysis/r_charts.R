@@ -5,8 +5,6 @@
 # This script is intended to be the single entry point. Internally it
 # delegates work to one script per chart under analysis/r_scripts/.
 #
-# For now, it only calls a single Likert-based chart script.
-#
 # Usage:
 #   - From repo root:
 #       Rscript analysis/r_charts.R
@@ -31,32 +29,36 @@ if (!dir.exists(data_dir)) {
 message("Using data directory: ", data_dir)
 message("Writing charts to:    ", out_dir)
 
-# Locate per-chart scripts, robust to working directory
-script_candidates <- c(
-  file.path("analysis", "r_scripts", "likert_mean_chart.R"), # when run from repo root
-  file.path("r_scripts", "likert_mean_chart.R")              # when run from analysis/
-)
 
-likert_script <- NULL
-for (cand in script_candidates) {
-  if (file.exists(cand)) {
-    likert_script <- cand
-    break
+# Helper to resolve an R script under analysis/r_scripts/ or r_scripts/
+resolve_script <- function(name) {
+  candidates <- c(
+    file.path("analysis", "r_scripts", name), # when run from repo root
+    file.path("r_scripts", name)              # when run from analysis/
+  )
+  for (cand in candidates) {
+    if (file.exists(cand)) {
+      return(cand)
+    }
+  }
+  warning(
+    "Chart script not found: ", name,
+    " (looked in: ", paste(candidates, collapse = " ; "), ")"
+  )
+  return(NULL)
+}
+
+likert_barplot_script <- resolve_script("likert_barplot.R")
+if (!is.null(likert_barplot_script)) {
+  message("Sourcing Likert barplot script: ", likert_barplot_script)
+  source(likert_barplot_script, local = TRUE)
+  if (exists("generate_likert_barplot")) {
+    message("Generating Likert barplot for questionnaire items …")
+    generate_likert_barplot(data_dir = data_dir, out_dir = out_dir)
+  } else {
+    warning("Function generate_likert_barplot() not found after sourcing ", likert_barplot_script)
   }
 }
-
-if (is.null(likert_script)) {
-  stop(
-    "Likert chart script not found. Tried: ",
-    paste(script_candidates, collapse = " ; ")
-  )
-}
-
-message("Sourcing Likert chart script: ", likert_script)
-source(likert_script, local = TRUE)
-
-# Call the per-chart generator (defined in likert_mean_chart.R)
-generate_likert_mean_chart(data_dir = data_dir, out_dir = out_dir)
 
 message("R wrapper finished.")
 
