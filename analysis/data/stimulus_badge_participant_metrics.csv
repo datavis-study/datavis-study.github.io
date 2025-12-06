@@ -1,0 +1,43 @@
+stimulusId,participantId,participantReadableId,badgeId,badgeLabel,clickCount,hoverCount,drawerOpenCount,totalHoverTime,totalDrawerOpenTime
+co2-emissions,5101b146-ce6f-4f61-8818-118229a2308b,alpha,cc-by-licence__co2-emissions,CC BY Licence,1,7,1,1.707,16.827
+co2-emissions,5101b146-ce6f-4f61-8818-118229a2308b,alpha,data-source-disclosed__co2-emissions,Data Source Disclosed,1,4,1,7.482,26.112
+co2-emissions,5101b146-ce6f-4f61-8818-118229a2308b,alpha,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,1,7,1,2.287,33.083
+co2-emissions,5101b146-ce6f-4f61-8818-118229a2308b,alpha,missing-data__co2-emissions,Missing Data,1,3,1,4.292,43.705
+co2-emissions,55eb4774748092000baa97ee,kilo,data-source-disclosed__co2-emissions,Data Source Disclosed,0,1,0,0.014,0.0
+co2-emissions,55eb4774748092000baa97ee,kilo,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,0,2,0,3.043,0.0
+co2-emissions,6697cf02d714e7ee3fdedcec,quebec,cc-by-licence__co2-emissions,CC BY Licence,0,1,0,1.416,0.0
+co2-emissions,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,cc-by-licence__co2-emissions,CC BY Licence,1,2,1,1.17,1.881
+co2-emissions,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,data-source-disclosed__co2-emissions,Data Source Disclosed,1,1,1,0.562,2.63
+co2-emissions,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,1,3,1,0.74,1.049
+co2-emissions,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,missing-data__co2-emissions,Missing Data,2,2,2,1.545,8.501
+global-warming-projection,5101b146-ce6f-4f61-8818-118229a2308b,alpha,actual-time-offset__global-warming-projection,Actual Time Offset,2,4,2,1.173,6.325
+global-warming-projection,5101b146-ce6f-4f61-8818-118229a2308b,alpha,contains-predictions__global-warming-projection,Contains Predictions,2,2,2,0.819,5.37
+global-warming-projection,5101b146-ce6f-4f61-8818-118229a2308b,alpha,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,3,3,3,3.084,21.216
+global-warming-projection,5101b146-ce6f-4f61-8818-118229a2308b,alpha,multiple-data-sources__global-warming-projection,Multiple Data Sources,4,6,4,3.62,72.684
+global-warming-projection,5101b146-ce6f-4f61-8818-118229a2308b,alpha,uncertainty-shown__global-warming-projection,Uncertainty Shown,2,4,2,0.767,5.888
+global-warming-projection,55eb4774748092000baa97ee,kilo,actual-time-offset__global-warming-projection,Actual Time Offset,0,1,0,5.383,0.0
+global-warming-projection,55eb4774748092000baa97ee,kilo,contains-predictions__global-warming-projection,Contains Predictions,0,1,0,3.611,0.0
+global-warming-projection,55eb4774748092000baa97ee,kilo,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,0,1,0,6.317,0.0
+global-warming-projection,55eb4774748092000baa97ee,kilo,multiple-data-sources__global-warming-projection,Multiple Data Sources,0,1,0,3.548,0.0
+global-warming-projection,55eb4774748092000baa97ee,kilo,uncertainty-shown__global-warming-projection,Uncertainty Shown,0,1,0,3.247,0.0
+global-warming-projection,5d879c06e645c60019847113,november,actual-time-offset__global-warming-projection,Actual Time Offset,0,5,0,8.22,0.0
+global-warming-projection,5d879c06e645c60019847113,november,contains-predictions__global-warming-projection,Contains Predictions,1,2,1,2.096,20.393
+global-warming-projection,5d879c06e645c60019847113,november,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,3,4,3,65.037,47.798
+global-warming-projection,5d879c06e645c60019847113,november,multiple-data-sources__global-warming-projection,Multiple Data Sources,0,8,0,18.46,0.0
+global-warming-projection,5d879c06e645c60019847113,november,uncertainty-shown__global-warming-projection,Uncertainty Shown,1,3,1,5.185,19.92
+global-warming-projection,65537e14439274fe5036b4d2,oscar,actual-time-offset__global-warming-projection,Actual Time Offset,0,4,0,2.165,0.0
+global-warming-projection,65537e14439274fe5036b4d2,oscar,contains-predictions__global-warming-projection,Contains Predictions,0,2,0,3.614,0.0
+global-warming-projection,65537e14439274fe5036b4d2,oscar,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,0,2,0,11.448,0.0
+global-warming-projection,65537e14439274fe5036b4d2,oscar,multiple-data-sources__global-warming-projection,Multiple Data Sources,0,3,0,5.334,0.0
+global-warming-projection,65537e14439274fe5036b4d2,oscar,uncertainty-shown__global-warming-projection,Uncertainty Shown,0,4,0,4.024,0.0
+global-warming-projection,6697cf02d714e7ee3fdedcec,quebec,actual-time-offset__global-warming-projection,Actual Time Offset,0,1,0,0.018,0.0
+global-warming-projection,6697cf02d714e7ee3fdedcec,quebec,contains-predictions__global-warming-projection,Contains Predictions,0,1,0,0.367,0.0
+global-warming-projection,676578e9b3ad38588f8808ba,golf,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,0,2,0,1.103,0.0
+global-warming-projection,676578e9b3ad38588f8808ba,golf,multiple-data-sources__global-warming-projection,Multiple Data Sources,0,1,0,29.871,0.0
+global-warming-projection,676578e9b3ad38588f8808ba,golf,uncertainty-shown__global-warming-projection,Uncertainty Shown,0,1,0,0.565,0.0
+global-warming-projection,67eee89119de070d8b864f60,tango,contains-predictions__global-warming-projection,Contains Predictions,0,1,0,0.033,0.0
+global-warming-projection,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,actual-time-offset__global-warming-projection,Actual Time Offset,1,1,1,3.881,3.911
+global-warming-projection,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,contains-predictions__global-warming-projection,Contains Predictions,1,1,1,4.265,2.536
+global-warming-projection,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,1,4,1,3.201,0.955
+global-warming-projection,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,multiple-data-sources__global-warming-projection,Multiple Data Sources,1,7,1,6.847,5.888
+global-warming-projection,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,uncertainty-shown__global-warming-projection,Uncertainty Shown,1,5,1,2.243,1.369

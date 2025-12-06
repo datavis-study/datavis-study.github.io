@@ -35,6 +35,19 @@ def export_badge_stats(
 
     data = load_completed_participants(src_path)
 
+    # Load human‑readable participant ids if available, so we can include them
+    # alongside the raw participantId in the exported CSVs.
+    participant_map_path = src_path.parent / "participant_id_map.csv"
+    readable_id_by_pid: Dict[str, str] = {}
+    if participant_map_path.exists():
+        with participant_map_path.open("r", encoding="utf-8", newline="") as f_map:
+            reader = csv.DictReader(f_map)
+            for row in reader:
+                pid = str(row.get("participantId", "")).strip()
+                rid = str(row.get("readableId", "")).strip()
+                if pid and rid:
+                    readable_id_by_pid[pid] = rid
+
     # Aggregation keyed by (stimulusId, badgeId)
     rows: Dict[Tuple[str, str], Dict[str, Any]] = {}
 
@@ -44,6 +57,14 @@ def export_badge_stats(
 
     # Track participant‑level coverage flags per (stimulusId, participantId)
     participant_flags: Dict[Tuple[str, str], Dict[str, Any]] = {}
+
+    # Track per-participant per-badge metrics keyed by
+    # (stimulusId, participantId, badgeId)
+    participant_badge_rows: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+
+    # Track per-participant per-stimulus metrics keyed by
+    # (stimulusId, participantId)
+    participant_stimulus_rows: Dict[Tuple[str, str], Dict[str, Any]] = {}
 
     for rec in _iter_participants(data):
         pid = str(rec.get("participantId", "")).strip()
@@ -131,11 +152,60 @@ def export_badge_stats(
                     # Sum counters (convert ms to seconds for totals)
                     click_inc = int(agg.get("clickCount", 0) or 0)
                     hover_inc = int(agg.get("totalHoverCount", 0) or 0)
+                    drawer_inc = int(agg.get("drawerOpenCount", 0) or 0)
+                    hover_time_sec = _seconds(agg.get("totalHoverTimeMs", 0)) or 0.0
+                    drawer_time_sec = _seconds(agg.get("totalDrawerOpenTimeMs", 0)) or 0.0
+
+                    # Global per-badge aggregates
                     row["clickCount"] += click_inc
                     row["hoverCount"] += hover_inc
-                    row["totalHoverTime"] += _seconds(agg.get("totalHoverTimeMs", 0)) or 0.0
-                    row["drawerOpenCount"] += int(agg.get("drawerOpenCount", 0) or 0)
-                    row["totalDrawerOpenTime"] += _seconds(agg.get("totalDrawerOpenTimeMs", 0)) or 0.0
+                    row["totalHoverTime"] += hover_time_sec
+                    row["drawerOpenCount"] += drawer_inc
+                    row["totalDrawerOpenTime"] += drawer_time_sec
+
+                    # Per-participant per-badge metrics
+                    if pid:
+                        pp_key = (stimulus_id, pid, badge_id)
+                        if pp_key not in participant_badge_rows:
+                            participant_badge_rows[pp_key] = {
+                                "stimulusId": stimulus_id,
+                                "participantId": pid,
+                                "badgeId": badge_id or None,
+                                "badgeLabel": badge_label,
+                                "clickCount": 0,
+                                "hoverCount": 0,
+                                "drawerOpenCount": 0,
+                                "totalHoverTime": 0.0,
+                                "totalDrawerOpenTime": 0.0,
+                            }
+                        pp_row = participant_badge_rows[pp_key]
+                        # Update label if missing
+                        if not pp_row.get("badgeLabel") and badge_label:
+                            pp_row["badgeLabel"] = badge_label
+                        pp_row["clickCount"] += click_inc
+                        pp_row["hoverCount"] += hover_inc
+                        pp_row["drawerOpenCount"] += drawer_inc
+                        pp_row["totalHoverTime"] += hover_time_sec
+                        pp_row["totalDrawerOpenTime"] += drawer_time_sec
+
+                        # Per-participant per-stimulus metrics (aggregated across badges)
+                        ps_key = (stimulus_id, pid)
+                        if ps_key not in participant_stimulus_rows:
+                            participant_stimulus_rows[ps_key] = {
+                                "stimulusId": stimulus_id,
+                                "participantId": pid,
+                                "totalClickCount": 0,
+                                "totalHoverCount": 0,
+                                "totalDrawerOpenCount": 0,
+                                "totalHoverTime": 0.0,
+                                "totalDrawerOpenTime": 0.0,
+                            }
+                        ps_row = participant_stimulus_rows[ps_key]
+                        ps_row["totalClickCount"] += click_inc
+                        ps_row["totalHoverCount"] += hover_inc
+                        ps_row["totalDrawerOpenCount"] += drawer_inc
+                        ps_row["totalHoverTime"] += hover_time_sec
+                        ps_row["totalDrawerOpenTime"] += drawer_time_sec
 
                     if click_inc > 0:
                         trial_clicked = True
@@ -333,11 +403,78 @@ def export_badge_stats(
     # can annotate individual stimulus notes with simple interaction flags.
     flags_path = dst_path.with_name("stimulus_badge_participant_flags.csv")
     with flags_path.open("w", encoding="utf-8", newline="") as f_flags:
-        fieldnames_flags = ["stimulusId", "participantId", "hoveredAnyBadge", "clickedAnyBadge"]
+        fieldnames_flags = [
+            "stimulusId",
+            "participantId",
+            "participantReadableId",
+            "hoveredAnyBadge",
+            "clickedAnyBadge",
+        ]
         writer_flags = csv.DictWriter(f_flags, fieldnames=fieldnames_flags)
         writer_flags.writeheader()
         for _, rec in sorted(participant_flags.items()):
-            writer_flags.writerow(rec)
+            pid = str(rec.get("participantId", "")).strip()
+            out = {
+                "stimulusId": rec.get("stimulusId"),
+                "participantId": pid,
+                "participantReadableId": readable_id_by_pid.get(pid),
+                "hoveredAnyBadge": rec.get("hoveredAnyBadge"),
+                "clickedAnyBadge": rec.get("clickedAnyBadge"),
+            }
+            writer_flags.writerow(out)
+
+    # Additionally, write a per-participant per-badge metrics file so that we
+    # can see exactly which participant interacted with which badge.
+    participant_metrics_path = dst_path.with_name("stimulus_badge_participant_metrics.csv")
+    with participant_metrics_path.open("w", encoding="utf-8", newline="") as f_pp:
+        fieldnames_pp = [
+            "stimulusId",
+            "participantId",
+            "participantReadableId",
+            "badgeId",
+            "badgeLabel",
+            "clickCount",
+            "hoverCount",
+            "drawerOpenCount",
+            "totalHoverTime",
+            "totalDrawerOpenTime",
+        ]
+        writer_pp = csv.DictWriter(f_pp, fieldnames=fieldnames_pp)
+        writer_pp.writeheader()
+        for _, rec in sorted(participant_badge_rows.items()):
+            pid = str(rec.get("participantId", "")).strip()
+            out = {k: rec.get(k) for k in fieldnames_pp if k != "participantReadableId"}
+            out["participantReadableId"] = readable_id_by_pid.get(pid)
+            # Round seconds for readability
+            for k in ["totalHoverTime", "totalDrawerOpenTime"]:
+                if out.get(k) is not None:
+                    out[k] = round(float(out[k]), 3)
+            writer_pp.writerow(out)
+
+    # And write a per-stimulus per-participant metrics file that aggregates
+    # interactions across all badges for that stimulus.
+    stimulus_participant_path = dst_path.with_name("stimulus_participant_metrics.csv")
+    with stimulus_participant_path.open("w", encoding="utf-8", newline="") as f_sp:
+        fieldnames_sp = [
+            "stimulusId",
+            "participantId",
+            "participantReadableId",
+            "totalClickCount",
+            "totalHoverCount",
+            "totalDrawerOpenCount",
+            "totalHoverTime",
+            "totalDrawerOpenTime",
+        ]
+        writer_sp = csv.DictWriter(f_sp, fieldnames=fieldnames_sp)
+        writer_sp.writeheader()
+        for _, rec in sorted(participant_stimulus_rows.items()):
+            pid = str(rec.get("participantId", "")).strip()
+            out = {k: rec.get(k) for k in fieldnames_sp if k != "participantReadableId"}
+            out["participantReadableId"] = readable_id_by_pid.get(pid)
+            for k in ["totalHoverTime", "totalDrawerOpenTime"]:
+                if out.get(k) is not None:
+                    out[k] = round(float(out[k]), 3)
+            writer_sp.writerow(out)
 
     return dst_path
 

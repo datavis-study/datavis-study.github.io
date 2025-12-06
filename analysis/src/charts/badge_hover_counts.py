@@ -25,7 +25,7 @@ def _stimulus_order(labels: pd.Series) -> List[str]:
 def _stimulus_label(stimulus_id: str) -> str:
 	label_map = {
 		"global-warming-projection": "Global Warming Projection",
-		"co2-emissions": "CO₂ Emissions",
+		"co2-emissions": "CO2 Emissions",
 	}
 	return label_map.get(str(stimulus_id), str(stimulus_id))
 
@@ -37,7 +37,8 @@ def _badge_sort_order(labels: pd.Series) -> list[str]:
 	- But any badge labelled exactly 'Contains Prediction' (case-insensitive)
 	  is always placed at the right-most side for easier comparison.
 	"""
-	unique = [str(v) for v in labels.dropna().unique()]
+	# Normalise any CO₂-like text to plain ASCII "CO2" so it renders everywhere
+	unique = [str(v).replace("₂", "2") for v in labels.dropna().unique()]
 	special = [v for v in unique if str(v).strip().lower() == "contains prediction"]
 	others = sorted(v for v in unique if v not in special)
 	return others + special
