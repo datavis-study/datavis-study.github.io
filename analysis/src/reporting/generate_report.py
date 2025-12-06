@@ -39,11 +39,22 @@ def _timestamp() -> str:
 def _human_timestamp() -> str:
 	return dt.datetime.now().astimezone().strftime("%a, %d %b %Y %H:%M %Z")
 
+
 def _run_label() -> str:
-	# Human-friendly, filesystem-safe label for the report directory
-	# Lowercase, underscores instead of spaces. Example: "sun_16_nov_2025_13-22"
-	raw = dt.datetime.now().astimezone().strftime("%a %d %b %Y %H-%M")
-	return raw.lower().replace(" ", "_")
+	"""
+	Human-friendly, filesystem-safe label for the report directory.
+
+	We prefix with an ISO-style date and time so that lexicographic sorting
+	matches chronological order, ensuring the newest report directory appears
+	at the bottom when sorted by name in ascending order.
+
+	Example: "2025-12-05_18-19_fri"
+	"""
+	now = dt.datetime.now().astimezone()
+	date_part = now.strftime("%Y-%m-%d")
+	time_part = now.strftime("%H-%M")
+	weekday_part = now.strftime("%a").lower()
+	return f"{date_part}_{time_part}_{weekday_part}"
 
 def _sanitize_path_component(name: str) -> str:
 	# Prevent path separator issues while keeping it readable
