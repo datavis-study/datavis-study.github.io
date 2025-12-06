@@ -130,11 +130,25 @@ generate_badge_hover_participant_counts_plot <- function(
   # Global max over *stacked* hover counts per badge (not per participant)
   max_total_hover <- max(badge_order_df$totalHover, na.rm = TRUE)
 
+  # Data frame for total-per-badge labels at the end of each bar
+  total_labels <- badge_order_df %>%
+    dplyr::select(stimulus_label, badgeLabelOrder, totalHover)
+
   badge_order_df <- badge_order_df %>%
     dplyr::select(stimulus_label, badgeLabelDisplay, badgeLabelOrder)
 
   df <- df %>%
     dplyr::left_join(badge_order_df, by = c("stimulus_label", "badgeLabelDisplay"))
+
+  # Build a soft monochrome (blue-grey) palette with one distinct shade per
+  # participant. This keeps everything in a single calm hue while still
+  # differentiating people without harsh contrasts.
+  participant_levels <- sort(unique(df$participantDisplay))
+  n_participants     <- length(participant_levels)
+  participant_colors <- stats::setNames(
+    grDevices::colorRampPalette(c("#e3e8f0", "#4c6a8a"))(n_participants),
+    participant_levels
+  )
 
   # Single chart: both stimuli in one figure, faceted vertically.
   # Axis is based on stacked hover counts per badge so the bar lengths
@@ -163,7 +177,22 @@ generate_badge_hover_participant_counts_plot <- function(
     geom_text(
       aes(label = hoverCount),
       position = position_stack(vjust = 0.5),
-      color    = "white",
+      color    = "black",
+      size     = 3,
+      fontface = "bold"
+    ) +
+    # Add total hover count per badge at the end of each full bar
+    geom_text(
+      data = total_labels,
+      inherit.aes = FALSE,
+      aes(
+        x     = totalHover,
+        y     = badgeLabelOrder,
+        label = totalHover
+      ),
+      # Place the total label a bit further to the right of the bar end
+      hjust    = -0.4,
+      color    = "black",
       size     = 3,
       fontface = "bold"
     ) +
@@ -176,8 +205,8 @@ generate_badge_hover_participant_counts_plot <- function(
       breaks = seq(0, max_break, by = 2),
       limits = c(0, max_break)
     ) +
-    # Use a clean qualitative palette from paletteer (many distinct colors)
-    paletteer::scale_fill_paletteer_d("ggthemes::Tableau_20") +
+    # Soft monochrome blue-grey palette for participants
+    scale_fill_manual(values = participant_colors) +
     labs(
       title = "Hover counts per badge, stacked by participant",
       x     = "Hover count",
@@ -188,7 +217,9 @@ generate_badge_hover_participant_counts_plot <- function(
     theme(
       legend.position       = "bottom",
       axis.text.y           = element_text(size = 10),
-      axis.text.x           = element_text(size = 10),
+      # Hide x-axis tick labels and ticks since values are now shown via labels
+      axis.text.x           = element_blank(),
+      axis.ticks.x          = element_blank(),
       panel.grid.major.y    = element_blank()
     )
 
