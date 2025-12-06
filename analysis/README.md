@@ -58,7 +58,6 @@ The Markdown supports simple templating (Jinja2) with these context variables:
 - `group_counts`: list of objects with `group`, `n_participants`
 - `data_dir`, `out_dir`, `run_id`, `generated_at`
 - `figures`: list of objects with `name`, `filename`, `path`
-
 Example inside `report.md`:
 
 ```markdown
@@ -71,7 +70,32 @@ We analyzed {{ participants_count }} participants.
 This setup generates a Markdown report. For PDF, use your editor/Markdown viewer’s “Export to PDF”, or we can add Quarto/Pandoc export in a follow-up.
 
 ### Updating with new data
-
 Drop new CSVs into `data/` (same filenames), then rerun the CLI. A fresh timestamped report will be created without touching previous runs.
+
+### Minimal R-based charts (experimental)
+
+If you prefer to experiment with R for chart creation while keeping the existing Python pipeline intact, there is a small R pipeline composed of:
+- A **single main wrapper** at `analysis/r_charts.R`.
+- One **per-chart script** at `analysis/r_scripts/likert_mean_chart.R` (for now).
+
+- **Dependencies**: R with `readr`, `dplyr`, `tidyr`, and `ggplot2` installed.
+- **Default behavior**: Reads CSVs from `analysis/data` and writes PNG charts to `analysis/r_output/`.
+
+From the repo root:
+
+```bash
+Rscript analysis/r_charts.R
+```
+
+You can also override the input data directory and output directory:
+
+```bash
+Rscript analysis/r_charts.R path/to/data path/to/output
+```
+
+Currently, the main wrapper internally calls the Likert script to generate:
+- A **Likert mean scores by group and dimension** chart from `questionnaire_likert_scores.csv` (if present).
+
+This does not modify the Python report generation or file layout; it only reads the existing CSVs and writes additional figures.
 
 
