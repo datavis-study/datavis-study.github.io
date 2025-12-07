@@ -5,10 +5,11 @@ from typing import List, Optional
 
 import pandas as pd
 from jinja2 import Template
+import json
+import shutil
 
 from . import util
 from . import text_clean
-import json
 
 
 def _timestamp() -> str:
@@ -75,6 +76,45 @@ def generate_report(
 
 	run_id = run_id or _run_label()
 	root_out = pathlib.Path(out_dir) / _sanitize_path_component(run_id)
+	# Ensure the report output directory (and figures/data subfolders) exist
+	util.safe_make_dir(root_out)
+	fig_out = root_out / "figures"
+	util.safe_make_dir(fig_out)
+	data_out = root_out / "data"
+	util.safe_make_dir(data_out)
+
+	# Archive all CSV data files used for this report into the run directory
+	try:
+		data_dir_path = pathlib.Path(data_dir)
+		if data_dir_path.exists():
+			for csv_path in data_dir_path.glob("*.csv"):
+				dst = data_out / csv_path.name
+				shutil.copy2(csv_path, dst)
+	except Exception:
+		# Data archiving should not break report generation
+		pass
+
+	# Copy R-generated charts (and any other PNGs) into the local figures folder
+	try:
+		this_file = pathlib.Path(__file__).resolve()
+		analysis_dir = this_file.parents[2]  # .../analysis
+		r_output_dir = analysis_dir / "r_output"
+		if r_output_dir.exists():
+			for png in r_output_dir.glob("*.png"):
+				dst = fig_out / png.name
+				if not dst.exists():
+					shutil.copy2(png, dst)
+		# Also copy static stimulus assets if present
+		assets_dir = this_file.with_name("assets")
+		if assets_dir.exists():
+			for asset in assets_dir.iterdir():
+				if asset.suffix.lower() in {".png", ".jpg", ".jpeg"}:
+					dst = fig_out / asset.name
+					if not dst.exists():
+						shutil.copy2(asset, dst)
+	except Exception:
+		# Figure copying is best-effort; do not fail the whole report
+		pass
 	# Ensure the report output directory exists before writing report.md
 	util.safe_make_dir(root_out)
 	n_participants = (

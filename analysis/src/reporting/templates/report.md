@@ -93,20 +93,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% endif %}
 {% endif %}
 
-# Post-questionaire
-
-**Likert scale questions per dimension**
-- **Saliency** Footnotes/Badges were easy to spot. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Clutter** Footnotes/Badges cluttered or distracted from the visualization. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Interpretability** Footnotes/Badges were clear and easy to interpret. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Usefulness** Information in the Footnotes/Badges was useful for understanding the visualization. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Trust** Footnotes/Badges increased my trust in the information and methodology. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Standardization** Footnotes/Badges like these should be widely used alongside visualizations. (1 = Strongly Disagree, 5 = Strongly Agree)
-
-
-*(Chart-based visual summaries are omitted in this version of the report.)*
-
-### Open-ended answers
+## Post Questionaire - Open-ended answers
 
 {% if open_questions and open_questions|length > 0 %}
 {# First, show the noticing summary table (not collapsed) #}
@@ -167,22 +154,9 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 > No open-ended responses available.
 {% endif %}
 
-### Badge interactions (text-only summary)
+## Post questionaire likert scale respponse
 
-{% if badge_participant_stats and badge_participant_stats|length > 0 %}
-**Per-stimulus participant coverage (hover and clicks):**
-
-{% for s in badge_participant_stats %}
-- **{{ s.label }}**: {{ s.hover_participants }} participants hovered at least one badge; {{ s.click_participants }} participants clicked at least one badge.
-{% endfor %}
-
-{% set total_click_participants = badge_participant_stats | map(attribute="click_participants") | sum %}
-{% if total_click_participants == 0 %}
-_Note: No click interaction data available (no participants clicked badges)._
-{% endif %}
-{% else %}
-_No badge interaction metrics available (missing `stimulus_badge_metrics.csv` or badge metrics were not computed)._
-{% endif %}
+![Likert scale responses by group](figures/likert_barplot_by_group.png)
 
 ### Participant ID mapping and time per component
 
