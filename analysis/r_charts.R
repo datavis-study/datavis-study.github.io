@@ -72,5 +72,17 @@ if (!is.null(badge_hover_participant_counts_script)) {
   }
 }
 
+badge_click_participant_counts_script <- resolve_script("badge_click_participant_counts.R")
+if (!is.null(badge_click_participant_counts_script)) {
+  message("Sourcing Badge Click Participant Counts script: ", badge_click_participant_counts_script)
+  source(badge_click_participant_counts_script, local = TRUE)
+  if (exists("generate_badge_click_participant_counts_plot")) {
+    message("Generating Badge Click Participant Counts stacked plot …")
+    generate_badge_click_participant_counts_plot(data_dir = data_dir, out_dir = out_dir)
+  } else {
+    warning("Function generate_badge_click_participant_counts_plot() not found after sourcing ", badge_click_participant_counts_script)
+  }
+}
+
 message("R wrapper finished.")
 

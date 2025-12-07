@@ -186,10 +186,10 @@ generate_badge_hover_participant_counts_plot <- function(
       color    = "black",
       size     = 3
     ) +
-    facet_grid(
-      rows   = vars(stimulus_label),
-      scales = "free_y",
-      space  = "free_y"
+    facet_wrap(
+      ~ stimulus_label,
+      ncol   = 1,
+      scales = "free_y"
     ) +
     scale_x_continuous(
       breaks = seq(0, max_break, by = 2),
