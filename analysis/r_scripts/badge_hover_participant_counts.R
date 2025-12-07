@@ -100,8 +100,8 @@ generate_badge_hover_participant_counts_plot <- function(
   # Nice human-readable stimulus labels using plain ASCII for "CO2"
   pretty_stimulus <- function(id) {
     dplyr::case_when(
-      id == "co2-emissions" ~ "CO2 Emissions",
-      id == "global-warming-projection" ~ "Global Warming Projection",
+      id == "co2-emissions" ~ "Stimuli: CO2 Emissions",
+      id == "global-warming-projection" ~ "Stimuli: Global Warming Projection",
       TRUE ~ as.character(id)
     )
   }
@@ -186,10 +186,10 @@ generate_badge_hover_participant_counts_plot <- function(
       color    = "black",
       size     = 3
     ) +
-    facet_wrap(
-      ~ stimulus_label,
-      ncol   = 1,
-      scales = "free_y"
+    facet_grid(
+      rows   = vars(stimulus_label),
+      scales = "free_y",
+      space  = "free_y"
     ) +
     scale_x_continuous(
       breaks = seq(0, max_break, by = 2),
@@ -207,7 +207,11 @@ generate_badge_hover_participant_counts_plot <- function(
       legend.position       = "bottom",
       axis.text.y           = element_text(size = 10),
       axis.text.x           = element_text(size = 10),
-      panel.grid.major.y    = element_blank()
+      # Horizontal grid lines off; vertical grid lines on starting at x = 0
+      panel.grid.major.y    = element_blank(),
+      panel.grid.minor.y    = element_blank(),
+      panel.grid.major.x    = element_line(colour = "grey95"),
+      panel.grid.minor.x    = element_blank()
     ) +
     guides(
       fill = guide_legend(nrow = 1, byrow = TRUE)
