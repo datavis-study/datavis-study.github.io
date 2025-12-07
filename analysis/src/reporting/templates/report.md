@@ -27,7 +27,12 @@ Generated at: `{{ generated_at }}`
 {% endif %}
 
 ## Main tasks
-Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+### Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+
+| Footnotes condition | Badges condition |
+| :-----------------: | :--------------: |
+| <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="360" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="360" /> |
+| <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="360" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="360" /> |
 
 ### Stimuli 1: CO₂ Emissions
 
@@ -93,7 +98,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% endif %}
 {% endif %}
 
-## Post Questionaire - Open-ended answers
+## Open-ended questions
 
 {% if open_questions and open_questions|length > 0 %}
 {# First, show the noticing summary table (not collapsed) #}
@@ -154,9 +159,19 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 > No open-ended responses available.
 {% endif %}
 
-## Post questionaire likert scale respponse
+## Likert scale responses
 
-![Likert scale responses by group](figures/likert_barplot_by_group.png)
+<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="600" />
+
+### Participant-level interactions per metric
+
+| Hover counts (per badge, by participant) | Hover time (per badge, by participant) |
+| :--------------------------------------: | :-------------------------------------: |
+| <img src="figures/badge_hover_participant_counts_stacked.png" alt="Stacked hover counts per badge and participant" width="420" /> | <img src="figures/badge_hover_time_participant_stacked.png" alt="Stacked total hover time per badge and participant" width="420" /> |
+
+| Click counts (per badge, by participant) | Drawer open time (per badge, by participant) |
+| :--------------------------------------: | :------------------------------------------: |
+| <img src="figures/badge_click_participant_counts_stacked.png" alt="Stacked click counts per badge and participant" width="420" /> | <img src="figures/badge_drawer_time_participant_stacked.png" alt="Stacked drawer open time per badge and participant" width="420" /> |
 
 ### Participant ID mapping and time per component
 

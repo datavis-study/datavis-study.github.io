@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Sun, 07 Dec 2025 14:35 CET`
+Generated at: `Sun, 07 Dec 2025 15:01 CET`
 
 **Demographics**
 
@@ -49,7 +49,12 @@ Generated at: `Sun, 07 Dec 2025 14:35 CET`
 
 
 ## Main tasks
-Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+### Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+
+| Footnotes condition | Badges condition |
+| :-----------------: | :--------------: |
+| <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="360" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="360" /> |
+| <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="360" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="360" /> |
 
 ### Stimuli 1: CO₂ Emissions
 
@@ -191,20 +196,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 
 
-# Post-questionaire
-
-**Likert scale questions per dimension**
-- **Saliency** Footnotes/Badges were easy to spot. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Clutter** Footnotes/Badges cluttered or distracted from the visualization. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Interpretability** Footnotes/Badges were clear and easy to interpret. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Usefulness** Information in the Footnotes/Badges was useful for understanding the visualization. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Trust** Footnotes/Badges increased my trust in the information and methodology. (1 = Strongly Disagree, 5 = Strongly Agree)
-- **Standardization** Footnotes/Badges like these should be widely used alongside visualizations. (1 = Strongly Disagree, 5 = Strongly Agree)
-
-
-*(Chart-based visual summaries are omitted in this version of the report.)*
-
-### Open-ended answers
+## Open-ended questions
 
 
 
@@ -573,20 +565,19 @@ Least: copyright and the ones I forgot already
 
 
 
-### Badge interactions (text-only summary)
+## Likert scale responses
 
+<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="600" />
 
-**Per-stimulus participant coverage (hover and clicks):**
+### Participant-level interactions per metric
 
+| Hover counts (per badge, by participant) | Hover time (per badge, by participant) |
+| :--------------------------------------: | :-------------------------------------: |
+| <img src="figures/badge_hover_participant_counts_stacked.png" alt="Stacked hover counts per badge and participant" width="420" /> | <img src="figures/badge_hover_time_participant_stacked.png" alt="Stacked total hover time per badge and participant" width="420" /> |
 
-- **CO₂ Emissions**: 4 participants hovered at least one badge; 2 participants clicked at least one badge.
-
-- **Global Warming Projection**: 9 participants hovered at least one badge; 3 participants clicked at least one badge.
-
-
-
-
-
+| Click counts (per badge, by participant) | Drawer open time (per badge, by participant) |
+| :--------------------------------------: | :------------------------------------------: |
+| <img src="figures/badge_click_participant_counts_stacked.png" alt="Stacked click counts per badge and participant" width="420" /> | <img src="figures/badge_drawer_time_participant_stacked.png" alt="Stacked drawer open time per badge and participant" width="420" /> |
 
 ### Participant ID mapping and time per component
 
