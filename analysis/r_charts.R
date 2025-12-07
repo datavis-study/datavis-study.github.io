@@ -84,5 +84,29 @@ if (!is.null(badge_click_participant_counts_script)) {
   }
 }
 
+badge_hover_time_participant_counts_script <- resolve_script("badge_hover_time_participant_counts.R")
+if (!is.null(badge_hover_time_participant_counts_script)) {
+  message("Sourcing Badge Hover Time Participant script: ", badge_hover_time_participant_counts_script)
+  source(badge_hover_time_participant_counts_script, local = TRUE)
+  if (exists("generate_badge_hover_time_participant_plot")) {
+    message("Generating Badge Hover Time Participant stacked plot …")
+    generate_badge_hover_time_participant_plot(data_dir = data_dir, out_dir = out_dir)
+  } else {
+    warning("Function generate_badge_hover_time_participant_plot() not found after sourcing ", badge_hover_time_participant_counts_script)
+  }
+}
+
+badge_drawer_time_participant_counts_script <- resolve_script("badge_drawer_time_participant_counts.R")
+if (!is.null(badge_drawer_time_participant_counts_script)) {
+  message("Sourcing Badge Drawer Time Participant script: ", badge_drawer_time_participant_counts_script)
+  source(badge_drawer_time_participant_counts_script, local = TRUE)
+  if (exists("generate_badge_drawer_time_participant_plot")) {
+    message("Generating Badge Drawer Time Participant stacked plot …")
+    generate_badge_drawer_time_participant_plot(data_dir = data_dir, out_dir = out_dir)
+  } else {
+    warning("Function generate_badge_drawer_time_participant_plot() not found after sourcing ", badge_drawer_time_participant_counts_script)
+  }
+}
+
 message("R wrapper finished.")
 

@@ -137,15 +137,11 @@ generate_badge_click_participant_counts_plot <- function(
     dplyr::left_join(badge_order_df, by = c("stimulus_label", "badgeLabelDisplay"))
 
   # Ensure the badges with the largest total click counts appear at the *top*
-  # of each facet, and participants with the largest overall contribution are
-  # stacked first along the x‑axis for easier visual comparison.
+  # of each facet. Participant colours/order are kept consistent across
+  # all charts by using a single global (alphabetical) ordering.
   participant_order <- df %>%
-    dplyr::group_by(participantDisplay) %>%
-    dplyr::summarise(
-      totalClick = sum(clickCount, na.rm = TRUE),
-      .groups = "drop"
-    ) %>%
-    dplyr::arrange(dplyr::desc(totalClick)) %>%
+    dplyr::distinct(participantDisplay) %>%
+    dplyr::arrange(participantDisplay) %>%
     dplyr::pull(participantDisplay)
 
   df <- df %>%
@@ -195,8 +191,8 @@ generate_badge_click_participant_counts_plot <- function(
       breaks = seq(0, max_break, by = 2),
       limits = c(0, max_break)
     ) +
-    # Use the same light qualitative palette as the hover chart so colours match
-    scale_fill_brewer(palette = "Set2") +
+    # Use the same soft pastel palette as the hover chart so colours match
+    scale_fill_brewer(palette = "Set3") +
     labs(
       title = NULL,          # no global header/title
       x     = "Click count",
