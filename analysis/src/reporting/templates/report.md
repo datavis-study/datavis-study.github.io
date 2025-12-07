@@ -132,7 +132,7 @@ Generated at: `{{ generated_at }}`
 
 {% if q.responses_footnotes and q.responses_footnotes|length > 0 %}
 {% for r in q.responses_footnotes %}
-- **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.firstStimulusLabel %}; {{ r.firstStimulusLabel }}{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
+- 🟦 **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.firstStimulusLabel %}; {{ r.firstStimulusLabel }}{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
@@ -143,7 +143,7 @@ Generated at: `{{ generated_at }}`
 
 {% if q.responses_badges and q.responses_badges|length > 0 %}
 {% for r in q.responses_badges %}
-- **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.firstStimulusLabel %}; {{ r.firstStimulusLabel }}{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
+- 🟩 **{{ r.participant }} ({{ r.words }} words{% if r.isProlific %}; Prolific{% endif %}{% if r.firstStimulusLabel %}; {{ r.firstStimulusLabel }}{% endif %}{% if r.hoveredAnyBadge or r.clickedAnyBadge %};{% if r.hoveredAnyBadge %} hovered badges{% endif %}{% if r.hoveredAnyBadge and r.clickedAnyBadge %}, {% endif %}{% if r.clickedAnyBadge %} clicked badges{% endif %}{% endif %})**: {{ r.text }}
 {% endfor %}
 {% endif %}
 
