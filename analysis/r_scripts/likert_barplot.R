@@ -49,12 +49,12 @@ generate_likert_barplot <- function(
 
   # Human-readable question text for each item (used as axis labels / headers)
   item_label_map <- c(
-    saliency        = "Footnotes/Badges were easy to spot.",
-    clutter         = "Footnotes/Badges cluttered or distracted from the visualization.",
-    interpretability = "Footnotes/Badges were clear and easy to interpret.",
-    usefulness      = "Information in the Footnotes/Badges was useful for understanding the visualization.",
-    trust           = "Footnotes/Badges increased my trust in the information and methodology.",
-    standardization = "Footnotes/Badges like these should be widely used alongside visualizations."
+    saliency        = "Easy to spot.",
+    clutter         = "Cluttered or distracted from the visualization.",
+    interpretability = "Clear and easy to interpret.",
+    usefulness      = "Information was useful for understanding the visualization.",
+    trust           = "Increased my trust in the information and methodology.",
+    standardization = "Should be widely used alongside visualizations."
   )
 
   if (length(item_cols) == 0) {

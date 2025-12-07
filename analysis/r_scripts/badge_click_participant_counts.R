@@ -130,25 +130,29 @@ generate_badge_click_participant_counts_plot <- function(
   # Global max over *stacked* click counts per badge (not per participant)
   max_total_click <- max(badge_order_df$totalClick, na.rm = TRUE)
 
-  # Data frame for total-per-badge labels at the end of each bar
-  total_labels <- badge_order_df %>%
-    dplyr::select(stimulus_label, badgeLabelOrder, totalClick)
-
   badge_order_df <- badge_order_df %>%
     dplyr::select(stimulus_label, badgeLabelDisplay, badgeLabelOrder)
 
   df <- df %>%
     dplyr::left_join(badge_order_df, by = c("stimulus_label", "badgeLabelDisplay"))
 
-  # Build a soft monochrome (blue-grey) palette with one distinct shade per
-  # participant. This keeps everything in a single calm hue while still
-  # differentiating people without harsh contrasts.
-  participant_levels <- sort(unique(df$participantDisplay))
-  n_participants     <- length(participant_levels)
-  participant_colors <- stats::setNames(
-    grDevices::colorRampPalette(c("#e3e8f0", "#4c6a8a"))(n_participants),
-    participant_levels
-  )
+  # Ensure the badges with the largest total click counts appear at the *top*
+  # of each facet, and participants with the largest overall contribution are
+  # stacked first along the x‑axis for easier visual comparison.
+  participant_order <- df %>%
+    dplyr::group_by(participantDisplay) %>%
+    dplyr::summarise(
+      totalClick = sum(clickCount, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    dplyr::arrange(dplyr::desc(totalClick)) %>%
+    dplyr::pull(participantDisplay)
+
+  df <- df %>%
+    dplyr::mutate(
+      badgeLabelOrder   = forcats::fct_rev(badgeLabelOrder),
+      participantDisplay = factor(participantDisplay, levels = participant_order)
+    )
 
   # Single chart: both stimuli in one figure, faceted vertically.
   # Axis is based on stacked click counts per badge so the bar lengths
@@ -172,29 +176,15 @@ generate_badge_click_participant_counts_plot <- function(
       fill = participantDisplay
     )
   ) +
-    geom_col(width = 0.7) +
-    # Add per-participant click counts as labels centered in each stacked segment
+    geom_col(
+      width    = 0.7,
+      position = position_stack(reverse = TRUE)
+    ) +
     geom_text(
       aes(label = clickCount),
-      position = position_stack(vjust = 0.5),
+      position = position_stack(vjust = 0.5, reverse = TRUE),
       color    = "black",
-      size     = 3,
-      fontface = "bold"
-    ) +
-    # Add total click count per badge at the end of each full bar
-    geom_text(
-      data = total_labels,
-      inherit.aes = FALSE,
-      aes(
-        x     = totalClick,
-        y     = badgeLabelOrder,
-        label = totalClick
-      ),
-      # Place the total label a bit further to the right of the bar end
-      hjust    = -0.4,
-      color    = "black",
-      size     = 3,
-      fontface = "bold"
+      size     = 3
     ) +
     facet_wrap(
       ~ stimulus_label,
@@ -205,22 +195,22 @@ generate_badge_click_participant_counts_plot <- function(
       breaks = seq(0, max_break, by = 2),
       limits = c(0, max_break)
     ) +
-    # Soft monochrome blue-grey palette for participants
-    scale_fill_manual(values = participant_colors) +
+    # Use a light qualitative palette so labels remain readable inside bars
+    scale_fill_brewer(palette = "Set2") +
     labs(
-      title = "Click counts per badge, stacked by participant",
-      x     = "Click count",
-      y     = NULL,
-      fill  = "Participant"
+      x    = "Click count",
+      y    = NULL,
+      fill = "Participant"
     ) +
     theme_minimal(base_size = 12) +
     theme(
       legend.position       = "bottom",
       axis.text.y           = element_text(size = 10),
-      # Hide x-axis tick labels and ticks since values are now shown via labels
-      axis.text.x           = element_blank(),
-      axis.ticks.x          = element_blank(),
+      axis.text.x           = element_text(size = 10),
       panel.grid.major.y    = element_blank()
+    ) +
+    guides(
+      fill = guide_legend(nrow = 1, byrow = TRUE)
     )
 
   grDevices::png(output_path, width = 1800, height = 1200, res = 200)
