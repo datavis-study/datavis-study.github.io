@@ -26,8 +26,9 @@ Generated at: `{{ generated_at }}`
 </details>
 {% endif %}
 
-## Main tasks
-### Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+## Main tasks - between subject design
+**Task description**: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
@@ -163,10 +164,10 @@ Generated at: `{{ generated_at }}`
 
 <img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="800" />
 
-### Participant-level interactions per metric
+### Measured badge interaction
 
-| Hover counts (per badge, by participant) | Hover time (per badge, by participant) |
-| :--------------------------------------: | :-------------------------------------: |
+| Hover counts (per badge, by participant) |                                            Tooltip open time (per badge, by participant)                                            |
+| :--------------------------------------: |:-----------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="figures/badge_hover_participant_counts_stacked.png" alt="Stacked hover counts per badge and participant" width="420" /> | <img src="figures/badge_hover_time_participant_stacked.png" alt="Stacked total hover time per badge and participant" width="420" /> |
 
 | Click counts (per badge, by participant) | Drawer open time (per badge, by participant) |
