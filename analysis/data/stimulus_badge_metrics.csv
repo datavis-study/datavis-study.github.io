@@ -3,8 +3,8 @@ co2-emissions,cc-by-licence__co2-emissions,CC BY Licence,2,0,10,2,4,2,4.293,1.41
 co2-emissions,data-source-disclosed__co2-emissions,Data Source Disclosed,2,2,6,2,4,2,8.058,5.237,0.014,28.742,26.112,2.63
 co2-emissions,definition-co2-emissions__co2-emissions,Definition: CO₂ emissions,2,0,12,2,4,2,6.07,2.993,0.016,34.132,33.083,1.049
 co2-emissions,missing-data__co2-emissions,Missing Data,3,0,5,3,4,2,5.837,3.793,0.066,52.206,43.705,1.157
-global-warming-projection,actual-time-offset__global-warming-projection,Actual Time Offset,3,1,16,3,8,3,20.84,5.383,0.017,10.236,3.911,3.128
-global-warming-projection,contains-predictions__global-warming-projection,Contains Predictions,4,0,10,4,8,3,14.805,4.265,0.033,28.299,20.393,1.544
-global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,7,1,16,7,8,3,90.19,64.385,0.016,69.969,24.544,0.955
-global-warming-projection,multiple-data-sources__global-warming-projection,Multiple Data Sources,5,1,26,5,8,3,67.68,29.871,0.011,78.572,29.081,5.386
-global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,4,0,18,4,8,3,16.031,4.271,0.016,27.177,19.92,1.19
+global-warming-projection,actual-time-offset__global-warming-projection,Actual Time Offset,3,1,16,3,9,3,20.84,5.383,0.017,10.236,3.911,3.128
+global-warming-projection,contains-predictions__global-warming-projection,Contains Predictions,4,0,10,4,9,3,14.805,4.265,0.033,28.299,20.393,1.544
+global-warming-projection,data-sources-disclosed__global-warming-projection,Data Sources Disclosed,7,1,17,7,9,3,90.558,64.385,0.016,69.969,24.544,0.955
+global-warming-projection,multiple-data-sources__global-warming-projection,Multiple Data Sources,5,1,26,5,9,3,67.68,29.871,0.011,78.572,29.081,5.386
+global-warming-projection,uncertainty-shown__global-warming-projection,Uncertainty Shown,4,0,18,4,9,3,16.031,4.271,0.016,27.177,19.92,1.19

@@ -1,4 +1,5 @@
 readableId,participantGroup,participantId,isProlific,participantIndex,completed,ip,country,language,userAgent,resolutionWidth,resolutionHeight,firstStimulus,secondStimulus
+uniform,badge-group,5dcfaad2dd9a740c2493fc28,True,45,True,86.151.161.109,GB,en-GB,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",1920,1080,global-warming-projection,co2-emissions
 tango,badge-group,67eee89119de070d8b864f60,True,44,True,113.20.54.14,US,en-US,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",1280,720,co2-emissions,global-warming-projection
 sierra,footnote-group,63956692bbbcfadf1156c3a2,True,43,True,86.129.207.193,GB,en-US,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",1366,768,co2-emissions,global-warming-projection
 romeo,footnote-group,5827634ea80bf4000199994b,True,42,True,176.251.204.69,GB,en-GB,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",1536,864,co2-emissions,global-warming-projection

@@ -108,5 +108,17 @@ if (!is.null(badge_drawer_time_participant_counts_script)) {
   }
 }
 
+badge_interactions_overview_script <- resolve_script("badge_interactions_overview.R")
+if (!is.null(badge_interactions_overview_script)) {
+  message("Sourcing Badge Interactions Overview script: ", badge_interactions_overview_script)
+  source(badge_interactions_overview_script, local = TRUE)
+  if (exists("generate_badge_interactions_overview_plot")) {
+    message("Generating Badge Interactions overview plot …")
+    generate_badge_interactions_overview_plot(data_dir = data_dir, out_dir = out_dir)
+  } else {
+    warning("Function generate_badge_interactions_overview_plot() not found after sourcing ", badge_interactions_overview_script)
+  }
+}
+
 message("R wrapper finished.")
 

@@ -1,4 +1,5 @@
 participantId,readableId,gender,gender-other,age,education,education-other,field-of-study,field-of-study-other,chart-reading-frequency,chart-creation-frequency,color-vision,color-vision-type
+5dcfaad2dd9a740c2493fc28,uniform,Man,,35-44 years,Bachelor's degree,,Arts / Design,,Occasionally (few times per month),Occasionally (few times per month),No,
 67eee89119de070d8b864f60,tango,Man,,35-44 years,Master's degree,,Business / Economics,,Frequently (daily or almost daily),Regularly (few times per week),No,
 63956692bbbcfadf1156c3a2,sierra,Man,,55-64 years,Bachelor's degree,,Computer Science / Information Technology,,Rarely (few times per year),Rarely (few times per year),No,
 5827634ea80bf4000199994b,romeo,Woman,,65+ years,Master's degree,,"Natural Sciences (Biology, Chemistry, Physics, etc.)",,Rarely (few times per year),Never,No,
