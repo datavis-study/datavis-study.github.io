@@ -350,26 +350,9 @@
       "example",
       {
         "id": "group-assignment",
-        "order": "latinSquare",
+        "order": "fixed",
         "numSamples": 1,
         "components": [
-          {
-            "id": "badge-group",
-            "order": "fixed",
-            "components": [
-              {
-                "order": "random",
-                "components": [
-                  "global-warming-projection-badges",
-                  "co2-emissions-badges"
-                ]
-              },
-              "pre-questionnaire",
-              "badge-questionaire-1",
-              "badge-questionaire-2",
-              "demographics-custom"
-            ]
-          },
           {
             "id": "footnote-group",
             "order": "fixed",
