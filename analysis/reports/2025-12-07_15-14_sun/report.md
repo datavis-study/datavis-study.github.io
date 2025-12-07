@@ -1,10 +1,10 @@
 # Mind the Badge - Study Data Report
-Generated at: `Sun, 07 Dec 2025 14:57 CET`
+Generated at: `Sun, 07 Dec 2025 15:14 CET`
 
 **Demographics**
 
 
-| Category | Top values |
+| Category | |
 |---|---|
 | Gender | Man (11), Woman (10) |
 | Age | 35-44 years (7), 45-54 years (5), 25-34 years (4) |
@@ -48,8 +48,9 @@ Generated at: `Sun, 07 Dec 2025 14:57 CET`
 </details>
 
 
-## Main tasks
-Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+## Main tasks - between subject design
+**Task description**: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
+
 
 | Footnotes condition | Badges condition |
 | :-----------------: | :--------------: |
@@ -196,7 +197,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 
 
-## Post Questionaire - Open-ended answers
+## Open-ended questions
 
 
 
@@ -565,23 +566,19 @@ Least: copyright and the ones I forgot already
 
 
 
-## Post questionaire likert scale respponse
+## Likert scale responses
 
-<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="600" />
+<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="800" />
 
-### Badge interactions overview
+### Measured badge interaction
 
-<img src="figures/badge_interactions_overview.png" alt="Overview of badge interactions by stimulus and metric" width="900" />
-
-### Participant-level interactions per metric
-
-| Hover counts (per badge, by participant) | Hover time (per badge, by participant) |
-| :--------------------------------------: | :-------------------------------------: |
+| Hover counts (per badge, by participant) |                                            Tooltip open time (per badge, by participant)                                            |
+| :--------------------------------------: |:-----------------------------------------------------------------------------------------------------------------------------------:|
 | <img src="figures/badge_hover_participant_counts_stacked.png" alt="Stacked hover counts per badge and participant" width="420" /> | <img src="figures/badge_hover_time_participant_stacked.png" alt="Stacked total hover time per badge and participant" width="420" /> |
 
-| Drawer open time (per badge, by participant) | Click counts (per badge, by participant) |
-| :------------------------------------------: | :---------------------------------------: |
-| <img src="figures/badge_drawer_time_participant_stacked.png" alt="Stacked drawer open time per badge and participant" width="420" /> | <img src="figures/badge_click_participant_counts_stacked.png" alt="Stacked click counts per badge and participant" width="420" /> |
+| Click counts (per badge, by participant) | Drawer open time (per badge, by participant) |
+| :--------------------------------------: | :------------------------------------------: |
+| <img src="figures/badge_click_participant_counts_stacked.png" alt="Stacked click counts per badge and participant" width="420" /> | <img src="figures/badge_drawer_time_participant_stacked.png" alt="Stacked drawer open time per badge and participant" width="420" /> |
 
 ### Participant ID mapping and time per component
 

@@ -202,20 +202,23 @@ generate_badge_hover_time_participant_plot <- function(
       title = NULL,
       x     = "Total hover time (s)",
       y     = NULL,
-      fill  = "Participant"
+      fill  = NULL           # no legend title ("Participant")
     ) +
     theme_minimal(base_size = 12) +
     theme(
-      legend.position       = "bottom",
-      axis.text.y           = element_text(size = 10),
-      axis.text.x           = element_text(size = 10),
-      panel.grid.major.y    = element_blank(),
-      panel.grid.minor.y    = element_blank(),
-      panel.grid.major.x    = element_line(colour = "grey95"),
-      panel.grid.minor.x    = element_blank()
+      legend.position    = "bottom",
+      legend.text        = element_text(size = 8),
+      axis.text.y        = element_text(size = 10),
+      axis.text.x        = element_text(size = 9, colour = "grey30"),
+      axis.title.x       = element_text(size = 9, colour = "grey40"),
+      strip.text.y       = element_text(size = 12, face = "bold"),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.x = element_line(colour = "grey95"),
+      panel.grid.minor.x = element_blank()
     ) +
     guides(
-      fill = guide_legend(nrow = 1, byrow = TRUE)
+      fill = guide_legend(nrow = 1, byrow = TRUE, title = NULL)
     )
 
   grDevices::png(output_path, width = 1800, height = 1200, res = 200)
