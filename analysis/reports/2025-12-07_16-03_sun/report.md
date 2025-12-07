@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Sun, 07 Dec 2025 15:46 CET`
+Generated at: `Sun, 07 Dec 2025 16:03 CET`
 
 **Demographics**
 
@@ -214,7 +214,9 @@ Generated at: `Sun, 07 Dec 2025 15:46 CET`
 
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Noticing and interactivity (free-text) (Badges group only)</strong> — 8 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Noticing and interactivity (Badges group only)</strong> — 8 responses</span></summary>
+
+
 
 
 
@@ -247,10 +249,101 @@ Generated at: `Sun, 07 Dec 2025 15:46 CET`
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Ease of understanding annotations</strong> — 21 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>How badges influenced reading (Badges group only)</strong> — 10 responses</span></summary>
+
+
+
+
+
+
+
+
+**🟩 Badges question:** If you noticed the visualization badges, describe your experience using them alongside the visualization. Did they influence how you read and interpreted the visualization? If so, how?
+
+
+
+
+
+- **uniform (21 words; Prolific; hovered badges)**: Not really, I noticed them but didn't actively use them or feel they were relevant to what I was looking for.
+
+- **tango (34 words; Prolific; hovered badges)**: Yes, I noticed them immediately. I was unable to read the lines as conclusive facts since they served as a pre-brief, setting expectations that the data was predictive, uncertain, and synthesized from different models.
+
+- **quebec (26 words; Prolific; hovered badges)**: They did not help me especially, as all I got from them was info such as that multiple sources were taken into account in the data.
+
+- **kilo (19 words; Prolific; hovered badges)**: Yes they helped me to learn more about what I seeing and to be able to better interpret it.
+
+- **oscar (15 words; Prolific; hovered badges)**: They provided a little information about sources, but nothing that really stuck out as useful.
+
+- **november (16 words; Prolific; hovered badges,  clicked badges)**: Yes, they helped inform me better about the data and how to interpret/relay the information shown.
+
+- **lima (23 words; Prolific)**: I actually didn't use them, I didn't think they were a huge part of the charts (I understand that's not the case now)
+
+- **juliet (17 words; Prolific)**: When I did notice them, they helped clarify what type of information the chart was based on.
+
+- **bravo (30 words; hovered badges,  clicked badges)**: They reminded me that some data was only based on predictions and there was uncertainty between data sources. I also found information about copyright, but I wasn't interested in that.
+
+- **alpha (82 words; hovered badges,  clicked badges)**: The visualization badges being interactive were very helpful in providing context and extra information to interprest the chart, especially in judging its accuracy and relevance. By providing this extra information I could check the data myself (although I didn't in these exercises). I assumed they were important to understand the data being visualised but they did not change my interpretation of the visualisations - I imagine they would if climate change was an area I knew a lot about / worked in.
+
+
+
+
+
+
+
+</details>
+
+<details>
+<summary><span style="font-size: 1.1em;"><strong>Most and least useful badge (Badges group only)</strong> — 9 responses</span></summary>
+
+
+
+
+
+
+
+
+**🟩 Badges question:** Which visualization badges were most and/or least useful? Why?
+
+
+
+
+
+- **uniform (24 words; Prolific; hovered badges)**: I didn't use any of them, I didn't think there were relevant as some of them said things like "no data" when there was.
+
+- **tango (40 words; Prolific; hovered badges)**: The most useful was "Uncertainty Shown," as it defined the visual structure of the chart itself. The least immediately useful for the verbal summary was "Actual Time Offset," though it is important for a full technical audit of the data.
+
+- **quebec (17 words; Prolific; hovered badges)**: I didn't find any of them super helpful, maybe because I was unaware of the hovering function.
+
+- **kilo (10 words; Prolific; hovered badges)**: The graph felt easier to read and understand to me.
+
+- **oscar (17 words; Prolific; hovered badges)**: I liked the ones that gave information as to what the labels meant. Some seemed overly complicated.
+
+- **november (33 words; Prolific; hovered badges,  clicked badges)**: The data sources and verified information was very useful, as was the missing/unverified in order to present a whole and correct interpretation of the data, understanding what it could and couldn't tell one.
+
+- **golf (16 words; Prolific; hovered badges)**: it was good to understand the data visually than numbers. it is also easier to explain
+
+- **bravo (14 words; hovered badges,  clicked badges)**: Most: highlighting uncertainty and multiple sources
+Least: copyright and the ones I forgot already
+
+- **alpha (13 words; hovered badges,  clicked badges)**: The ones explaining the labels in the charts (i.e. UNEP, CAT, IEA, etc)..
+
+
+
+
+
+
+
+</details>
+
+<details>
+<summary><span style="font-size: 1.1em;"><strong>Ease of understanding</strong> — 21 responses</span></summary>
+
+
 
 
 **🟦 Footnotes question:** How easy was it to understand the footnotes?
@@ -314,10 +407,14 @@ Generated at: `Sun, 07 Dec 2025 15:46 CET`
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Use of annotations in the main task</strong> — 21 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Use of badges/footnotes during the main task</strong> — 21 responses</span></summary>
+
+
 
 
 **🟦 Footnotes question:** Did you consider information in the footnotes for Your Speech? Please explain.
@@ -381,16 +478,17 @@ Generated at: `Sun, 07 Dec 2025 15:46 CET`
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Overall helpfulness of annotations</strong> — 20 responses</span></summary>
-
-
-**🟦 Footnotes question:** Overall, did the footnotes help you understand and interpret the visualization? Please explain.
+<summary><span style="font-size: 1.1em;"><strong>Overall helpfulness</strong> — 20 responses</span></summary>
 
 
 
+
+**🟦 Footnotes**
 
 
 - **sierra (12 words; Prolific)**: Yes especially the second one as I did not initially understand it
@@ -414,10 +512,7 @@ Generated at: `Sun, 07 Dec 2025 15:46 CET`
 
 
 
-**🟩 Badges question:** Overall, did the visualization badges help you understand and interpret the visualization? Please explain.
-
-
-
+**🟩 Badges**
 
 
 - **uniform (10 words; Prolific; hovered badges)**: No because I didn't use them to their full potential.
@@ -449,89 +544,12 @@ Generated at: `Sun, 07 Dec 2025 15:46 CET`
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Most and least useful annotations (Badges group only)</strong> — 9 responses</span></summary>
-
-
-
-
-
-
-**🟩 Badges question:** Which visualization badges were most and/or least useful? Why?
-
-
-
-
-
-- **uniform (24 words; Prolific; hovered badges)**: I didn't use any of them, I didn't think there were relevant as some of them said things like "no data" when there was.
-
-- **tango (40 words; Prolific; hovered badges)**: The most useful was "Uncertainty Shown," as it defined the visual structure of the chart itself. The least immediately useful for the verbal summary was "Actual Time Offset," though it is important for a full technical audit of the data.
-
-- **quebec (17 words; Prolific; hovered badges)**: I didn't find any of them super helpful, maybe because I was unaware of the hovering function.
-
-- **kilo (10 words; Prolific; hovered badges)**: The graph felt easier to read and understand to me.
-
-- **oscar (17 words; Prolific; hovered badges)**: I liked the ones that gave information as to what the labels meant. Some seemed overly complicated.
-
-- **november (33 words; Prolific; hovered badges,  clicked badges)**: The data sources and verified information was very useful, as was the missing/unverified in order to present a whole and correct interpretation of the data, understanding what it could and couldn't tell one.
-
-- **golf (16 words; Prolific; hovered badges)**: it was good to understand the data visually than numbers. it is also easier to explain
-
-- **bravo (14 words; hovered badges,  clicked badges)**: Most: highlighting uncertainty and multiple sources
-Least: copyright and the ones I forgot already
-
-- **alpha (13 words; hovered badges,  clicked badges)**: The ones explaining the labels in the charts (i.e. UNEP, CAT, IEA, etc)..
-
-
-
-
-
-</details>
-
-<details>
-<summary><span style="font-size: 1.1em;"><strong>How annotations influenced reading (Badges group only)</strong> — 10 responses</span></summary>
-
-
-
-
-
-
-**🟩 Badges question:** If you noticed the visualization badges, describe your experience using them alongside the visualization. Did they influence how you read and interpreted the visualization? If so, how?
-
-
-
-
-
-- **uniform (21 words; Prolific; hovered badges)**: Not really, I noticed them but didn't actively use them or feel they were relevant to what I was looking for.
-
-- **tango (34 words; Prolific; hovered badges)**: Yes, I noticed them immediately. I was unable to read the lines as conclusive facts since they served as a pre-brief, setting expectations that the data was predictive, uncertain, and synthesized from different models.
-
-- **quebec (26 words; Prolific; hovered badges)**: They did not help me especially, as all I got from them was info such as that multiple sources were taken into account in the data.
-
-- **kilo (19 words; Prolific; hovered badges)**: Yes they helped me to learn more about what I seeing and to be able to better interpret it.
-
-- **oscar (15 words; Prolific; hovered badges)**: They provided a little information about sources, but nothing that really stuck out as useful.
-
-- **november (16 words; Prolific; hovered badges,  clicked badges)**: Yes, they helped inform me better about the data and how to interpret/relay the information shown.
-
-- **lima (23 words; Prolific)**: I actually didn't use them, I didn't think they were a huge part of the charts (I understand that's not the case now)
-
-- **juliet (17 words; Prolific)**: When I did notice them, they helped clarify what type of information the chart was based on.
-
-- **bravo (30 words; hovered badges,  clicked badges)**: They reminded me that some data was only based on predictions and there was uncertainty between data sources. I also found information about copyright, but I wasn't interested in that.
-
-- **alpha (82 words; hovered badges,  clicked badges)**: The visualization badges being interactive were very helpful in providing context and extra information to interprest the chart, especially in judging its accuracy and relevance. By providing this extra information I could check the data myself (although I didn't in these exercises). I assumed they were important to understand the data being visualised but they did not change my interpretation of the visualisations - I imagine they would if climate change was an area I knew a lot about / worked in.
-
-
-
-
-
-</details>
-
-<details>
 <summary><span style="font-size: 1.1em;"><strong>Additional comments</strong> — 9 responses</span></summary>
 
 
 
+
+**🟦 Footnotes**
 
 
 - **romeo (1 words; Prolific)**: none
@@ -545,7 +563,7 @@ Least: copyright and the ones I forgot already
 
 
 
-
+**🟩 Badges**
 
 
 - **tango (1 words; Prolific; hovered badges)**: none

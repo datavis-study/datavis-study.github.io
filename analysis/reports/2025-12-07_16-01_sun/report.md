@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Sun, 07 Dec 2025 15:42 CET`
+Generated at: `Sun, 07 Dec 2025 16:01 CET`
 
 **Demographics**
 
@@ -221,6 +221,8 @@ Generated at: `Sun, 07 Dec 2025 15:42 CET`
 
 
 
+
+
 **🟩 Badges question:** Additional comments about noticing or interactivity
 
 
@@ -247,10 +249,14 @@ Generated at: `Sun, 07 Dec 2025 15:42 CET`
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>How annotations influenced reading (Badges group only)</strong> — 10 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>How badges influenced reading (Badges group only)</strong> — 10 responses</span></summary>
+
+
 
 
 
@@ -287,10 +293,14 @@ Generated at: `Sun, 07 Dec 2025 15:42 CET`
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Ease of understanding annotations</strong> — 21 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Ease of understanding</strong> — 21 responses</span></summary>
+
+
 
 
 **🟦 Footnotes question:** How easy was it to understand the footnotes?
@@ -354,10 +364,14 @@ Generated at: `Sun, 07 Dec 2025 15:42 CET`
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Use of annotations in the main task</strong> — 21 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Use of badges/footnotes during the main task</strong> — 21 responses</span></summary>
+
+
 
 
 **🟦 Footnotes question:** Did you consider information in the footnotes for Your Speech? Please explain.
@@ -421,10 +435,14 @@ Generated at: `Sun, 07 Dec 2025 15:42 CET`
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Most and least useful annotations (Badges group only)</strong> — 9 responses</span></summary>
+<summary><span style="font-size: 1.1em;"><strong>Most and least useful badge (Badges group only)</strong> — 9 responses</span></summary>
+
+
 
 
 
@@ -460,16 +478,17 @@ Least: copyright and the ones I forgot already
 
 
 
+
+
 </details>
 
 <details>
-<summary><span style="font-size: 1.1em;"><strong>Overall helpfulness of annotations</strong> — 20 responses</span></summary>
-
-
-**🟦 Footnotes question:** Overall, did the footnotes help you understand and interpret the visualization? Please explain.
+<summary><span style="font-size: 1.1em;"><strong>Overall helpfulness</strong> — 20 responses</span></summary>
 
 
 
+
+**🟦 Footnotes**
 
 
 - **sierra (12 words; Prolific)**: Yes especially the second one as I did not initially understand it
@@ -493,10 +512,7 @@ Least: copyright and the ones I forgot already
 
 
 
-**🟩 Badges question:** Overall, did the visualization badges help you understand and interpret the visualization? Please explain.
-
-
-
+**🟩 Badges**
 
 
 - **uniform (10 words; Prolific; hovered badges)**: No because I didn't use them to their full potential.
@@ -533,6 +549,8 @@ Least: copyright and the ones I forgot already
 
 
 
+**🟦 Footnotes**
+
 
 - **romeo (1 words; Prolific)**: none
 
@@ -545,7 +563,7 @@ Least: copyright and the ones I forgot already
 
 
 
-
+**🟩 Badges**
 
 
 - **tango (1 words; Prolific; hovered badges)**: none

@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Sun, 07 Dec 2025 15:49 CET`
+Generated at: `Sun, 07 Dec 2025 15:59 CET`
 
 **Demographics**
 
@@ -221,6 +221,8 @@ Generated at: `Sun, 07 Dec 2025 15:49 CET`
 
 
 
+
+
 **🟩 Badges question:** Additional comments about noticing or interactivity
 
 
@@ -247,10 +249,14 @@ Generated at: `Sun, 07 Dec 2025 15:49 CET`
 
 
 
+
+
 </details>
 
 <details>
 <summary><span style="font-size: 1.1em;"><strong>How badges/footnotes influenced reading (Badges group only)</strong> — 10 responses</span></summary>
+
+
 
 
 
@@ -287,10 +293,14 @@ Generated at: `Sun, 07 Dec 2025 15:49 CET`
 
 
 
+
+
 </details>
 
 <details>
 <summary><span style="font-size: 1.1em;"><strong>Ease of understanding</strong> — 21 responses</span></summary>
+
+
 
 
 **🟦 Footnotes question:** How easy was it to understand the footnotes?
@@ -354,10 +364,14 @@ Generated at: `Sun, 07 Dec 2025 15:49 CET`
 
 
 
+
+
 </details>
 
 <details>
 <summary><span style="font-size: 1.1em;"><strong>Use of badges/footnotes during the main task</strong> — 21 responses</span></summary>
+
+
 
 
 **🟦 Footnotes question:** Did you consider information in the footnotes for Your Speech? Please explain.
@@ -421,10 +435,14 @@ Generated at: `Sun, 07 Dec 2025 15:49 CET`
 
 
 
+
+
 </details>
 
 <details>
 <summary><span style="font-size: 1.1em;"><strong>Most and least useful badge (Badges group only)</strong> — 9 responses</span></summary>
+
+
 
 
 
@@ -460,10 +478,14 @@ Least: copyright and the ones I forgot already
 
 
 
+
+
 </details>
 
 <details>
 <summary><span style="font-size: 1.1em;"><strong>Overall helpfulness</strong> — 20 responses</span></summary>
+
+
 
 
 **🟦 Footnotes question:** Overall, did the footnotes help you understand and interpret the visualization? Please explain.
@@ -525,6 +547,8 @@ Least: copyright and the ones I forgot already
 
 
 
+
+
 </details>
 
 <details>
@@ -532,6 +556,8 @@ Least: copyright and the ones I forgot already
 
 
 
+
+**🟦 Footnotes**
 
 
 - **romeo (1 words; Prolific)**: none
@@ -545,7 +571,7 @@ Least: copyright and the ones I forgot already
 
 
 
-
+**🟩 Badges**
 
 
 - **tango (1 words; Prolific; hovered badges)**: none
