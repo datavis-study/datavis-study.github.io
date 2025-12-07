@@ -1,3 +1,2 @@
-charts
 data_prep
 reporting

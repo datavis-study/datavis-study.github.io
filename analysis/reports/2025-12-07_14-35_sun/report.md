@@ -1,5 +1,5 @@
 # Mind the Badge - Study Data Report
-Generated at: `Sun, 07 Dec 2025 14:14 CET`
+Generated at: `Sun, 07 Dec 2025 14:35 CET`
 
 **Demographics**
 
@@ -48,14 +48,11 @@ Generated at: `Sun, 07 Dec 2025 14:14 CET`
 </details>
 
 
-# Main tasks
+## Main tasks
 Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
 
 ### Stimuli 1: CO₂ Emissions
 
-| Footnotes condition | Badges condition |
-| :-----------------: | :--------------: |
-| <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="420" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="420" /> |
 
 
 
@@ -125,10 +122,6 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 
 
 ### Stimuli 2: Global Warming Projection
-
-| Footnotes condition | Badges condition |
-| :-----------------: | :--------------: |
-| <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="420" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="420" /> |
 
 
 
@@ -209,19 +202,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 - **Standardization** Footnotes/Badges like these should be widely used alongside visualizations. (1 = Strongly Disagree, 5 = Strongly Agree)
 
 
-**Distributions and medians**
-
-
-<img src="figures/f_likert_distribution_median.png" alt="Likert distributions and medians" width="720" />
-
-
-**Mean bar charts**
-
-
-
-
-<img src="figures/f_likert_mean_bars_altair.png" alt="Likert mean bars" width="720" />
-
+*(Chart-based visual summaries are omitted in this version of the report.)*
 
 ### Open-ended answers
 
@@ -592,42 +573,20 @@ Least: copyright and the ones I forgot already
 
 
 
-### Badge interactions – hover metrics
+### Badge interactions (text-only summary)
 
 
-
-**Per-stimulus participant coverage (hover):**
-
-
-- **CO₂ Emissions**: 4 participants hovered at least one visualization badge.
-
-- **Global Warming Projection**: 9 participants hovered at least one visualization badge.
+**Per-stimulus participant coverage (hover and clicks):**
 
 
+- **CO₂ Emissions**: 4 participants hovered at least one badge; 2 participants clicked at least one badge.
 
-| Hover counts | Total hover time | Duration stats |
-| :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
-| <img src="figures/f_badge_hover_facets.png" alt="Hover counts per stimulus" width="320" /> | <img src="figures/f_badge_hover_time_facets.png" alt="Hover times per stimulus" width="320" /> | <img src="figures/f_badge_hover_duration_stats_facets.png" alt="Hover duration statistics per stimulus" width="320" /> |
-
-
-### Badge interactions – clicks and drawer metrics 
-
-
-**Per-stimulus participant coverage (clicks):**
-
-
-- **CO₂ Emissions**: 2 participants clicked at least one visualization badge.
-
-- **Global Warming Projection**: 3 participants clicked at least one visualization badge.
+- **Global Warming Projection**: 9 participants hovered at least one badge; 3 participants clicked at least one badge.
 
 
 
 
 
-
-| Click counts | Total open time | Mean open duration |
-| :----------: | :-------------: | :----------------: |
-| <img src="figures/f_badge_click_facets.png" alt="Click counts per stimulus" width="320" /> | <img src="figures/f_badge_drawer_time_facets.png" alt="Total drawer open time per stimulus" width="320" /> | <img src="figures/f_badge_drawer_duration_stats_facets.png" alt="Mean drawer open time per stimulus" width="320" /> |
 
 ### Participant ID mapping and time per component
 

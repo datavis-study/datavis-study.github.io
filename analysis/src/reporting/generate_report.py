@@ -75,6 +75,8 @@ def generate_report(
 
 	run_id = run_id or _run_label()
 	root_out = pathlib.Path(out_dir) / _sanitize_path_component(run_id)
+	# Ensure the report output directory exists before writing report.md
+	util.safe_make_dir(root_out)
 	n_participants = (
 		int(data.participants["participantId"].nunique())
 		if data.participants is not None and "participantId" in data.participants.columns
