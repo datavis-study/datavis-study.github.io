@@ -201,17 +201,18 @@ generate_badge_click_participant_counts_plot <- function(
     ) +
     theme_minimal(base_size = 12) +
     theme(
-      legend.position    = "bottom",
-      legend.text        = element_text(size = 8),
-      axis.text.y        = element_text(size = 10),
-      axis.text.x        = element_text(size = 9, colour = "grey30"),
-      axis.title.x       = element_text(size = 9, colour = "grey40"),
-      strip.text.y       = element_text(size = 12, face = "bold"),
+      legend.position     = "bottom",
+      legend.text         = element_text(size = 8, colour = "black"),
+      axis.text.y         = element_text(size = 10, colour = "black"),
+      axis.text.x         = element_text(size = 9, colour = "black"),
+      axis.title.x        = element_text(size = 9, colour = "black"),
+      strip.text.y        = element_text(size = 12, face = "bold", colour = "black"),
+      strip.background    = element_rect(fill = "grey95", colour = NA),
       # Horizontal grid lines off; vertical grid lines on starting at x = 0
-      panel.grid.major.y = element_blank(),
-      panel.grid.minor.y = element_blank(),
-      panel.grid.major.x = element_line(colour = "grey95"),
-      panel.grid.minor.x = element_blank()
+      panel.grid.major.y  = element_blank(),
+      panel.grid.minor.y  = element_blank(),
+      panel.grid.major.x  = element_line(colour = "grey95"),
+      panel.grid.minor.x  = element_blank()
     ) +
     guides(
       fill = guide_legend(nrow = 1, byrow = TRUE, title = NULL)

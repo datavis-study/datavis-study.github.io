@@ -1,0 +1,14 @@
+stimulusId,participantId,participantReadableId,hoveredAnyBadge,clickedAnyBadge
+co2-emissions,5101b146-ce6f-4f61-8818-118229a2308b,alpha,True,True
+co2-emissions,55eb4774748092000baa97ee,kilo,True,False
+co2-emissions,6697cf02d714e7ee3fdedcec,quebec,True,False
+co2-emissions,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,True,True
+global-warming-projection,5101b146-ce6f-4f61-8818-118229a2308b,alpha,True,True
+global-warming-projection,55eb4774748092000baa97ee,kilo,True,False
+global-warming-projection,5d879c06e645c60019847113,november,True,True
+global-warming-projection,5dcfaad2dd9a740c2493fc28,uniform,True,False
+global-warming-projection,65537e14439274fe5036b4d2,oscar,True,False
+global-warming-projection,6697cf02d714e7ee3fdedcec,quebec,True,False
+global-warming-projection,676578e9b3ad38588f8808ba,golf,True,False
+global-warming-projection,67eee89119de070d8b864f60,tango,True,False
+global-warming-projection,782e2f94-ade5-4279-94aa-9dcdb26abbcd,bravo,True,True

@@ -166,13 +166,13 @@ Generated at: `{{ generated_at }}`
 
 ### Measured badge interaction
 
-| Hover counts (per badge, by participant) |                                            Tooltip open time (per badge, by participant)                                            |
-| :--------------------------------------: |:-----------------------------------------------------------------------------------------------------------------------------------:|
-| <img src="figures/badge_hover_participant_counts_stacked.png" alt="Stacked hover counts per badge and participant" width="420" /> | <img src="figures/badge_hover_time_participant_stacked.png" alt="Stacked total hover time per badge and participant" width="420" /> |
+|                                             Hover counts (per badge, by participant)                                              |                                            Tooltip open time (per badge, by participant)                                            |
+|:---------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------:|
+| <img src="figures/badge_hover_participant_counts_stacked.png" alt="Stacked hover counts per badge and participant" width="600" /> | <img src="figures/badge_hover_time_participant_stacked.png" alt="Stacked total hover time per badge and participant" width="600" /> |
 
-| Click counts (per badge, by participant) | Drawer open time (per badge, by participant) |
-| :--------------------------------------: | :------------------------------------------: |
-| <img src="figures/badge_click_participant_counts_stacked.png" alt="Stacked click counts per badge and participant" width="420" /> | <img src="figures/badge_drawer_time_participant_stacked.png" alt="Stacked drawer open time per badge and participant" width="420" /> |
+|                                             Click counts (per badge, by participant)                                              |                                             Drawer open time (per badge, by participant)                                             |
+|:---------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------:|
+| <img src="figures/badge_click_participant_counts_stacked.png" alt="Stacked click counts per badge and participant" width="600" /> | <img src="figures/badge_drawer_time_participant_stacked.png" alt="Stacked drawer open time per badge and participant" width="600" /> |
 
 ### Participant ID mapping and time per component
 
