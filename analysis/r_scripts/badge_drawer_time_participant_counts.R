@@ -2,6 +2,7 @@
 
 suppressPackageStartupMessages({
   library(tidyverse)
+  library(paletteer)
 })
 
 #' Generate stacked total drawer-open time bars per badge, stacked by participant.
@@ -185,7 +186,8 @@ generate_badge_drawer_time_participant_plot <- function(
       breaks = seq(0, max_break, by = break_step),
       limits = c(0, max_break)
     ) +
-    scale_fill_brewer(palette = "Set3") +
+    # Use the same clean, modern participant palette as the other interaction charts (Tableau 20 via paletteer)
+    scale_fill_paletteer_d("ggthemes::Tableau_20") +
     labs(
       title = NULL,
       x     = "Total drawer open time (s)",

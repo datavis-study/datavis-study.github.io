@@ -191,8 +191,8 @@ generate_badge_click_participant_counts_plot <- function(
       breaks = seq(0, max_break, by = 2),
       limits = c(0, max_break)
     ) +
-    # Use the same soft pastel palette as the hover chart so colours match
-    scale_fill_brewer(palette = "Set3") +
+    # Use the same clean, modern palette as the hover chart (Tableau 20 via paletteer)
+    scale_fill_paletteer_d("ggthemes::Tableau_20") +
     labs(
       title = NULL,          # no global header/title
       x     = "Click count",

@@ -191,8 +191,8 @@ generate_badge_hover_participant_counts_plot <- function(
       breaks = seq(0, max_break, by = 2),
       limits = c(0, max_break)
     ) +
-    # Use a soft pastel palette for clear, aesthetically pleasing participant colours
-    scale_fill_brewer(palette = "Set3") +
+    # Use a clean, modern discrete palette for participant colours (Tableau 20 via paletteer)
+    scale_fill_paletteer_d("ggthemes::Tableau_20") +
     labs(
       x    = "Hover count",
       y    = NULL,
