@@ -365,12 +365,12 @@ def generate_report(
 			"notice-comments": "Noticing and interactivity",
 			"noticed-in-task": "Noticing and interactivity",
 			# How annotations influenced reading
-			"experience-with-badges": "How annotations influenced reading",
+			"experience-with-badges": "How badges/footnotes influenced reading",
 			# Shared dimensions (same ids in both groups)
-			"ease-of-understanding": "Ease of understanding annotations",
-			"considered-in-notes": "Use of annotations in the main task",
-			"most-least-useful": "Most and least useful annotations",
-			"overall-help": "Overall helpfulness of annotations",
+			"ease-of-understanding": "Ease of understanding",
+			"considered-in-notes": "Use of badges/footnotes during the main task",
+			"most-least-useful": "Most and least useful badge",
+			"overall-help": "Overall helpfulness",
 			# Catch‑all comments
 			"final-comments": "Additional comments",
 		}
