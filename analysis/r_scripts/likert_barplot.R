@@ -144,7 +144,7 @@ generate_likert_barplot <- function(
     ) + # Make negative values positive on the axis and add % sign
     ggplot2::scale_fill_manual(
       values = palette_5,
-      name   = "Response",
+      name   = NULL,          # no legend title ("Response")
       breaks = likert_labels,
       labels = likert_labels
     ) +

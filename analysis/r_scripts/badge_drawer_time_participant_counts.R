@@ -7,17 +7,18 @@ suppressPackageStartupMessages({
 
 #' Generate stacked total drawer-open time bars per badge, stacked by participant.
 #'
-#' Data source:
-#'   - stimulus_badge_participant_metrics.csv
-#'     (one row per stimulus × participant × badge with drawer/time metrics)
-#'
 #' For each stimulus:
 #'   - y-axis: badge label
 #'   - x-axis: totalDrawerOpenTime (sum across participants)
-#'   - fill: participant (readable id when available)
+#'   - fill:  participant (readable id when available)
+#'
+#' Colours for participants are fixed globally across all interaction charts
+#' by building a single mapping participantDisplay -> colour from the full
+#' metrics file (sorted alphabetically).
 #'
 #' @param data_dir Directory where the CSV files live.
 #' @param out_dir  Output directory for charts (created if missing).
+#' @param input_file CSV file name (default: stimulus_badge_participant_metrics.csv).
 generate_badge_drawer_time_participant_plot <- function(
   data_dir  = "data",
   out_dir   = "r_output",
@@ -53,7 +54,32 @@ generate_badge_drawer_time_participant_plot <- function(
     return(invisible(NULL))
   }
 
-  # Keep only rows with non-zero total drawer open time
+  # ---------------------------------------------------------------------------
+  # Global participant palette (from the *full* metrics file, before filtering)
+  # ---------------------------------------------------------------------------
+  df_palette <- df %>%
+    dplyr::mutate(
+      participantDisplay = dplyr::if_else(
+        !is.na(participantReadableId) & trimws(participantReadableId) != "",
+        trimws(participantReadableId),
+        trimws(participantId)
+      )
+    )
+
+  participant_order <- df_palette %>%
+    dplyr::distinct(participantDisplay) %>%
+    dplyr::arrange(participantDisplay) %>%
+    dplyr::pull(participantDisplay)
+
+  n_participants <- length(participant_order)
+  participant_palette <- as.character(
+    paletteer::paletteer_d("ggthemes::Tableau_20", n = max(1, n_participants))
+  )
+  names(participant_palette) <- participant_order
+
+  # ---------------------------------------------------------------------------
+  # Metric-specific cleaning and aggregation
+  # ---------------------------------------------------------------------------
   df <- df %>%
     dplyr::mutate(
       totalDrawerOpenTime = as.numeric(totalDrawerOpenTime)
@@ -65,7 +91,6 @@ generate_badge_drawer_time_participant_plot <- function(
     return(invisible(NULL))
   }
 
-  # Display label per badge: prefer badgeLabel, fall back to badgeId
   df <- df %>%
     dplyr::mutate(
       badgeLabelDisplay = dplyr::if_else(
@@ -77,6 +102,11 @@ generate_badge_drawer_time_participant_plot <- function(
         badgeLabelDisplay,
         pattern = "\u2082",
         replacement = "2"
+      ),
+      participantDisplay = dplyr::if_else(
+        !is.na(participantReadableId) & trimws(participantReadableId) != "",
+        trimws(participantReadableId),
+        trimws(participantId)
       )
     ) %>%
     dplyr::filter(!is.na(badgeLabelDisplay), badgeLabelDisplay != "")
@@ -85,16 +115,6 @@ generate_badge_drawer_time_participant_plot <- function(
     warning("No badges with valid labels after cleaning.")
     return(invisible(NULL))
   }
-
-  # Participant display: use readable id when available, otherwise raw id
-  df <- df %>%
-    dplyr::mutate(
-      participantDisplay = dplyr::if_else(
-        !is.na(participantReadableId) & trimws(participantReadableId) != "",
-        trimws(participantReadableId),
-        trimws(participantId)
-      )
-    )
 
   pretty_stimulus <- function(id) {
     dplyr::case_when(
@@ -109,21 +129,38 @@ generate_badge_drawer_time_participant_plot <- function(
       stimulus_label = pretty_stimulus(stimulusId)
     )
 
-  # Order badges within each stimulus by total drawer time (descending)
-  badge_order_df <- df %>%
-    dplyr::group_by(stimulus_label, badgeLabelDisplay) %>%
-    dplyr::summarise(
-      totalTime = sum(totalDrawerOpenTime, na.rm = TRUE),
-      .groups = "drop"
-    ) %>%
-    dplyr::group_by(stimulus_label) %>%
-    dplyr::arrange(dplyr::desc(totalTime), .by_group = TRUE) %>%
-    dplyr::mutate(
-      badgeLabelOrder = factor(badgeLabelDisplay, levels = badgeLabelDisplay)
-    ) %>%
-    dplyr::ungroup()
-
-  max_total_time <- max(badge_order_df$totalTime, na.rm = TRUE)
+  # Order badges within each stimulus using the same badge order as a
+  # hypothetical "drawer open count" chart when possible (driven by counts),
+  # so that click and drawer-time panels are comparable.
+  if ("drawerOpenCount" %in% names(df)) {
+    badge_order_df <- df %>%
+      dplyr::mutate(drawerOpenCount = as.numeric(drawerOpenCount)) %>%
+      dplyr::group_by(stimulus_label, badgeLabelDisplay) %>%
+      dplyr::summarise(
+        totalOpens = sum(drawerOpenCount, na.rm = TRUE),
+        .groups    = "drop"
+      ) %>%
+      dplyr::group_by(stimulus_label) %>%
+      dplyr::arrange(dplyr::desc(totalOpens), .by_group = TRUE) %>%
+      dplyr::mutate(
+        badgeLabelOrder = factor(badgeLabelDisplay, levels = badgeLabelDisplay)
+      ) %>%
+      dplyr::ungroup()
+  } else {
+    # Fallback: order by total drawer open time if counts are not available.
+    badge_order_df <- df %>%
+      dplyr::group_by(stimulus_label, badgeLabelDisplay) %>%
+      dplyr::summarise(
+        totalTime = sum(totalDrawerOpenTime, na.rm = TRUE),
+        .groups   = "drop"
+      ) %>%
+      dplyr::group_by(stimulus_label) %>%
+      dplyr::arrange(dplyr::desc(totalTime), .by_group = TRUE) %>%
+      dplyr::mutate(
+        badgeLabelOrder = factor(badgeLabelDisplay, levels = badgeLabelDisplay)
+      ) %>%
+      dplyr::ungroup()
+  }
 
   badge_order_df <- badge_order_df %>%
     dplyr::select(stimulus_label, badgeLabelDisplay, badgeLabelOrder)
@@ -131,12 +168,14 @@ generate_badge_drawer_time_participant_plot <- function(
   df <- df %>%
     dplyr::left_join(badge_order_df, by = c("stimulus_label", "badgeLabelDisplay"))
 
-  # Participant colours/order are kept consistent across all charts by using
-  # a single global (alphabetical) ordering.
-  participant_order <- df %>%
-    dplyr::distinct(participantDisplay) %>%
-    dplyr::arrange(participantDisplay) %>%
-    dplyr::pull(participantDisplay)
+  max_total_time <- df %>%
+    dplyr::group_by(stimulus_label, badgeLabelDisplay) %>%
+    dplyr::summarise(
+      totalTime = sum(totalDrawerOpenTime, na.rm = TRUE),
+      .groups   = "drop"
+    ) %>%
+    dplyr::pull(totalTime) %>%
+    max(na.rm = TRUE)
 
   df <- df %>%
     dplyr::mutate(
@@ -186,13 +225,13 @@ generate_badge_drawer_time_participant_plot <- function(
       breaks = seq(0, max_break, by = break_step),
       limits = c(0, max_break)
     ) +
-    # Use the same clean, modern participant palette as the other interaction charts (Tableau 20 via paletteer)
-    scale_fill_paletteer_d("ggthemes::Tableau_20") +
+    # Fixed participant → colour mapping (Tableau 20) shared across charts
+    scale_fill_manual(values = participant_palette) +
     labs(
       title = NULL,
       x     = "Total drawer open time (s)",
       y     = NULL,
-      fill  = NULL           # no legend title ("Participant")
+      fill  = NULL
     ) +
     theme_minimal(base_size = 12) +
     theme(
@@ -225,5 +264,3 @@ if (identical(environment(), globalenv())) {
   out_dir  <- if (length(args) >= 2) args[[2]] else "r_output"
   generate_badge_drawer_time_participant_plot(data_dir = data_dir, out_dir = out_dir)
 }
-
-
