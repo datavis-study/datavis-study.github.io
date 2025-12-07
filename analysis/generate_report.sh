@@ -119,6 +119,17 @@ else
 	echo "Skipping data preparation (per --skip-dataprep); using existing CSV exports."
 fi
 
+# Always (re)generate R-based charts from the current CSV exports so that
+# report runs are fully automated and self-contained.
+echo "Generating R charts (Likert + interaction summaries)..."
+if ! command -v Rscript >/dev/null 2>&1; then
+	echo "Warning: Rscript not found on PATH; skipping R chart generation."
+else
+	if ! Rscript "${SCRIPT_DIR}/r_charts.R" "${DATA_DIR_DEFAULT}" "${SCRIPT_DIR}/r_output"; then
+		echo "Warning: R chart generation failed; continuing without updated R figures."
+	fi
+fi
+
 mkdir -p "$OUT_DIR_DEFAULT"
 
 exec "$PYTHON_BIN" -m reporting.generate_report "${ARGS[@]}"

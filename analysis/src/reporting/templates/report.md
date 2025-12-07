@@ -4,7 +4,7 @@ Generated at: `{{ generated_at }}`
 **Demographics**
 
 {% if demographics_summary and demographics_summary|length > 0 %}
-| Category | Top values |
+| Category | |
 |---|---|
 {% for item in demographics_summary -%}
 | {{ item.label }} | {% for v in item.top_values %}{{ v.value }} ({{ v.count }}){% if not loop.last %}, {% endif %}{% endfor %} |
@@ -161,7 +161,7 @@ Generated at: `{{ generated_at }}`
 
 ## Likert scale responses
 
-<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="600" />
+<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="800" />
 
 ### Participant-level interactions per metric
 
