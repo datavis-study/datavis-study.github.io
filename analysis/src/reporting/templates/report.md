@@ -26,14 +26,11 @@ Generated at: `{{ generated_at }}`
 </details>
 {% endif %}
 
-# Main tasks
+## Main tasks
 Task description: Imagine you're presenting this visualization to your boss. Write down the text you would use for your speech.
 
 ### Stimuli 1: CO₂ Emissions
 
-| Footnotes condition | Badges condition |
-| :-----------------: | :--------------: |
-| <img src="figures/stimuli_co2_emissions_footnotes.jpg" alt="CO₂ emissions stimulus with footnotes" width="420" /> | <img src="figures/stimuli_co2_emissions_badges.jpg" alt="CO₂ emissions stimulus with badges" width="420" /> |
 {% if notes_items and notes_items|length > 0 %}
 {% set co2_notes = (notes_items | selectattr('stimulus','equalto','CO₂ Emissions') | list | first) %}
 {% if co2_notes %}
@@ -65,10 +62,6 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 {% endif %}
 
 ### Stimuli 2: Global Warming Projection
-
-| Footnotes condition | Badges condition |
-| :-----------------: | :--------------: |
-| <img src="figures/stimuli_global_warming_footnotes.jpg" alt="Global warming projection stimulus with footnotes" width="420" /> | <img src="figures/stimuli_global_warming_badges.jpg" alt="Global warming projection stimulus with badges" width="420" /> |
 
 {% if notes_items and notes_items|length > 0 %}
 {% set gw_notes = (notes_items | selectattr('stimulus','equalto','Global Warming Projection') | list | first) %}
@@ -111,25 +104,7 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 - **Standardization** Footnotes/Badges like these should be widely used alongside visualizations. (1 = Strongly Disagree, 5 = Strongly Agree)
 
 
-**Distributions and medians**
-{% set ldist = (figures | selectattr('name','equalto','f_likert_distribution_median') | list | first) %}
-{% if ldist %}
-<img src="{{ ldist.path }}" alt="Likert distributions and medians" width="720" />
-{% else %}
-> Distributions/medians figure is not available.
-{% endif %}
-
-**Mean bar charts**
-{# Prefer Altair version if available; otherwise fall back to matplotlib version #}
-{% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars_altair') | list | first) %}
-{% if not lbar %}
-  {% set lbar = (figures | selectattr('name','equalto','f_likert_mean_bars') | list | first) %}
-{% endif %}
-{% if lbar %}
-<img src="{{ lbar.path }}" alt="Likert mean bars" width="720" />
-{% else %}
-> Mean bars figure is not available.
-{% endif %}
+*(Chart-based visual summaries are omitted in this version of the report.)*
 
 ### Open-ended answers
 
@@ -192,44 +167,22 @@ Task description: Imagine you're presenting this visualization to your boss. Wri
 > No open-ended responses available.
 {% endif %}
 
-### Badge interactions – hover metrics
-
-{% if badge_hover_chart or badge_hover_time_chart or badge_hover_duration_chart %}
-{% if badge_participant_stats and badge_participant_stats|length > 0 %}
-**Per-stimulus participant coverage (hover):**
-
-{% for s in badge_participant_stats %}
-- **{{ s.label }}**: {{ s.hover_participants }} participants hovered at least one visualization badge.
-{% endfor %}
-
-{% endif %}
-| {% if badge_hover_chart %}Hover counts{% endif %} | {% if badge_hover_time_chart %}Total hover time{% endif %} | {% if badge_hover_duration_chart %}Duration stats{% endif %} |
-| :-----------------------------------------------: | :--------------------------------------------------------: | :-----------------------------------------------------------: |
-| {% if badge_hover_chart %}<img src="{{ badge_hover_chart.path }}" alt="Hover counts per stimulus" width="320" />{% endif %} | {% if badge_hover_time_chart %}<img src="{{ badge_hover_time_chart.path }}" alt="Hover times per stimulus" width="320" />{% endif %} | {% if badge_hover_duration_chart %}<img src="{{ badge_hover_duration_chart.path }}" alt="Hover duration statistics per stimulus" width="320" />{% endif %} |
-{% else %}
-> No badge interaction metrics available (missing `stimulus_badge_metrics.csv` or hover counts).
-{% endif %}
-
-### Badge interactions – clicks and drawer metrics 
+### Badge interactions (text-only summary)
 
 {% if badge_participant_stats and badge_participant_stats|length > 0 %}
-**Per-stimulus participant coverage (clicks):**
+**Per-stimulus participant coverage (hover and clicks):**
 
 {% for s in badge_participant_stats %}
-- **{{ s.label }}**: {{ s.click_participants }} participants clicked at least one visualization badge.
+- **{{ s.label }}**: {{ s.hover_participants }} participants hovered at least one badge; {{ s.click_participants }} participants clicked at least one badge.
 {% endfor %}
 
 {% set total_click_participants = badge_participant_stats | map(attribute="click_participants") | sum %}
 {% if total_click_participants == 0 %}
-_Note: No data, because nobody clicked on any badge_
+_Note: No click interaction data available (no participants clicked badges)._
 {% endif %}
 {% else %}
-_Note: No data, because nobody clicked on any badge_
+_No badge interaction metrics available (missing `stimulus_badge_metrics.csv` or badge metrics were not computed)._
 {% endif %}
-
-| Click counts | Total open time | Mean open duration |
-| :----------: | :-------------: | :----------------: |
-| {% if badge_click_chart %}<img src="{{ badge_click_chart.path }}" alt="Click counts per stimulus" width="320" />{% endif %} | {% if badge_drawer_time_chart %}<img src="{{ badge_drawer_time_chart.path }}" alt="Total drawer open time per stimulus" width="320" />{% endif %} | {% if badge_drawer_duration_chart %}<img src="{{ badge_drawer_duration_chart.path }}" alt="Mean drawer open time per stimulus" width="320" />{% endif %} |
 
 ### Participant ID mapping and time per component
 

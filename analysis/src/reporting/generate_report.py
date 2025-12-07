@@ -3,32 +3,11 @@ import datetime as dt
 import pathlib
 from typing import List, Optional
 
-import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 from jinja2 import Template
 
 from . import util
 from . import text_clean
-from charts.group_counts import plot_group_counts
-from charts.time_distributions import plot_time_distributions
-from charts.total_time_hist import plot_total_time_hist
-from charts.likert_diverging_bars import plot_likert_diverging_bars
-from charts.likert_dot_ci import plot_likert_dot_ci
-from charts.likert_mean_bars import plot_likert_mean_bars
-from charts.likert_mean_bars_altair import plot_likert_mean_bars_altair
-from charts.likert_distribution_median import plot_likert_distribution_median
-from charts.badge_hover_counts import (
-	plot_badge_hover_counts,
-	plot_badge_hover_times,
-	plot_badge_hover_duration_stats,
-)
-from charts.badge_click_counts import plot_badge_click_counts
-from charts.badge_drawer_times import (
-	plot_badge_drawer_open_times,
-	plot_badge_drawer_duration_stats,
-)
-
 import json
 
 
@@ -92,117 +71,10 @@ def generate_report(
 	likert_questions_badge_md: Optional[str] = None,
 	likert_questions_footnote_md: Optional[str] = None,
 ) -> pathlib.Path:
-	sns.set_theme(style="whitegrid")
-	plt.rcParams["font.family"] = "DejaVu Sans"
 	data = util.load_all_data(data_dir)
 
 	run_id = run_id or _run_label()
 	root_out = pathlib.Path(out_dir) / _sanitize_path_component(run_id)
-	fig_out = root_out / "figures"
-	util.safe_make_dir(fig_out)
-
-	figure_paths: List[pathlib.Path] = []
-
-	# Copy static stimulus assets (actual study stimuli) into the figures folder
-	# so they can be referenced from the Markdown template via "figures/...".
-	try:
-		import shutil
-
-		assets_dir = pathlib.Path(__file__).with_name("assets")
-		stimulus_assets = [
-			"stimuli_co2_emissions_badges.jpg",
-			"stimuli_co2_emissions_footnotes.jpg",
-			"stimuli_global_warming_badges.jpg",
-			"stimuli_global_warming_footnotes.jpg",
-		]
-		for fname in stimulus_assets:
-			src = assets_dir / fname
-			if not src.exists():
-				continue
-			dst = fig_out / fname
-			if not dst.exists():
-				shutil.copy(src, dst)
-	except Exception:
-		# If anything goes wrong here, we still want the rest of the report to render.
-		pass
-
-	p1 = plot_group_counts(data.participants, root_out)
-	if p1 is not None:
-		figure_paths.append(p1)
-
-	if data.time_per_component is not None:
-		component_cols = []
-		for col in ["global-warming-projection (s)", "co2-emissions (s)", "total (s)"]:
-			if col in data.time_per_component.columns:
-				component_cols.append(col)
-		figure_paths.extend(plot_time_distributions(data.time_per_component, root_out, component_cols))
-		p_total_hist = plot_total_time_hist(data.time_per_component, root_out, col="total (s)")
-		if p_total_hist is not None:
-			figure_paths.append(p_total_hist)
-	# Likert beehive plot
-	if data.likert_scores is not None:
-		# Likert diverging bars (100% stacked)
-		# p_likert_div = plot_likert_diverging_bars(data.likert_scores, root_out)
-		# if p_likert_div is not None:
-		# 	figure_paths.append(p_likert_div)
-		# (removed) Likert mean scores chart
-		# Likert mean bars
-		p_likert_bar = plot_likert_mean_bars(data.likert_scores, root_out)
-		if p_likert_bar is not None:
-			figure_paths.append(p_likert_bar)
-		# Altair version of Likert mean bars
-		p_likert_bar_alt = plot_likert_mean_bars_altair(data.likert_scores, root_out)
-		if p_likert_bar_alt is not None:
-			figure_paths.append(p_likert_bar_alt)
-		# Likert distributions + medians (Altair)
-		p_likert_dist = plot_likert_distribution_median(data.likert_scores, root_out)
-		if p_likert_dist is not None:
-			figure_paths.append(p_likert_dist)
-
-	# Badge hover-count & hover-time charts (Altair)
-	badge_hover_chart: Optional[dict] = None
-	badge_hover_time_chart: Optional[dict] = None
-	badge_hover_duration_chart: Optional[dict] = None
-	badge_click_chart: Optional[dict] = None
-	badge_drawer_time_chart: Optional[dict] = None
-	badge_drawer_duration_chart: Optional[dict] = None
-	if data.badge_metrics is not None:
-		badge_counts_fig = plot_badge_hover_counts(data.badge_metrics, root_out)
-		if badge_counts_fig is not None:
-			figure_paths.append(badge_counts_fig)
-			badge_hover_chart = {
-				"name": badge_counts_fig.stem,
-				"path": f"figures/{badge_counts_fig.name}",
-			}
-		badge_time_fig = plot_badge_hover_times(data.badge_metrics, root_out)
-		if badge_time_fig is not None:
-			figure_paths.append(badge_time_fig)
-			badge_hover_time_chart = {
-				"name": badge_time_fig.stem,
-				"path": f"figures/{badge_time_fig.name}",
-			}
-		badge_dur_fig = plot_badge_hover_duration_stats(data.badge_metrics, root_out)
-		if badge_dur_fig is not None:
-			figure_paths.append(badge_dur_fig)
-			badge_hover_duration_chart = {
-				"name": badge_dur_fig.stem,
-				"path": f"figures/{badge_dur_fig.name}",
-			}
-		# Click counts (per badge, per stimulus)
-		click_fig = plot_badge_click_counts(data.badge_metrics, root_out)
-		if click_fig is not None:
-			figure_paths.append(click_fig)
-			badge_click_chart = {"name": click_fig.stem, "path": f"figures/{click_fig.name}"}
-		# Drawer open metrics (time + mean duration)
-		drawer_time_fig = plot_badge_drawer_open_times(data.badge_metrics, root_out)
-		if drawer_time_fig is not None:
-			figure_paths.append(drawer_time_fig)
-			badge_drawer_time_chart = {"name": drawer_time_fig.stem, "path": f"figures/{drawer_time_fig.name}"}
-		drawer_dur_fig = plot_badge_drawer_duration_stats(data.badge_metrics, root_out)
-		if drawer_dur_fig is not None:
-			figure_paths.append(drawer_dur_fig)
-			badge_drawer_duration_chart = {"name": drawer_dur_fig.stem, "path": f"figures/{drawer_dur_fig.name}"}
-
 	n_participants = (
 		int(data.participants["participantId"].nunique())
 		if data.participants is not None and "participantId" in data.participants.columns
@@ -307,7 +179,8 @@ def generate_report(
 		"out_dir": str(root_out.resolve()),
 		"run_id": run_id,
 		"generated_at": _human_timestamp(),
-		"figures": [{"name": p.stem, "filename": p.name, "path": f"figures/{p.name}"} for p in figure_paths],
+		# No Python-generated figures; R scripts handle chart creation outside this pipeline.
+		"figures": [],
 		"languages_top": languages_top,
 		"countries_top": countries_top,
 		"resolutions_top": resolutions_top,
@@ -322,12 +195,13 @@ def generate_report(
 		"n_badge_labels": n_badge_labels,
 		"n_stimuli_with_badges": n_stimuli_with_badges,
 		"badge_participant_stats": badge_participant_stats,
-		"badge_hover_chart": badge_hover_chart,
-		"badge_hover_time_chart": badge_hover_time_chart,
-		"badge_hover_duration_chart": badge_hover_duration_chart,
-		"badge_click_chart": badge_click_chart,
-		"badge_drawer_time_chart": badge_drawer_time_chart,
-		"badge_drawer_duration_chart": badge_drawer_duration_chart,
+		# Chart metadata is omitted; the report no longer embeds charts.
+		"badge_hover_chart": None,
+		"badge_hover_time_chart": None,
+		"badge_hover_duration_chart": None,
+		"badge_click_chart": None,
+		"badge_drawer_time_chart": None,
+		"badge_drawer_duration_chart": None,
 		"demographics_rows": [],
 		"dimension_labels": {
 			"saliency": "Saliency",
