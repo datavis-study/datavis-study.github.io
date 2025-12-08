@@ -22,9 +22,9 @@
     "withProgressBar": true,
     "autoDownloadStudy": false,
     "sidebar": true,
-      "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [https://app.prolific.com/submissions/complete?cc=CM90O1D9](https://app.prolific.com/submissions/complete?cc=CM90O1D9)",
-      "hideStudyBrowser": false,
-      "urlParticipantIdParam": "PROLIFIC_PID"
+    "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [https://app.prolific.com/submissions/complete?cc=CM90O1D9](https://app.prolific.com/submissions/complete?cc=CM90O1D9)",
+    "hideStudyBrowser": false,
+    "urlParticipantIdParam": "PROLIFIC_PID"
   },
   "importedLibraries": [
     "demographics",
@@ -350,9 +350,26 @@
       "example",
       {
         "id": "group-assignment",
-        "order": "fixed",
+        "order": "latinSquare",
         "numSamples": 1,
         "components": [
+          {
+            "id": "badge-group",
+            "order": "fixed",
+            "components": [
+              {
+                "order": "random",
+                "components": [
+                  "global-warming-projection-badges",
+                  "co2-emissions-badges"
+                ]
+              },
+              "pre-questionnaire",
+              "badge-questionaire-1",
+              "badge-questionaire-2",
+              "demographics-custom"
+            ]
+          },
           {
             "id": "footnote-group",
             "order": "fixed",
