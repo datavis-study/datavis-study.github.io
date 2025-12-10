@@ -1,0 +1,149 @@
+{
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "Experiment 1.2 – Group Footnotes",
+    "version": "0.0.1",
+    "authors": [
+      "Valentin Edelsbrunner"
+    ],
+    "date": "2025-12-10",
+    "description": "Follow-up study for participants from the Experiment 1 footnote group, exposing them to visualization badges and comparing badges vs. footnotes.",
+    "organizations": [
+      "inria",
+      "University of Bordeaux",
+      "University of Edinburgh",
+      "University of Oxford"
+    ]
+  },
+  "uiConfig": {
+    "contactEmail": "valentin.edelsbrunner@inria.fr",
+    "helpTextPath": "mind-the-badge/assets/help.md",
+    "logoPath": "revisitAssets/badge-logo.png",
+    "withProgressBar": true,
+    "autoDownloadStudy": false,
+    "sidebar": true,
+    "studyEndMsg": "**Thank you for completing this follow-up study. You may click this link and return to Prolific**: [https://app.prolific.com/submissions/complete?cc=CM90O1D9](https://app.prolific.com/submissions/complete?cc=CM90O1D9)",
+    "urlParticipantIdParam": "PROLIFIC_PID"
+  },
+  "importedLibraries": [],
+  "baseComponents": {
+    "stimuliWithBadge": {
+      "description": "A static visualization with one to many interactive visualization badges placed bottom right",
+      "type": "react-component",
+      "path": "mind-the-badge/assets/StimuliWithBadge.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "sidebar",
+      "response": []
+    }
+  },
+  "components": {
+    "introduction": {
+      "type": "markdown",
+      "path": "mind-the-badge-experiment-1-2-footnote-group/assets/introduction.md",
+      "nextButtonText": "Continue",
+      "response": []
+    },
+    "consent": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/consent.md",
+      "nextButtonText": "Accept and Continue",
+      "response": []
+    },
+    "reminder-original-study": {
+      "type": "questionnaire",
+      "description": "Quick reminder of the original footnote study and memory check",
+      "instruction": "### The visualizations you saw with footnotes\n\n<div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;\">\n  <div style=\"text-align: center; border: 1px solid #ddd; padding: 8px;\">\n    <strong>Global warming projection (footnotes)</strong><br/>\n    <img src=\"mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png\" alt=\"Global warming with footnotes\" />\n  </div>\n  <div style=\"text-align: center; border: 1px solid #ddd; padding: 8px;\">\n    <strong>CO₂ emissions (footnotes)</strong><br/>\n    <img src=\"mind-the-badge/assets/stimuli-co2-emissions/grp-footnotes/source.png\" alt=\"CO₂ emissions with footnotes\" />\n  </div>\n</div>",
+      "instructionLocation": "aboveStimulus",
+      "nextButtonLocation": "sidebar",
+      "response": [
+        {
+          "id": "remember-original-study",
+          "prompt": "### Quick reminder\n\nIn the previous study, you read data visualizations **with footnotes** and wrote speeches based on what you saw.\n\n**Do you remember taking part in this study?**",
+          "type": "radio",
+          "required": true,
+          "location": "sidebar",
+          "options": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "id": "remember-footnote-stimuli",
+          "prompt": "**Do you remember reading visualizations with footnotes?**",
+          "type": "radio",
+          "required": true,
+          "location": "sidebar",
+          "options": [
+            "Yes",
+            "No"
+          ]
+        }
+      ]
+    },
+    "transition-to-badges": {
+      "type": "markdown",
+      "path": "mind-the-badge-experiment-1-2-footnote-group/assets/transition-to-badges.md",
+      "nextButtonText": "I am ready",
+      "response": []
+    },
+    "explore-badges-global-warming": {
+      "baseComponent": "stimuliWithBadge",
+      "instruction": "Spend at least **3 minutes** exploring the visualization and badges (hover, click). We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 3 minutes*",
+      "parameters": {
+        "imageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
+        "detailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json"
+      },
+      "nextButtonEnableTime": 180000,
+      "response": []
+    },
+    "explore-badges-co2-emissions": {
+      "baseComponent": "stimuliWithBadge",
+      "instruction": "Spend at least **3 minutes** exploring the visualization and badges (hover, click). We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 3 minutes*",
+      "parameters": {
+        "imageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
+        "detailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json"
+      },
+      "nextButtonEnableTime": 180000,
+      "response": []
+    },
+    "badge-questionaire-2": {
+      "type": "questionnaire",
+      "description": "Preference and post-task Likert questionnaire about visualization badges (compared to footnotes)",
+      "instruction": "### Please compare the two versions and answer the questions below.\n\nIn the table, the **left** column shows the versions with **footnotes** (as in your previous study). The **right** column shows the versions with **visualization badges** (as you just explored).\n\n| Footnotes version | Badges version |\n| --- | --- |\n| ![Global warming with footnotes](mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png) | ![Global warming with badges](mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png) |\n| ![CO₂ emissions with footnotes](mind-the-badge/assets/stimuli-co2-emissions/grp-footnotes/source.png) | ![CO₂ emissions with badges](mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png) |",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "preferred-condition",
+          "prompt": "Looking at the visualizations above, **which version do you prefer overall**?",
+          "type": "radio",
+          "required": true,
+          "options": [
+            "I prefer the version with footnotes",
+            "I prefer the version with visualization badges",
+            "No clear preference",
+            "Not sure / cannot say"
+          ]
+        },
+        { "id": "saliency", "prompt": "Visualization badges were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "clutter", "prompt": "Visualization badges cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "interpretability", "prompt": "Visualization badges were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "usefulness", "prompt": "Information in the visualization badges was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "trust", "prompt": "Visualization badges increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "standardization", "prompt": "Visualization badges should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "final-comments", "prompt": "Any additional comments about comparing footnotes and badges?", "type": "longText", "required": false, "minRows": 3, "autosize": true, "maxRows": 8 }
+      ]
+    }
+  },
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "introduction",
+      "consent",
+      "reminder-original-study",
+      "transition-to-badges",
+      "explore-badges-global-warming",
+      "explore-badges-co2-emissions",
+      "badge-questionaire-2"
+    ]
+  }
+}

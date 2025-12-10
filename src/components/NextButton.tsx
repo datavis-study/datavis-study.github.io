@@ -86,15 +86,6 @@ export function NextButton({
       >
         {label}
       </Button>
-      {nextButtonEnableTime > 0 && timer && timer < nextButtonEnableTime && (
-      <Alert mt="md" title="Please wait" color="blue" icon={<IconInfoCircle />}>
-        The next button will be enabled in
-        {' '}
-        {Math.ceil((nextButtonEnableTime - timer) / 1000)}
-        {' '}
-        seconds.
-      </Alert>
-      )}
       {nextButtonDisableTime && timer && (nextButtonDisableTime - timer) < 10000 && (
         (nextButtonDisableTime - timer) > 0
           ? (
