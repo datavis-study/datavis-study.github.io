@@ -80,9 +80,8 @@ const BadgeRow: React.FC<BadgeRowProps> = ({
         flexDirection: 'column',
         gap: `${verticalGapPx}px`,
         alignItems: 'flex-end',
-        width: '1000px',
+        width: '100%',
         maxWidth: '100%',
-        marginRight: '+80px',
       }}
     >
       {badgeRows.map((row, rowIndex) => (
@@ -94,7 +93,7 @@ const BadgeRow: React.FC<BadgeRowProps> = ({
             gap: '4px',
             alignItems: 'center',
             justifyContent: 'flex-end',
-            transform: `scale(0.9)`,
+            transform: `scale(${scale})`,
             transformOrigin: 'right center',
           }}
         >

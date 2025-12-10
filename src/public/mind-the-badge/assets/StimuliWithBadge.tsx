@@ -412,10 +412,9 @@ const StimuliWithBadge: React.FC<StimulusParams<BadgeStimulusParams>> = ({ param
           src={resolvedImageSrc}
           alt={imageAlt}
           style={{
-            width: '800px',
+            width: '100%',
             height: 'auto',
             display: 'block',
-            maxWidth: '100%',
           }}
         />
       )}

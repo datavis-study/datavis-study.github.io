@@ -14,12 +14,14 @@ import { useStoreSelector } from '../store/store';
 import { AnalysisFooter } from './interface/AnalysisFooter';
 import { ViewportBlocker } from './interface/ViewportBlocker';
 import { useIsAnalysis } from '../store/hooks/useIsAnalysis';
+import { useCurrentComponent } from '../routes/utils';
 
 export function StepRenderer() {
   const windowEvents = useRef<EventType[]>([]);
 
   const studyConfig = useStudyConfig();
   const windowEventDebounceTime = studyConfig.uiConfig.windowEventDebounceTime ?? 100;
+  const currentComponent = useCurrentComponent();
 
   const showStudyBrowser = useStoreSelector((state) => state.showStudyBrowser);
   const analysisHasAudio = useStoreSelector((state) => state.analysisHasAudio);
@@ -101,6 +103,7 @@ export function StepRenderer() {
   }, []);
 
   const sidebarWidth = studyConfig.uiConfig.sidebarWidth ?? 300;
+  const hideSidebarForComponent = currentComponent === 'badge-questionaire-2';
 
   const { studyNavigatorEnabled, dataCollectionEnabled } = useMemo(() => modes, [modes]);
   const effectiveStudyNavigatorEnabled = useMemo(() => {
@@ -118,7 +121,14 @@ export function StepRenderer() {
       <AppShell
         padding="md"
         header={{ height: 70 }}
-        navbar={{ width: sidebarWidth, breakpoint: 'xs', collapsed: { desktop: !studyConfig.uiConfig.sidebar, mobile: !studyConfig.uiConfig.sidebar } }}
+        navbar={{
+          width: sidebarWidth,
+          breakpoint: 'xs',
+          collapsed: {
+            desktop: !studyConfig.uiConfig.sidebar || hideSidebarForComponent,
+            mobile: !studyConfig.uiConfig.sidebar || hideSidebarForComponent,
+          },
+        }}
         aside={{ width: 360, breakpoint: 'xs', collapsed: { desktop: !asideOpen, mobile: !asideOpen } }}
         footer={{ height: (isAnalysis ? 75 : 0) + (analysisHasAudio ? 50 : 0) }}
       >
