@@ -35,12 +35,11 @@ export function NextButton({
   const nextButtonDisableTime = configInUse?.nextButtonDisableTime;
   const nextButtonEnableTime = configInUse?.nextButtonEnableTime || 0;
   const [timer, setTimer] = useState<number | undefined>(undefined);
-  // Start a timer on first render, update timer every 100ms
+  // Start a timer on first render, update timer every 100ms based on wall‑clock time
   useEffect(() => {
-    let time = 0;
+    const startTime = Date.now();
     const interval = setInterval(() => {
-      time += 100;
-      setTimer(time);
+      setTimer(Date.now() - startTime);
     }, 100);
     return () => {
       clearInterval(interval);
