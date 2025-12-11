@@ -21,7 +21,7 @@
     "autoDownloadStudy": false,
     "sidebar": true,
     "studyEndMsg": "TODO: Prolific completion URL",
-    "hideStudyBrowser": false,
+    "hideStudyBrowser": true,
     "urlParticipantIdParam": "PROLIFIC_PID"
   },
   "importedLibraries": [],

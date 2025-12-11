@@ -22,7 +22,7 @@
     "withProgressBar": true,
     "autoDownloadStudy": false,
     "sidebar": true,
-    "hideStudyBrowser": false,
+    "hideStudyBrowser": true,
     "studyEndMsg": "TODO: Prolific completion URL",
     "urlParticipantIdParam": "PROLIFIC_PID"
   },
