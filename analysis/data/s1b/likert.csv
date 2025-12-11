@@ -1,0 +1,4 @@
+group,participantId,participantIndex,prolificPid,saliency_badges,saliency_footnotes,clutter_badges,clutter_footnotes,interpretability_badges,interpretability_footnotes,usefulness_badges,usefulness_footnotes,trust_badges,trust_footnotes,standardization_badges,standardization_footnotes,final_comments
+badges,f0beae1c-a0c4-4416-8b33-5b0a54f3608b,1,,1,2,3,4,5,4,3,2,1,2,3,4,s1b-badges
+footnotes,d38c89f2-fde6-4a64-83b1-516a0329e580,2,,1,2,1,2,1,2,1,2,1,2,1,2,sb1-footnotes
+footnotes,69a14120-36b5-494e-ad0e-78375ca26cc4,1,,,,,,,,,,,,,,
