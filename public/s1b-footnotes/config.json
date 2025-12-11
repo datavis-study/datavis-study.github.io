@@ -22,7 +22,7 @@
     "withProgressBar": true,
     "autoDownloadStudy": false,
     "sidebar": true,
-    "hideStudyBrowser": true,
+    "hideStudyBrowser": false,
     "studyEndMsg": "TODO: Prolific completion URL",
     "urlParticipantIdParam": "PROLIFIC_PID"
   },
@@ -237,17 +237,23 @@
     },
     "badge-likert-badges": {
       "type": "questionnaire",
-      "description": "Post-task Likert scale questionnaire about visualization badges (reused from main study)",
-      "instruction": "### Please answer the following questions about the **visualization badges** you saw",
+      "description": "Final Likert questionnaire about visualization badges and footnotes",
+      "instruction": "### Final questions about **visualization badges** and **footnotes**\n\nFor each statement below, please answer **once about visualization badges** (the small graphical labels shown below the visualization) and **once about footnotes** (the explanatory text shown below the visualization).\n\n<div style=\"display: flex; gap: 12px; margin-top: 8px; margin-bottom: 4px;\">\n  <span style=\"background-color: #e6f4ff; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;\">\n    Visualization badges\n  </span>\n  <span style=\"background-color: #fff7e6; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;\">\n    Footnotes\n  </span>\n</div>",
       "instructionLocation": "aboveStimulus",
       "response": [
-        { "id": "saliency", "prompt": "Visualization badges were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "clutter", "prompt": "Visualization badges cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "interpretability", "prompt": "Visualization badges were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "usefulness", "prompt": "Information in the visualization badges was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "trust", "prompt": "Visualization badges increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "standardization", "prompt": "Visualization badges should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "final-comments-badges", "prompt": "Any additional comments?", "type": "longText", "required": false, "minRows": 3, "autosize": true, "maxRows": 8 }
+        { "id": "saliency-badges", "prompt": "<span style=\"background-color: #e6f4ff; padding: 2px 4px; border-radius: 3px;\">Visualization badges</span> were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "saliency-footnotes", "prompt": "<span style=\"background-color: #fff7e6; padding: 2px 4px; border-radius: 3px;\">Footnotes</span> were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "clutter-badges", "prompt": "<span style=\"background-color: #e6f4ff; padding: 2px 4px; border-radius: 3px;\">Visualization badges</span> cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "clutter-footnotes", "prompt": "<span style=\"background-color: #fff7e6; padding: 2px 4px; border-radius: 3px;\">Footnotes</span> cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "interpretability-badges", "prompt": "<span style=\"background-color: #e6f4ff; padding: 2px 4px; border-radius: 3px;\">Visualization badges</span> were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "interpretability-footnotes", "prompt": "<span style=\"background-color: #fff7e6; padding: 2px 4px; border-radius: 3px;\">Footnotes</span> were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "usefulness-badges", "prompt": "Information in the <span style=\"background-color: #e6f4ff; padding: 2px 4px; border-radius: 3px;\">visualization badges</span> was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "usefulness-footnotes", "prompt": "Information in the <span style=\"background-color: #fff7e6; padding: 2px 4px; border-radius: 3px;\">footnotes</span> was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "trust-badges", "prompt": "<span style=\"background-color: #e6f4ff; padding: 2px 4px; border-radius: 3px;\">Visualization badges</span> increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "trust-footnotes", "prompt": "<span style=\"background-color: #fff7e6; padding: 2px 4px; border-radius: 3px;\">Footnotes</span> increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "standardization-badges", "prompt": "<span style=\"background-color: #e6f4ff; padding: 2px 4px; border-radius: 3px;\">Visualization badges</span> should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "standardization-footnotes", "prompt": "<span style=\"background-color: #fff7e6; padding: 2px 4px; border-radius: 3px;\">Footnotes like these</span> should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "final-comments-badges", "prompt": "Any additional comments about **visualization badges** or **footnotes**, or how they compare?", "type": "longText", "required": false, "minRows": 3, "autosize": true, "maxRows": 8 }
       ]
     }
   },
