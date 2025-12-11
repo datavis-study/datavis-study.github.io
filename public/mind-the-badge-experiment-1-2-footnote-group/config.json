@@ -101,7 +101,7 @@
         "imageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
         "detailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json"
       },
-      "nextButtonEnableTime": 180000,
+      "nextButtonEnableTime": 10000,
       "response": []
     },
     "explore-badges-co2-emissions": {
@@ -111,7 +111,7 @@
         "imageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
         "detailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json"
       },
-      "nextButtonEnableTime": 180000,
+      "nextButtonEnableTime": 10000,
       "response": []
     },
     "badge-global-comparison": {
@@ -148,7 +148,8 @@
           "required": true,
           "minRows": 6,
           "autosize": true,
-          "maxRows": 8
+          "maxRows": 8,
+          "placeholder": "Write at least 50 words"
         }
       ]
     },
@@ -170,32 +171,25 @@
       "response": [
         {
           "id": "preferred-condition-co2",
-          "prompt": "Looking at the **CO₂ emissions** visualizations above, **which version do you prefer overall**?",
+          "prompt": "\n\n\n**Which version do you prefer**?",
           "type": "radio",
           "required": true,
           "options": [
-            "I prefer the version with footnotes",
-            "I prefer the version with visualization badges",
-            "No clear preference",
-            "Not sure / cannot say"
+            "I prefer the version with visualization badges (left)",
+            "I prefer the version with footnotes (right)",
+            "No clear preference"
           ]
         },
         {
           "id": "preferred-condition-co2-explanation",
-          "prompt": "In a few sentences, please explain **why** you prefer this version for the **CO₂ emissions** visualization (or why you have no clear preference).",
+          "prompt": "**Explain why**",
           "type": "longText",
           "required": true,
-          "minRows": 4,
+          "minRows": 6,
           "autosize": true,
-          "maxRows": 8
-        },
-        { "id": "saliency", "prompt": "Visualization badges were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "clutter", "prompt": "Visualization badges cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "interpretability", "prompt": "Visualization badges were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "usefulness", "prompt": "Information in the visualization badges was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "trust", "prompt": "Visualization badges increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "standardization", "prompt": "Visualization badges should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
-        { "id": "final-comments", "prompt": "Any additional comments about comparing footnotes and badges?", "type": "longText", "required": false, "minRows": 3, "autosize": true, "maxRows": 8 }
+          "maxRows": 8,
+          "placeholder": "Write at least 50 words"
+        }
       ]
     }
   },

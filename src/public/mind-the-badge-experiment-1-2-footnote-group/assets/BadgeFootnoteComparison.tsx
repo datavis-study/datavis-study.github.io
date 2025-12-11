@@ -61,6 +61,7 @@ const BadgeFootnoteComparison: React.FC<StimulusParams<BadgeFootnoteComparisonPa
         // Extra padding so the framing lines don't hug the stimuli
         pt: { xs: 0, md: 2 },
         pb: { xs: 0, md: 2 },
+        mb: { xs: 2, md: 3 },
         display: 'grid',
         gridTemplateColumns: { xs: '0fr', md: '0fr 1fr' },
         gap: { xs: 0, md: 0 },
@@ -68,21 +69,38 @@ const BadgeFootnoteComparison: React.FC<StimulusParams<BadgeFootnoteComparisonPa
         position: 'relative',
       }}
     >
-      {/* Central vertical divider (desktop only, subtle and rounded) */}
+      {/* Central vertical divider + bottom horizontal divider (desktop only, subtle and rounded) */}
       {(showGlobal || showCO2) && (
-        <Box
-          sx={{
-            display: { xs: 'none', md: 'block' },
-            position: 'absolute',
-            top: 6,
-            bottom: 6,
-            left: '50%',
-            width: '2px',
-            bgcolor: '#d1d5db', // lighter grey for lower salience
-            borderRadius: 9999, // fully rounded ends
-            pointerEvents: 'none',
-          }}
-        />
+        <>
+          {/* Vertical center line */}
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'block' },
+              position: 'absolute',
+              top: 4,      // a bit closer to top for slightly longer line
+              bottom: 4,   // a bit closer to bottom for slightly longer line
+              left: '50%',
+              width: '2px',
+              bgcolor: '#d1d5db', // lighter grey for lower salience
+              borderRadius: 9999, // fully rounded ends
+              pointerEvents: 'none',
+            }}
+          />
+          {/* Bottom horizontal divider between stimuli and questions */}
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'block' },
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: '2px',
+              bgcolor: '#d1d5db',
+              borderRadius: 9999,
+              pointerEvents: 'none',
+            }}
+          />
+        </>
       )}
       {showGlobal && (
         <>
