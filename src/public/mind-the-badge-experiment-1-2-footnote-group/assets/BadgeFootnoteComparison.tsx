@@ -34,24 +34,21 @@ const BadgeFootnoteComparison: React.FC<StimulusParams<BadgeFootnoteComparisonPa
     // - gap xs=0 → 0px total
     // - panels xs=512px → 512 * 2 = 1024 (maximized width)
     // On larger screens (md+), make panels noticeably larger.
-    width: { xs: 512, md: 620 },
+    width: { xs: 512, md: 650 },
     maxWidth: '100%',
     mx: 'auto',
-    border: '1px solid #ddd',
-    borderRadius: 1,
-    p: 1,
   } as const;
 
   return (
     <Box
       sx={{
         width: '100%',
-        maxWidth: { xs: 1024, md: 1200 },
+        maxWidth: { xs: 1400, md: 1600 },
         mx: 'auto',
         px: 0,
         display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-        gap: { xs: 0, md: 3 },
+        gridTemplateColumns: { xs: '0fr', md: '0fr 1fr' },
+        gap: { xs: 0, md: 0 },
         alignItems: 'flex-start',
       }}
     >
