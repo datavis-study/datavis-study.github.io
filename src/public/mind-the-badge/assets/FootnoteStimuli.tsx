@@ -143,7 +143,6 @@ const FootnoteStimuli: React.FC<StimulusParams<FootnoteStimulusParams>> = ({
               px: 0,
               py: 0,
               textAlign: 'left',
-              fontSize: '0.65rem',
               fontSize: `${footnoteFontSize}rem`,
               lineHeight: 1.2,
               color: '#4b5563', // dark grey
