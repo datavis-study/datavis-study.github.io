@@ -3,7 +3,8 @@
   "configsList": [
     "s1",
     "s2",
-    "s1b-footnotes"
+    "s1b-footnotes",
+    "s1b-badges"
   ],
   "configs": {
     "s1": {
@@ -14,6 +15,9 @@
     },
     "s1b-footnotes": {
       "path": "s1b-footnotes/config.json"
+    },
+    "s1b-badges": {
+      "path": "s1b-badges/config.json"
     }
   }
 }

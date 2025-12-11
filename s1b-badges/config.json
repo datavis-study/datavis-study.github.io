@@ -1,0 +1,289 @@
+{
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "s1b-badges",
+    "version": "0.0.1",
+    "authors": ["Valentin Edelsbrunner"],
+    "date": "2025-12-11",
+    "description": "Follow-up study for participants from the Experiment 1 badge group, exposing them to visualization footnotes and comparing badges vs. footnotes.",
+    "organizations": [
+      "inria",
+      "University of Bordeaux",
+      "University of Edinburgh",
+      "University of Oxford"
+    ]
+  },
+  "uiConfig": {
+    "contactEmail": "valentin.edelsbrunner@inria.fr",
+    "helpTextPath": "mind-the-badge/assets/help.md",
+    "logoPath": "revisitAssets/badge-logo.png",
+    "withProgressBar": true,
+    "autoDownloadStudy": false,
+    "sidebar": true,
+    "studyEndMsg": "TODO: Prolific completion URL",
+    "hideStudyBrowser": true,
+    "urlParticipantIdParam": "PROLIFIC_PID"
+  },
+  "importedLibraries": [],
+  "baseComponents": {
+    "stimuliWithBadge": {
+      "description": "A static visualization with one to many interactive visualization badges placed bottom right",
+      "type": "react-component",
+      "path": "mind-the-badge/assets/StimuliWithBadge.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "sidebar",
+      "response": []
+    },
+    "stimuliWithFootnotes": {
+      "description": "A static visualization with footnotes shown below the chart",
+      "type": "react-component",
+      "path": "mind-the-badge/assets/FootnoteStimuli.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "sidebar",
+      "response": []
+    },
+    "reminderOriginalBadges": {
+      "description": "Reminder view showing both badge stimuli with interactive badges below each image",
+      "type": "react-component",
+      "path": "s1b-badges/assets/ReminderOriginalBadges.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "aboveStimulus",
+      "response": []
+    },
+    "badgeFootnoteComparison": {
+      "description": "Side‑by‑side comparison of footnote and badge versions for both visualizations",
+      "type": "react-component",
+      "path": "s1b-footnotes/assets/BadgeFootnoteComparison.tsx",
+      "nextButtonLocation": "sidebar",
+      "instructionLocation": "aboveStimulus",
+      "response": []
+    }
+  },
+  "components": {
+    "introduction": {
+      "type": "markdown",
+      "path": "s1b-badges/assets/introduction.md",
+      "nextButtonText": "Continue",
+      "response": []
+    },
+    "consent": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/consent.md",
+      "nextButtonText": "Accept and Continue",
+      "response": []
+    },
+    "reminder-original-study-badges": {
+      "baseComponent": "reminderOriginalBadges",
+      "description": "Quick reminder of the original badge study and memory check",
+      "instruction": "### The visualizations you saw with badges",
+      "instructionLocation": "aboveStimulus",
+      "nextButtonLocation": "sidebar",
+      "parameters": {
+        "globalImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
+        "globalDetailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json",
+        "co2ImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
+        "co2DetailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json",
+        "badgeScale": 0.8
+      },
+      "response": [
+        {
+          "id": "remember-original-study-badges",
+          "prompt": "### Quick reminder\n\nIn the previous study, you read data visualizations **with visualization badges** and wrote speeches based on what you saw.\n\n**Do you remember taking part in this study?**",
+          "type": "radio",
+          "required": true,
+          "location": "sidebar",
+          "options": ["Yes", "No"]
+        },
+        {
+          "id": "remember-badge-stimuli",
+          "prompt": "**Do you remember reading visualizations with visualization badges?**",
+          "type": "radio",
+          "required": true,
+          "location": "sidebar",
+          "options": ["Yes", "No"]
+        }
+      ]
+    },
+    "transition-to-footnotes": {
+      "type": "markdown",
+      "path": "s1b-badges/assets/transition-to-footnotes.md",
+      "nextButtonText": "I am ready",
+      "response": []
+    },
+    "explore-footnotes-global-warming": {
+      "baseComponent": "stimuliWithFootnotes",
+      "instruction": "Spend at least **1 minute** exploring the visualization and the footnotes shown below it. We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 1 minute*",
+      "parameters": {
+        "imageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
+        "detailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json",
+        "showFootnoteText": true,
+        "footnoteFontSize": 0.75
+      },
+      "nextButtonEnableTime": 60000,
+      "response": []
+    },
+    "explore-footnotes-co2-emissions": {
+      "baseComponent": "stimuliWithFootnotes",
+      "instruction": "Spend at least **1 minute** exploring the visualization and the footnotes shown below it. We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 1 minute*",
+      "parameters": {
+        "imageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
+        "detailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json",
+        "showFootnoteText": true,
+        "footnoteFontSize": 0.75
+      },
+      "nextButtonEnableTime": 60000,
+      "response": []
+    },
+    "badge-global-comparison": {
+      "baseComponent": "badgeFootnoteComparison",
+      "description": "Preference for the global warming visualization (badges vs footnotes)",
+      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **footnotes** and on the **right** with **interactive visualization badges**. Both versions include the same information but displayed differently.",
+      "parameters": {
+        "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
+        "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
+        "globalBadgesDetailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json",
+        "co2FootnoteImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-footnotes/source.png",
+        "co2BadgesImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
+        "co2BadgesDetailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json",
+        "badgeScale": 0.75,
+        "mode": "global"
+      },
+      "instructionLocation": "aboveStimulus",
+      "nextButtonLocation": "belowStimulus",
+      "response": [
+        {
+          "id": "preferred-condition-global-understanding",
+          "prompt": "\n\n\n**(a) For understanding this visualization yourself, which version do you prefer?**",
+          "type": "radio",
+          "required": true,
+          "options": [
+            "I prefer the version with footnotes (left)",
+            "I prefer the version with visualization badges (right)",
+            "No clear preference"
+          ]
+        },
+        {
+          "id": "preferred-condition-global-understanding-explanation",
+          "prompt": "Explain **why**",
+          "type": "longText",
+          "required": true,
+          "minRows": 5,
+          "autosize": true,
+          "maxRows": 5,
+          "placeholder": "Aim for at least 50 words"
+        },
+        {
+          "id": "preferred-condition-global-presenting",
+          "prompt": "\n\n\n**(b) For presenting and explaining this visualization to others (like in the speech you wrote), which version would you prefer to use?**",
+          "type": "radio",
+          "required": true,
+          "options": [
+            "I prefer the version with footnotes (left)",
+            "I prefer the version with visualization badges (right)",
+            "No clear preference"
+          ]
+        },
+        {
+          "id": "preferred-condition-global-presenting-explanation",
+          "prompt": "Explain **why**",
+          "type": "longText",
+          "required": true,
+          "minRows": 5,
+          "autosize": true,
+          "maxRows": 5,
+          "placeholder": "Aim for at least 50 words"
+        }
+      ]
+    },
+    "badge-co2-comparison": {
+      "baseComponent": "badgeFootnoteComparison",
+      "description": "Preference and post-task Likert questionnaire for the CO₂ emissions visualization (badges vs footnotes)",
+      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **interactive visualization badges** and on the **right** with **footnotes**. Both versions include the same information but displayed differently.",
+      "parameters": {
+        "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
+        "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
+        "globalBadgesDetailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json",
+        "co2FootnoteImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-footnotes/source.png",
+        "co2BadgesImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
+        "co2BadgesDetailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json",
+        "badgeScale": 0.8,
+        "mode": "co2"
+      },
+      "instructionLocation": "aboveStimulus",
+      "nextButtonLocation": "belowStimulus",
+      "response": [
+        {
+          "id": "preferred-condition-co2-understanding",
+          "prompt": "\n\n\n**(a) For understanding this visualization yourself, which version do you prefer?**",
+          "type": "radio",
+          "required": true,
+          "options": [
+            "I prefer the version with visualization badges (left)",
+            "I prefer the version with footnotes (right)",
+            "No clear preference"
+          ]
+        },
+        {
+          "id": "preferred-condition-co2-understanding-explanation",
+          "prompt": "Explain **why**.",
+          "type": "longText",
+          "required": true,
+          "minRows": 5,
+          "autosize": true,
+          "maxRows": 5,
+          "placeholder": "Aim for at least 50 words."
+        },
+        {
+          "id": "preferred-condition-co2-presenting",
+          "prompt": "\n\n\n**(b) For presenting and explaining this visualization to others (like in the speech you wrote), which version would you prefer to use?**",
+          "type": "radio",
+          "required": true,
+          "options": [
+            "I prefer the version with visualization badges (left)",
+            "I prefer the version with footnotes (right)",
+            "No clear preference"
+          ]
+        },
+        {
+          "id": "preferred-condition-co2-presenting-explanation",
+          "prompt": "Explain **why**",
+          "type": "longText",
+          "required": true,
+          "minRows": 5,
+          "autosize": true,
+          "maxRows": 5,
+          "placeholder": "Aim for at least 50 words"
+        }
+      ]
+    },
+    "badge-likert-badges": {
+      "type": "questionnaire",
+      "description": "Post-task Likert scale questionnaire about visualization footnotes (reused from main study)",
+      "instruction": "### Please answer the following questions about the **footnotes** you saw",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        { "id": "saliency", "prompt": "Footnotes were easy to spot.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "clutter", "prompt": "Footnotes cluttered or distracted from the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "interpretability", "prompt": "Footnotes were clear and easy to interpret.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "usefulness", "prompt": "Information in the footnotes was useful for understanding the visualization.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "trust", "prompt": "Footnotes increased my trust in the information and methodology.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "standardization", "prompt": "Footnotes like these should be widely used alongside visualizations.", "type": "likert", "numItems": 5, "leftLabel": "Strongly Disagree", "rightLabel": "Strongly Agree", "required": true },
+        { "id": "final-comments-badges", "prompt": "Any additional comments about the footnotes?", "type": "longText", "required": false, "minRows": 3, "autosize": true, "maxRows": 8 }
+      ]
+    }
+  },
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "introduction",
+      "consent",
+      "reminder-original-study-badges",
+      "transition-to-footnotes",
+      "explore-footnotes-global-warming",
+      "explore-footnotes-co2-emissions",
+      "badge-global-comparison",
+      "badge-co2-comparison",
+      "badge-likert-badges"
+    ]
+  }
+}
