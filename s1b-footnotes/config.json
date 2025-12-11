@@ -23,7 +23,7 @@
     "autoDownloadStudy": false,
     "sidebar": true,
     "hideStudyBrowser": true,
-    "studyEndMsg": "TODO: Prolific completion URL",
+    "studyEndMsg": "**Thank you for completing the study. You may click this link and return to Prolific**: [https://app.prolific.com/submissions/complete?cc=CM90O1D9](https://app.prolific.com/submissions/complete?cc=CM90O1D9)",
     "urlParticipantIdParam": "PROLIFIC_PID"
   },
   "importedLibraries": [],
