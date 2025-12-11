@@ -114,42 +114,60 @@
       "nextButtonEnableTime": 180000,
       "response": []
     },
-    "badge-questionaire-2": {
+    "badge-global-comparison": {
       "baseComponent": "badgeFootnoteComparison",
-      "description": "Preference and post-task Likert questionnaire about visualization badges (compared to footnotes)",
-      "instruction": "### Please compare the two versions and answer the questions below.\n\nFor each visualization, the **left** side shows the version with **footnotes** (as in your previous study), and the **right** side shows the version with **interactive visualization badges** (as you just explored).",
+      "description": "Preference for the global warming visualization (footnotes vs badges)",
+      "instruction": "",
       "parameters": {
         "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
         "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
         "globalBadgesDetailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json",
         "co2FootnoteImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-footnotes/source.png",
         "co2BadgesImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
-        "co2BadgesDetailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json"
+        "co2BadgesDetailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json",
+        "mode": "global"
       },
       "instructionLocation": "aboveStimulus",
       "nextButtonLocation": "belowStimulus",
       "response": [
         {
           "id": "preferred-condition-global",
-          "prompt": "Looking at the **global warming** visualizations above, **which version do you prefer overall**?",
+          "prompt": "\n\n\n**Which version do you prefer**?",
           "type": "radio",
           "required": true,
           "options": [
-            "I prefer the version with footnotes",
-            "I prefer the version with visualization badges",
-            "No clear preference",
-            "Not sure / cannot say"
+            "I prefer the version with footnotes (left)",
+            "I prefer the version with visualization badges (right)",
+            "No clear preference"
           ]
         },
         {
           "id": "preferred-condition-global-explanation",
-          "prompt": "In a few sentences, please explain **why** you prefer this version for the **global warming** visualization (or why you have no clear preference).",
+          "prompt": "**Explain why**",
           "type": "longText",
           "required": true,
-          "minRows": 4,
+          "minRows": 6,
           "autosize": true,
           "maxRows": 8
-        },
+        }
+      ]
+    },
+    "badge-co2-comparison": {
+      "baseComponent": "badgeFootnoteComparison",
+      "description": "Preference and post-task Likert questionnaire for the CO₂ emissions visualization (footnotes vs badges)",
+      "instruction": "",
+      "parameters": {
+        "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
+        "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
+        "globalBadgesDetailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json",
+        "co2FootnoteImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-footnotes/source.png",
+        "co2BadgesImageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
+        "co2BadgesDetailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json",
+        "mode": "co2"
+      },
+      "instructionLocation": "aboveStimulus",
+      "nextButtonLocation": "belowStimulus",
+      "response": [
         {
           "id": "preferred-condition-co2",
           "prompt": "Looking at the **CO₂ emissions** visualizations above, **which version do you prefer overall**?",
@@ -190,7 +208,8 @@
       "transition-to-badges",
       "explore-badges-global-warming",
       "explore-badges-co2-emissions",
-      "badge-questionaire-2"
+      "badge-global-comparison",
+      "badge-co2-comparison"
     ]
   }
 }

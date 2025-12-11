@@ -103,7 +103,9 @@ export function StepRenderer() {
   }, []);
 
   const sidebarWidth = studyConfig.uiConfig.sidebarWidth ?? 300;
-  const hideSidebarForComponent = currentComponent === 'badge-questionaire-2';
+  const hideSidebarForComponent = currentComponent === 'badge-questionaire-2'
+    || currentComponent === 'badge-global-comparison'
+    || currentComponent === 'badge-co2-comparison';
 
   const { studyNavigatorEnabled, dataCollectionEnabled } = useMemo(() => modes, [modes]);
   const effectiveStudyNavigatorEnabled = useMemo(() => {
@@ -132,7 +134,12 @@ export function StepRenderer() {
         aside={{ width: 360, breakpoint: 'xs', collapsed: { desktop: !asideOpen, mobile: !asideOpen } }}
         footer={{ height: (isAnalysis ? 75 : 0) + (analysisHasAudio ? 50 : 0) }}
       >
-        <ViewportBlocker minWidth={1024} minHeight={700} blockPhoneLike message="Your screen is too small for this study. Please use a tablet or desktop-sized window (at least 1024 × 700 px)." />
+        <ViewportBlocker
+          minWidth={1300}
+          minHeight={800}
+          blockPhoneLike
+          message="Your screen is too small for this study. Please use a laptop- or desktop-sized window (at least 1300 × 800 px)."
+        />
         <AppNavBar />
         <AppAside />
         <AppHeader studyNavigatorEnabled={effectiveStudyNavigatorEnabled} dataCollectionEnabled={dataCollectionEnabled} />

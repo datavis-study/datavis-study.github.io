@@ -122,7 +122,8 @@ const FootnoteStimuli: React.FC<StimulusParams<FootnoteStimulusParams>> = ({
       {showFootnoteText && badges.length > 0 && (
         <Box
           sx={{
-            mt: 0.5, // tiny spacing below image
+            // Increased spacing below the image so footnotes don't feel cramped
+            mt: 3,
           }}
         >
           <Typography
@@ -139,8 +140,8 @@ const FootnoteStimuli: React.FC<StimulusParams<FootnoteStimulusParams>> = ({
           >
             {badges.map((badge, index) => (
               <React.Fragment key={badge.id}>
-                <strong>{badge.label}:</strong>
-                {' '}
+                {badge.label}
+                {': '}
                 {badge.description}
                 {index < badges.length - 1 ? ' ' : null}
               </React.Fragment>
