@@ -102,11 +102,10 @@ const BadgeRow: React.FC<BadgeRowProps> = ({
             return (
               <Box
                 key={badge.id || `${rowIndex}-${idx}`}
-                onClick={(e) => onBadgeClick(badge, [e.clientX, e.clientY])}
                 onMouseEnter={() => onBadgeHoverStart?.(badge.id, badge.label)}
                 onMouseLeave={() => onBadgeHoverEnd?.(badge.id, badge.label)}
                 sx={{
-                  cursor: 'pointer',
+                  cursor: 'default',
                   borderRadius: 2,
                   transition: 'border 0.2s',
                 }}

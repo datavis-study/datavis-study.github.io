@@ -71,6 +71,7 @@ const BadgeBase: React.FC<BadgeBaseProps> = ({
                         {description && (
                             <Box sx={{ mb: 0.75 }}>{description}</Box>
                         )}
+                        {/*
                         <Box
                             sx={{
                                 mt: description ? 0.75 : 0,
@@ -91,6 +92,7 @@ const BadgeBase: React.FC<BadgeBaseProps> = ({
                             <Icons.TouchApp sx={{ fontSize: '0.8em', opacity: 0.9 }} />
                             Click for more
                         </Box>
+                        */}
                     </Box>
                 )}
                 arrow
@@ -145,33 +147,37 @@ const BadgeBase: React.FC<BadgeBaseProps> = ({
                     onDelete={rightIcon ? (event) => {
                         event.stopPropagation();
                     } : undefined}
-                    clickable
+                    clickable={false}
                     color={chipColor as any}
                     sx={{
                         ...chipSx,
                         transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                         position: 'relative',
                         overflow: 'hidden',
+                        // Subtle hover animation without click behaviour
                         '&::before': {
                             content: '""',
                             position: 'absolute',
                             top: 0,
-                            left: '-100%',
-                            width: '100%',
+                            left: '-120%',
+                            width: '120%',
                             height: '100%',
-                            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent)',
-                            transition: 'left 0.4s ease',
+                            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent)',
+                            opacity: 0,
+                            transition: 'left 0.5s ease, opacity 0.5s ease',
+                            pointerEvents: 'none',
                         },
                         '&:hover': {
-                            transform: 'translateY(-1px) scale(1.01)',
-                            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08)',
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 4px 12px rgba(15, 23, 42, 0.18)',
                             '&::before': {
-                                left: '100%',
+                                left: '120%',
+                                opacity: 1,
                             },
                         },
                         '&:active': {
-                            transform: 'translateY(0px) scale(1.005)',
-                            transition: 'all 0.1s ease',
+                            transform: 'translateY(0)',
+                            boxShadow: '0 2px 6px rgba(15, 23, 42, 0.12)',
                         },
                         ...(hideLabel && {
                             pl: 0,

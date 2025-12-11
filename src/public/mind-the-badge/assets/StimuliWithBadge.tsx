@@ -405,7 +405,17 @@ const StimuliWithBadge: React.FC<StimulusParams<BadgeStimulusParams>> = ({ param
   }, [getSimplifiedTrackingData, getComprehensiveTrackingData, setAnswer, badges, trrack.graph.backend, computeAnalysisFields]);
 
   return (
-    <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+    <Box
+      sx={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: 750,
+        mx: 'auto',
+      }}
+    >
       {/* Main stimuli image */}
       {resolvedImageSrc && (
         <img
