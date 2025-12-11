@@ -118,7 +118,7 @@
     "badge-global-comparison": {
       "baseComponent": "badgeFootnoteComparison",
       "description": "Preference for the global warming visualization (footnotes vs badges)",
-      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **footnotes** (as in your previous study) and on the **right** with **interactive visualization badges**. Both versions include the **same information** but shown differently.",
+      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **footnotes** (as in your previous study) and on the **right** with **interactive visualization badges**. Both versions include the same information but displayed differently.",
       "parameters": {
         "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
         "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
@@ -178,7 +178,7 @@
     "badge-co2-comparison": {
       "baseComponent": "badgeFootnoteComparison",
       "description": "Preference and post-task Likert questionnaire for the CO₂ emissions visualization (footnotes vs badges)",
-      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **footnotes** (as in your previous study) and on the **right** with **interactive visualization badges**. Both versions include the **same information** but shown differently.",
+      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **interactive visualization badges** and on the **right** with **footnotes**. Both versions include the same information but displayed differently.",
       "parameters": {
         "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
         "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",

@@ -137,7 +137,7 @@
     "badge-global-comparison": {
       "baseComponent": "badgeFootnoteComparison",
       "description": "Preference for the global warming visualization (badges vs footnotes)",
-      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: one version with **visualization badges** and one version with **footnotes**. Both versions include the **same information** but shown differently.",
+      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **footnotes** and on the **right** with **interactive visualization badges**. Both versions include the same information but displayed differently.",
       "parameters": {
         "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
         "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
@@ -157,8 +157,8 @@
           "type": "radio",
           "required": true,
           "options": [
-            "I prefer the version with visualization badges (left)",
-            "I prefer the version with footnotes (right)",
+            "I prefer the version with footnotes (left)",
+            "I prefer the version with visualization badges (right)",
             "No clear preference"
           ]
         },
@@ -178,8 +178,8 @@
           "type": "radio",
           "required": true,
           "options": [
-            "I prefer the version with visualization badges (left)",
-            "I prefer the version with footnotes (right)",
+            "I prefer the version with footnotes (left)",
+            "I prefer the version with visualization badges (right)",
             "No clear preference"
           ]
         },
@@ -198,7 +198,7 @@
     "badge-co2-comparison": {
       "baseComponent": "badgeFootnoteComparison",
       "description": "Preference and post-task Likert questionnaire for the CO₂ emissions visualization (badges vs footnotes)",
-      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: one version with **visualization badges** and one version with **footnotes**. Both versions include the **same information** but shown differently.",
+      "instruction": "### Comparing footnotes and visualization badges\n\nHere, you see the **same visualization twice**: on the **left** with **interactive visualization badges** and on the **right** with **footnotes**. Both versions include the same information but displayed differently.",
       "parameters": {
         "globalFootnoteImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-footnotes/source.png",
         "globalBadgesImageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
