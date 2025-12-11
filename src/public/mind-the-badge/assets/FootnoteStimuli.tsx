@@ -24,6 +24,11 @@ interface FootnoteStimulusParams {
    * so we can render label + tooltip text as "footnotes".
    */
   detailedInformation?: string;
+  /**
+   * Optional font size for the footnote text, in rem units.
+   * Defaults to 0.65 (the original size).
+   */
+  footnoteFontSize?: number;
 }
 
 const resolveImageSrc = (imageSrc?: string): string => {
@@ -50,6 +55,7 @@ const FootnoteStimuli: React.FC<StimulusParams<FootnoteStimulusParams>> = ({
     showFootnoteText = true,
     detailedInformation,
   } = parameters || {};
+  const footnoteFontSize = parameters?.footnoteFontSize ?? 0.65;
   const resolvedImageSrc = resolveImageSrc(imageSrc);
 
   const [badges, setBadges] = useState<BadgeData[]>([]);
@@ -96,6 +102,8 @@ const FootnoteStimuli: React.FC<StimulusParams<FootnoteStimulusParams>> = ({
     <Box
       sx={{
         width: '100%',
+        maxWidth: 750,
+        mx: 'auto',
         textAlign: 'left',
       }}
     >
@@ -112,8 +120,10 @@ const FootnoteStimuli: React.FC<StimulusParams<FootnoteStimulusParams>> = ({
           alt={title || 'Visualization with footnotes'}
           sx={{
             width: '100%',
+            maxWidth: 750,
             height: 'auto',
             display: 'block',
+            mx: 'auto',
           }}
         />
       )}
@@ -134,6 +144,7 @@ const FootnoteStimuli: React.FC<StimulusParams<FootnoteStimulusParams>> = ({
               py: 0,
               textAlign: 'left',
               fontSize: '0.65rem',
+              fontSize: `${footnoteFontSize}rem`,
               lineHeight: 1.2,
               color: '#4b5563', // dark grey
             }}
