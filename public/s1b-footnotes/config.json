@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/StudyConfigSchema.json",
   "studyMetadata": {
-    "title": "Experiment 1.2 – Group Footnotes",
+    "title": "s1b-footnotes",
     "version": "0.0.1",
     "authors": [
       "Valentin Edelsbrunner"
@@ -38,7 +38,7 @@
     "badgeFootnoteComparison": {
       "description": "Side‑by‑side comparison of footnote and badge versions for both visualizations",
       "type": "react-component",
-      "path": "mind-the-badge-experiment-1-2-footnote-group/assets/BadgeFootnoteComparison.tsx",
+      "path": "s1b-footnotes/assets/BadgeFootnoteComparison.tsx",
       "nextButtonLocation": "sidebar",
       "instructionLocation": "aboveStimulus",
       "response": []
@@ -47,7 +47,7 @@
   "components": {
     "introduction": {
       "type": "markdown",
-      "path": "mind-the-badge-experiment-1-2-footnote-group/assets/introduction.md",
+      "path": "s1b-footnotes/assets/introduction.md",
       "nextButtonText": "Continue",
       "response": []
     },
@@ -90,7 +90,7 @@
     },
     "transition-to-badges": {
       "type": "markdown",
-      "path": "mind-the-badge-experiment-1-2-footnote-group/assets/transition-to-badges.md",
+      "path": "s1b-footnotes/assets/transition-to-badges.md",
       "nextButtonText": "I am ready",
       "response": []
     },
