@@ -6,6 +6,10 @@ src/data_prep/export_demographics.py
 src/data_prep/export_participant_meta.py
 src/data_prep/export_questionnaire_likert.py
 src/data_prep/export_questionnaire_open.py
+src/data_prep/export_s1b_likert.py
+src/data_prep/export_s1b_pilots.py
+src/data_prep/export_s1b_preferences.py
+src/data_prep/export_s1b_quick_reminder.py
 src/data_prep/export_speech.py
 src/data_prep/export_time_spent.py
 src/data_prep/io.py

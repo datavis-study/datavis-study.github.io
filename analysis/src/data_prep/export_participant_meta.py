@@ -228,27 +228,53 @@ def export_participant_meta(
     # Also write a standalone mapping CSV for convenience
     map_path = dst_path.parent / "participant_id_map.csv"
     with open(map_path, "w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["participantId", "readableId", "isProlific"])
+        writer = csv.DictWriter(
+            f,
+            fieldnames=[
+                "participantId",
+                "readableId",
+                "participantGroup",
+                "isProlific",
+                "prolificId",
+            ],
+        )
         writer.writeheader()
-        # Build a lookup from participantId to a simple True/False flag for Prolific
+        # Build lookups from participantId to:
+        # - the assigned group (badges / footnotes)
+        # - a simple True/False flag for Prolific
+        # - the original Prolific participant id (PROLIFIC_PID), if present
+        group_by_pid: Dict[str, Optional[str]] = {}
         is_prolific_by_pid: Dict[str, bool] = {}
+        prolific_id_by_pid: Dict[str, Optional[str]] = {}
         for rec in participants:
             pid = rec.get("participantId")
             if not pid:
                 continue
+            pid_str = str(pid)
+
+            # Group (badges vs footnotes)
+            seq = rec.get("sequence", {})
+            group_by_pid[pid_str] = _find_group_in_sequence(seq)
+
             search_params = rec.get("searchParams", {})
             if isinstance(search_params, dict):
-                is_prolific = bool(search_params.get("PROLIFIC_PID"))
+                prolific_pid = search_params.get("PROLIFIC_PID")
+                is_prolific = bool(prolific_pid)
             else:
+                prolific_pid = None
                 is_prolific = False
-            is_prolific_by_pid[str(pid)] = is_prolific
+            is_prolific_by_pid[pid_str] = is_prolific
+            # Only store a Prolific id for Prolific participants; leave empty otherwise.
+            prolific_id_by_pid[pid_str] = str(prolific_pid) if is_prolific and prolific_pid else None
 
         for pid, rid in id_map.items():
             writer.writerow(
                 {
                     "participantId": pid,
                     "readableId": rid,
+                    "participantGroup": group_by_pid.get(pid),
                     "isProlific": is_prolific_by_pid.get(pid, False),
+                    "prolificId": prolific_id_by_pid.get(pid) or "",
                 }
             )
 
