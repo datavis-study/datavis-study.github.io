@@ -96,7 +96,7 @@
     },
     "explore-badges-global-warming": {
       "baseComponent": "stimuliWithBadge",
-      "instruction": "Spend at least **1 minute** exploring the visualization and visualization badges (hover). We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 1 minute*",
+      "instruction": "Spend at least **1 minute** exploring the visualization and visualization badges. We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 1 minute*",
       "parameters": {
         "imageSrc": "mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/source.png",
         "detailedInformation": "/mind-the-badge/assets/stimuli-global-warming-projection/grp-badges/visualization-badges.json"
@@ -106,7 +106,7 @@
     },
     "explore-badges-co2-emissions": {
       "baseComponent": "stimuliWithBadge",
-      "instruction": "Spend at least **1 minute** exploring the visualization and visualization badges (hover). We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 1 minute*",
+      "instruction": "Spend at least **1 minute** exploring the visualization and visualization badges. We will ask you some questions afterwards. \n\n *Note: The next button will be automatically enabled after 1 minute*",
       "parameters": {
         "imageSrc": "mind-the-badge/assets/stimuli-co2-emissions/grp-badges/source.png",
         "detailedInformation": "/mind-the-badge/assets/stimuli-co2-emissions/grp-badges/visualization-badges.json"

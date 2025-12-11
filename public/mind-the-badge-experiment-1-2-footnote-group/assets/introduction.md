@@ -1,7 +1,7 @@
-# Follow-up Study: Experiment 1.2 – Group Footnotes
+# Comparing footnotes and visualization badges
 
 Thank you for returning to take part in this short follow‑up study.
 
-This study will only take a few minutes.
+This study should not take longer than 10-12mins.
 
 Click **Continue** to get started.
