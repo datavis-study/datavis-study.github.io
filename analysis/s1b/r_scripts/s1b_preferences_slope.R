@@ -45,7 +45,7 @@ generate_s1b_preferences_slope <- function(
       "co2_understanding_choice",
       "co2_presenting_choice"
     ),
-    stimulus = c("Global", "Global", "CO2", "CO2"),
+    stimulus = c("Stimuli 1", "Stimuli 1", "Stimuli 2", "Stimuli 2"),
     task     = c("Understanding", "Presenting", "Understanding", "Presenting")
   )
 
@@ -124,7 +124,7 @@ generate_s1b_preferences_slope <- function(
     scale_color_manual(
       values = colors,
       breaks = c("badges", "no_preference", "footnotes"),
-      labels = c("Prefer Badges", "No Preference", "Prefer Footnotes"),
+      labels = c("Badges", "No preference", "Footnotes"),
       name   = NULL
     ) +
     labs(
@@ -135,7 +135,8 @@ generate_s1b_preferences_slope <- function(
     theme_minimal(base_size = 11) +
     theme(
       legend.position      = "bottom",
-      legend.key.width     = unit(1.5, "lines"),
+      legend.key.width     = unit(1.2, "lines"),
+      legend.text          = element_text(size = 7),
       panel.grid.major.x   = element_blank(),
       strip.text           = element_text(size = 11, face = "bold"),
       axis.text.x          = element_text(size = 10),

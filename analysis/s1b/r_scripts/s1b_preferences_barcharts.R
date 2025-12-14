@@ -38,22 +38,40 @@ generate_s1b_preferences_barcharts <- function(
   message("Reading s1b preference data from: ", input_path)
   df <- readr::read_csv(input_path, show_col_types = FALSE)
 
-  # 1. Tasks and badge score -------------------------------------------------
+  # 1. Tasks and participant ordering ----------------------------------------
   tasks <- c("global_understanding", "global_presenting", "co2_understanding", "co2_presenting")
-
-  df <- df %>%
-    rowwise() %>%
-    mutate(badge_score = sum(c_across(ends_with("choice")) == "badges", na.rm = TRUE)) %>%
-    ungroup()
 
   # Ensure a stable group ordering: badges -> footnotes
   df <- df %>%
     mutate(group = factor(group, levels = c("badges", "footnotes")))
 
-  # Sort participants first by group, then by badge_score (descending)
+  # Helper to score choices so that sorting by this score yields a smooth
+  # left-to-right colour gradient (badges > no_preference > footnotes).
+  score_choice <- function(x) {
+    dplyr::case_when(
+      x == "badges"        ~ 2L,
+      x == "no_preference" ~ 1L,
+      x == "footnotes"     ~ 0L,
+      TRUE                 ~ 1L
+    )
+  }
+
   df_sorted <- df %>%
-    arrange(group, desc(badge_score)) %>%
-    mutate(participant_rank = row_number())
+    mutate(
+      s_global_understanding = score_choice(global_understanding_choice),
+      s_global_presenting    = score_choice(global_presenting_choice),
+      s_co2_understanding    = score_choice(co2_understanding_choice),
+      s_co2_presenting       = score_choice(co2_presenting_choice)
+    ) %>%
+    arrange(
+      group,
+      desc(s_global_understanding),
+      desc(s_global_presenting),
+      desc(s_co2_understanding),
+      desc(s_co2_presenting)
+    ) %>%
+    mutate(participant_rank = row_number()) %>%
+    select(-starts_with("s_"))
 
   # X-offset per group to leave a visual gap
   df_positions <- df_sorted %>%
@@ -85,6 +103,8 @@ generate_s1b_preferences_barcharts <- function(
     summarise(count = n(), .groups = "drop") %>%
     group_by(y, task_name) %>%
     mutate(
+      # Order choices so that on the x-axis we see
+      # all orange (badges), then grey (no preference), then blue (footnotes)
       choice = factor(choice, levels = c("badges", "no_preference", "footnotes"))
     ) %>%
     arrange(choice) %>%
@@ -103,9 +123,9 @@ generate_s1b_preferences_barcharts <- function(
 
   # 4. Colors and group label positions --------------------------------------
   colors <- c(
-    "badges"        = "#4E79A7",
-    "no_preference" = "#E0E0E0",
-    "footnotes"     = "#F28E2B"
+    "badges"        = "#F28E2B",  # orange
+    "no_preference" = "#B0B0B0",  # grey
+    "footnotes"     = "#4E79A7"   # blue
   )
 
   group_labels <- main_grid %>%
@@ -122,7 +142,7 @@ generate_s1b_preferences_barcharts <- function(
     max_main_x / 2
   }
 
-  # 5. Build plot -------------------------------------------------------------
+  # 5. Build plot (compact, clean, \"scientific\") -----------------------------
   y_max <- length(tasks)
   max_blocks_per_row <- summary_grid %>%
     count(y, name = "blocks") %>%
@@ -138,53 +158,57 @@ generate_s1b_preferences_barcharts <- function(
     geom_tile(aes(fill = choice), width = 0.85, height = 0.85) +
     scale_fill_manual(
       values = colors,
-      labels = c("Prefer Badges", "No Preference", "Prefer Footnotes"),
+      breaks = c("badges", "no_preference", "footnotes"),
+      labels = c("Badges", "No preference", "Footnotes"),
       drop   = FALSE
     ) +
 
     # Row labels (tasks) on the left
     geom_text(
       data = distinct(plot_data, y, task_name),
-      aes(x = x_min + 0.5, label = str_to_title(str_replace(task_name, "_", "\n"))),
+      aes(
+        x     = x_min + 0.4,
+        label = dplyr::case_when(
+          task_name == "global_understanding" ~ "Stimuli 1\nUnderstanding",
+          task_name == "global_presenting"    ~ "Stimuli 1\nPresenting",
+          task_name == "co2_understanding"    ~ "Stimuli 2\nUnderstanding",
+          task_name == "co2_presenting"       ~ "Stimuli 2\nPresenting",
+          TRUE                                ~ str_to_title(str_replace(task_name, "_", "\n"))
+        )
+      ),
       hjust    = 1,
       vjust    = 0.5,
-      fontface = "bold",
-      size     = 3.5,
-      color    = "#444444"
+      fontface = "plain",
+      size     = 3.0,
+      color    = "#333333"
     ) +
 
     # Group labels (top)
-    { if (!is.na(badges_x)) annotate("text", x = badges_x, y = y_max + 0.8,
-                                     label = "Assigned: Badges", fontface = "bold", color = "#555555") } +
-    { if (!is.na(footnotes_x)) annotate("text", x = footnotes_x, y = y_max + 0.8,
-                                        label = "Assigned: Footnotes", fontface = "bold", color = "#555555") } +
+    { if (!is.na(badges_x)) annotate("text", x = badges_x, y = y_max + 0.6,
+                                     label = "Assigned badges", fontface = "plain",
+                                     size = 3.0, color = "#555555") } +
+    { if (!is.na(footnotes_x)) annotate("text", x = footnotes_x, y = y_max + 0.6,
+                                        label = "Assigned footnotes", fontface = "plain",
+                                        size = 3.0, color = "#555555") } +
 
     # Split line between groups
     annotate("segment",
              x = split_x, xend = split_x,
              y = 0.5,    yend = y_max + 0.5,
-             linetype = "dashed", color = "grey50") +
-
-    # Summary header
-    annotate("text",
-             x = start_summary_x,
-             y = y_max + 0.8,
-             label   = "Total Counts (1 square = 1 person)",
-             hjust   = 0,
-             fontface = "italic",
-             color   = "#555555") +
+             linetype = "dotted", color = "grey70") +
 
     coord_fixed() +
     theme_void() +
     theme(
       legend.position = "bottom",
       legend.title    = element_blank(),
-      plot.title      = element_text(face = "bold", size = 16, hjust = 0.5),
-      plot.margin     = margin(20, 20, 20, 20)
+      legend.text     = element_text(size = 7),
+      plot.title      = element_text(face = "plain", size = 10, hjust = 0.5),
+      plot.margin     = margin(8, 8, 8, 8)
     ) +
     scale_y_continuous(limits = c(0, y_max + 1.5), breaks = 1:y_max) +
     scale_x_continuous(limits = c(x_min, x_max)) +
-    labs(title = "Preference Grid: Individual Choices & Group Totals")
+    labs(title = NULL)
 
   message("Writing s1b preferences grid to: ", output_path)
   grDevices::png(output_path, width = 1800, height = 1000, res = 200)
