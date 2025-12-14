@@ -101,10 +101,18 @@ generate_s1b_preferences_barcharts <- function(
     ) %>%
     mutate(
       task_name = str_remove(task_raw, "_choice"),
+      # Add a small visual gap between "Understanding" and "Presenting" rows
+      # by shifting the "Presenting" rows slightly downward.
+      gap_understanding_presenting_y = 0.25,
       # y rows follow the explicit `tasks` vector (top → bottom)
       # Note: ggplot's y-axis increases upwards, so we invert the index so the
       # first entry in `tasks` appears at the top row.
       y = length(tasks) - match(task_name, tasks) + 1,
+      y = y - dplyr::if_else(
+        task_name %in% c("global_presenting", "co2_presenting"),
+        gap_understanding_presenting_y,
+        0
+      ),
       choice = tolower(trimws(choice)),
       choice = dplyr::case_when(
         choice == "badges"        ~ "badges",
@@ -129,6 +137,15 @@ generate_s1b_preferences_barcharts <- function(
   max_main_x <- max(main_grid$x, na.rm = TRUE)
   start_summary_x <- max_main_x + 3
 
+  # Tile sizing:
+  # - Main grid: keep a small gap between participants for readability.
+  # - Summary (aggregate) grid: reduce *horizontal* whitespace only (keep the
+  #   same vertical spacing as the main grid).
+  tile_size_main           <- 0.92
+  tile_size_summary_width  <- 0.97
+  tile_size_summary_height <- tile_size_main
+  summary_step_x           <- 1.0
+
   summary_grid <- main_grid %>%
     group_by(y, task_name, choice) %>%
     summarise(count = n(), .groups = "drop") %>%
@@ -142,7 +159,7 @@ generate_s1b_preferences_barcharts <- function(
     tidyr::uncount(count, .id = "id") %>%
     group_by(y) %>%
     mutate(
-      x = start_summary_x + (row_number() - 1) * 1.1
+      x = start_summary_x + (row_number() - 1) * summary_step_x
     ) %>%
     ungroup() %>%
     mutate(type = "summary")
@@ -151,6 +168,8 @@ generate_s1b_preferences_barcharts <- function(
     main_grid %>% mutate(type = "main"),
     summary_grid
   )
+
+  y_min <- min(plot_data$y, na.rm = TRUE)
 
   # 4. Colors and group label positions --------------------------------------
   colors <- c(
@@ -177,7 +196,7 @@ generate_s1b_preferences_barcharts <- function(
     summarise(max(blocks), .groups = "drop") %>%
     pull()
 
-  end_summary_x <- start_summary_x + (max_blocks_per_row - 1) * 1.1
+  end_summary_x <- start_summary_x + (max_blocks_per_row - 1) * summary_step_x
 
   # Place task labels close to the waffles, but keep enough room so they never clip.
   # Since hjust = 1, the text extends to the LEFT of `label_x`.
@@ -185,12 +204,21 @@ generate_s1b_preferences_barcharts <- function(
   x_min   <- label_x - 9
   x_max   <- end_summary_x + 1.2
 
-  # Centered figure title above all waffle groups (not including the label area)
-  title_x <- (start_badges + end_summary_x) / 2
-
   p <- ggplot(plot_data, aes(x = x, y = y)) +
-    # Squares
-    geom_tile(aes(fill = choice), width = 0.92, height = 0.92) +
+    # Squares (draw main and aggregate grids separately so the aggregate tiles
+    # can be denser / less gappy for a clean visual distinction).
+    geom_tile(
+      data = dplyr::filter(plot_data, type == "main"),
+      aes(fill = choice),
+      width = tile_size_main,
+      height = tile_size_main
+    ) +
+    geom_tile(
+      data = dplyr::filter(plot_data, type == "summary"),
+      aes(fill = choice),
+      width = tile_size_summary_width,
+      height = tile_size_summary_height
+    ) +
     scale_fill_manual(
       values = colors,
       breaks = c("badges", "no_preference", "footnotes"),
@@ -218,31 +246,20 @@ generate_s1b_preferences_barcharts <- function(
       color    = "#333333"
     ) +
 
-    # Figure title (centered above all waffle groups)
-    annotate(
-      "text",
-      x = title_x,
-      y = y_max + 2.05,
-      label = "Preferences by task (s1b follow-up)",
-      size = 3.4,
-      fontface = "plain",
-      colour = "#222222"
-    ) +
-
     # Group labels (top, above individual grids)
     { if (!is.na(badges_x)) annotate("text", x = badges_x, y = y_max + 1.35,
-                                     label = "Assigned badges", fontface = "plain",
+                                     label = "Group badges", fontface = "plain",
                                      size = 3.0, color = "#555555") } +
     { if (!is.na(footnotes_x)) annotate("text", x = footnotes_x, y = y_max + 1.35,
-                                        label = "Assigned footnotes", fontface = "plain",
+                                        label = "Group footnotes", fontface = "plain",
                                         size = 3.0, color = "#555555") } +
 
     # Header and separator for aggregate grid on the right
     annotate("text",
-             x = start_summary_x,
+             x = (start_summary_x + end_summary_x) / 2,
              y = y_max + 1.35,
-             label = "Aggregate (1 square = 1 participant)",
-             hjust = 0,
+             label = "Total count",
+             hjust = 0.5,
              size  = 3.0,
              colour = "#333333") +
     annotate("segment",
@@ -255,14 +272,17 @@ generate_s1b_preferences_barcharts <- function(
     theme(
       legend.position = "bottom",
       legend.title    = element_blank(),
-      legend.text     = element_text(size = 6),
-      legend.key.width  = unit(0.6, "lines"),
-      legend.key.height = unit(0.4, "lines"),
-      plot.title      = element_text(face = "plain", size = 10, hjust = 0.5),
+      legend.text     = element_text(size = 8),
+      # Square legend keys (avoid rectangular swatches)
+      legend.key.width  = unit(0.55, "lines"),
+      legend.key.height = unit(0.55, "lines"),
       plot.margin     = margin(8, 6, 4, 10)
     ) +
     # Lower limit must be <= 1 - (tile_height / 2) to avoid clipping bottom row.
-    scale_y_continuous(limits = c(0.4, y_max + 2.25), breaks = 1:y_max) +
+    scale_y_continuous(
+      limits = c(y_min - (tile_size_main / 2) - 0.02, y_max + 2.25),
+      breaks = 1:y_max
+    ) +
     scale_x_continuous(limits = c(x_min, x_max)) +
     labs(title = NULL)
 

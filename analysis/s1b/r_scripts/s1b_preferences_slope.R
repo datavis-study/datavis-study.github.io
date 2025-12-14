@@ -121,24 +121,20 @@ generate_s1b_preferences_slope <- function(
       labels = function(x) paste0(round(x * 100), "%"),
       limits = c(0, 1)
     ) +
-    # Use very compact x-axis labels (U / P) to avoid overlap
+    # Use full x-axis labels for paper readability
     scale_x_discrete(
       labels = c(
-        "Understanding" = "U",
-        "Presenting"    = "P"
+        "Understanding" = "Understanding",
+        "Presenting"    = "Presentation"
       )
     ) +
     scale_color_manual(
       values = colors,
       breaks = c("badges", "no_preference", "footnotes"),
-      labels = c("Badges", "No preference", "Footnotes"),
+      labels = c("Prefer Badges", "No preference", "Prefer Footnotes"),
       name   = NULL
     ) +
-    labs(
-      title = "The Shift: How Task Affects Preference",
-      x     = NULL,
-      y     = NULL
-    ) +
+    labs(title = NULL, x = NULL, y = NULL) +
     theme_minimal(base_size = 10) +
     theme(
       legend.position      = "bottom",
