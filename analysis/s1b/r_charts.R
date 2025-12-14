@@ -59,7 +59,7 @@ resolve_script <- function(name) {
 
 
 ## ---------------------------------------------------------------------------
-## s1b follow-up study charts (Likert, preferences, quick reminder)
+## s1b follow-up study charts (Likert + preferences + slope)
 ## ---------------------------------------------------------------------------
 
 s1b_likert_barplot_script <- resolve_script("s1b_likert_barplot.R")
@@ -67,8 +67,8 @@ if (!is.null(s1b_likert_barplot_script)) {
   message("Sourcing s1b Likert barplot script: ", s1b_likert_barplot_script)
   source(s1b_likert_barplot_script, local = TRUE)
   if (exists("generate_s1b_likert_barplot")) {
-    message("Generating s1b Likert barplot (Badges vs Footnotes) …")
-    generate_s1b_likert_barplot(data_dir = data_dir, out_dir = out_dir)
+    message("Generating s1b Likert barplot (matching main report style, using s1b data) …")
+    generate_s1b_likert_barplot(data_dir_s1b = data_dir, out_dir = out_dir)
   } else {
     warning("Function generate_s1b_likert_barplot() not found after sourcing ", s1b_likert_barplot_script)
   }
@@ -86,15 +86,15 @@ if (!is.null(s1b_preferences_script)) {
   }
 }
 
-s1b_quick_reminder_script <- resolve_script("s1b_quick_reminder_barcharts.R")
-if (!is.null(s1b_quick_reminder_script)) {
-  message("Sourcing s1b quick reminder barcharts script: ", s1b_quick_reminder_script)
-  source(s1b_quick_reminder_script, local = TRUE)
-  if (exists("generate_s1b_quick_reminder_barcharts")) {
-    message("Generating s1b quick reminder by-group chart …")
-    generate_s1b_quick_reminder_barcharts(data_dir = data_dir, out_dir = out_dir)
+s1b_preferences_slope_script <- resolve_script("s1b_preferences_slope.R")
+if (!is.null(s1b_preferences_slope_script)) {
+  message("Sourcing s1b preferences slope script: ", s1b_preferences_slope_script)
+  source(s1b_preferences_slope_script, local = TRUE)
+  if (exists("generate_s1b_preferences_slope")) {
+    message("Generating s1b preferences slope chart …")
+    generate_s1b_preferences_slope(data_dir = data_dir, out_dir = out_dir)
   } else {
-    warning("Function generate_s1b_quick_reminder_barcharts() not found after sourcing ", s1b_quick_reminder_script)
+    warning("Function generate_s1b_preferences_slope() not found after sourcing ", s1b_preferences_slope_script)
   }
 }
 

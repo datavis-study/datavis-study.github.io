@@ -1,60 +1,39 @@
 #!/usr/bin/env Rscript
 
-# Likert-style comparison for s1b follow-up study
-# -----------------------------------------------
-# This script reads the s1b Likert CSV (one row per participant, columns such
-# as `saliency_badges`, `saliency_footnotes`, …) and produces a clean Likert
-# barplot comparing *Badges* vs *Footnotes* for each item.
-#
-# Layout:
-#   - One horizontal bar per question (saliency, clutter, …)
-#   - Stacked responses from Strongly Disagree to Strongly Agree
-#   - Grouped by response *format* ("Badges", "Footnotes")
-#
-# Usage (from repo root):
-#   Rscript analysis/s1b/r_scripts/s1b_likert_barplot.R analysis/data/s1b analysis/s1b/r_output
-# or (from inside analysis/):
-#   Rscript s1b/r_scripts/s1b_likert_barplot.R data/s1b s1b/r_output
+# s1b Likert chart wrapper
+# ------------------------
+# - Reads `analysis/data/s1b/likert.csv` (one row per participant, separate
+#   *_badges and *_footnotes columns).
+# - Reshapes it into the wide format expected by `generate_likert_barplot()`
+#   from `analysis/r_scripts/likert_barplot.R`.
+# - Calls that helper so the figure is styled identically to the main report's
+#   Likert chart, but uses s1b data.
 
 suppressPackageStartupMessages({
   library(tidyverse)
-  library(likert)
 })
 
-#' Generate a Likert-type horizontal stacked barplot for the s1b follow-up.
+#' Generate the s1b Likert chart using the main Likert helper.
 #'
-#' Each participant rated *both* visualization formats (badges and footnotes)
-#' on the same set of items. We reshape the data so that each row represents a
-#' participant × format, with a `group` column indicating "Badges" vs
-#' "Footnotes", and one column per item (saliency, clutter, …).
-#'
-#' @param data_dir   Directory where the s1b CSV lives (default: "data/s1b").
-#' @param out_dir    Output directory for charts (created if missing).
-#' @param input_file CSV file name inside `data_dir` (default: "likert.csv").
-#' @param output_file PNG file name inside `out_dir`.
+#' @param data_dir_s1b Directory where s1b `likert.csv` lives (default: "data/s1b").
+#' @param out_dir      Output directory for charts (created if missing).
+#' @param output_file  PNG file name inside `out_dir` for the s1b copy.
 generate_s1b_likert_barplot <- function(
-  data_dir    = file.path("data", "s1b"),
-  out_dir     = file.path("s1b", "r_output"),
-  input_file  = "likert.csv",
-  output_file = "s1b_likert_barplot_by_format.png"
+  data_dir_s1b = file.path("data", "s1b"),
+  out_dir      = file.path("s1b", "r_output"),
+  output_file  = "s1b_likert_barplot_by_group.png"
 ) {
-  input_path  <- file.path(data_dir, input_file)
-  output_path <- file.path(out_dir, output_file)
-
-  if (!file.exists(input_path)) {
-    stop("s1b Likert input file not found: ", input_path)
+  # ---------------------------------------------------------------------------
+  # 1. Read s1b likert.csv and reshape to main-helper format
+  # ---------------------------------------------------------------------------
+  s1b_input <- file.path(data_dir_s1b, "likert.csv")
+  if (!file.exists(s1b_input)) {
+    stop("s1b Likert CSV not found: ", s1b_input)
   }
 
-  if (!dir.exists(out_dir)) {
-    dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
-  }
+  message("Reading s1b Likert CSV from: ", s1b_input)
+  df_raw <- readr::read_csv(s1b_input, show_col_types = FALSE)
 
-  message("Reading s1b Likert data from: ", input_path)
-
-  df_raw <- readr::read_csv(input_path, show_col_types = FALSE)
-
-  # Core item base names we care about; these should exist as
-  # "<item>_badges" and "<item>_footnotes" in the CSV.
   item_bases <- c(
     "saliency",
     "clutter",
@@ -64,178 +43,114 @@ generate_s1b_likert_barplot <- function(
     "standardization"
   )
 
-  # Check that at least one expected pair of columns exists
   expected_cols <- c(
     paste0(item_bases, "_badges"),
     paste0(item_bases, "_footnotes")
   )
-  available_cols <- intersect(expected_cols, names(df_raw))
-  if (length(available_cols) == 0) {
+  missing_cols <- setdiff(expected_cols, names(df_raw))
+  if (length(missing_cols) > 0) {
     stop(
-      "No expected s1b Likert item columns found in ",
-      input_path,
-      ". Expected some of: ",
-      paste(expected_cols, collapse = ", ")
+      "Missing expected s1b Likert columns in likert.csv: ",
+      paste(missing_cols, collapse = ", ")
     )
   }
 
-  # Long format: participant × item × format (badges/footnotes)
+  # Long: participant × item × format (badges/footnotes)
   df_long <- df_raw %>%
     dplyr::select(
-      dplyr::any_of(c("participantId", "participantIndex", "group")),
-      dplyr::all_of(available_cols)
+      dplyr::any_of(c("participantId")),
+      dplyr::all_of(expected_cols)
     ) %>%
     tidyr::pivot_longer(
-      cols      = tidyselect::all_of(available_cols),
+      cols      = tidyselect::all_of(expected_cols),
       names_to  = c("item", "format"),
       names_sep = "_",
       values_to = "value"
+    ) %>%
+    dplyr::mutate(
+      format = factor(format, levels = c("badges", "footnotes"))
     )
 
-  # Keep only rows with non-missing numeric responses
-  df_long <- df_long %>%
-    dplyr::mutate(
-      value_num = as.integer(value),
-      format    = factor(
-        format,
-        levels = c("badges", "footnotes"),
-        labels = c("Badges", "Footnotes")
-      )
-    ) %>%
-    dplyr::filter(!is.na(value_num))
-
   if (nrow(df_long) == 0) {
-    stop("No valid (non-missing) s1b Likert responses found in: ", input_path)
+    stop("No non-missing s1b Likert responses found in: ", s1b_input)
   }
 
-  # Wide format for likert::likert:
-  #   - one row per participant × format
-  #   - `group` column: "Badges" vs "Footnotes"
-  #   - one column per item base name (saliency, clutter, …)
-  df_wide <- df_long %>%
+  # Wide: one row per participant × format, with a group column encoding format
+  df_for_likert <- df_long %>%
     dplyr::mutate(
-      group = format
+      group = dplyr::case_when(
+        format == "badges"    ~ "Badges",
+        format == "footnotes" ~ "Footnotes",
+        TRUE                   ~ as.character(format)
+      )
     ) %>%
     dplyr::select(
-      dplyr::any_of(c("participantId", "participantIndex")),
+      participantId,
       group,
       item,
-      value_num
+      value
     ) %>%
     tidyr::pivot_wider(
       names_from  = item,
-      values_from = value_num
+      values_from = value
     )
 
-  # Identify id and item columns
-  id_cols   <- intersect(c("group", "participantId", "participantIndex"), names(df_wide))
-  item_cols <- setdiff(names(df_wide), id_cols)
+  # Write a temporary CSV that matches the main helper's expectations.
+  # Use the R session's temporary directory so nothing clutters the repo.
+  helper_dir <- file.path(tempdir(), "s1b_likert_helper")
+  if (!dir.exists(helper_dir)) {
+    dir.create(helper_dir, recursive = TRUE, showWarnings = FALSE)
+  }
+  tmp_input_file <- "likert_s1b_for_helper.csv"
+  tmp_input_path <- file.path(helper_dir, tmp_input_file)
 
-  if (length(item_cols) == 0) {
+  message("Writing reshaped s1b Likert data for helper to: ", tmp_input_path)
+  readr::write_csv(df_for_likert, tmp_input_path, na = "")
+
+  # ---------------------------------------------------------------------------
+  # 2. Resolve and source the main Likert helper, then call it
+  # ---------------------------------------------------------------------------
+  likert_script_candidates <- c(
+    file.path("analysis", "r_scripts", "likert_barplot.R"), # from repo root
+    file.path("r_scripts", "likert_barplot.R")              # from analysis/
+  )
+
+  likert_script <- NULL
+  for (cand in likert_script_candidates) {
+    if (file.exists(cand)) {
+      likert_script <- cand
+      break
+    }
+  }
+
+  if (is.null(likert_script)) {
     stop(
-      "No s1b Likert item columns found after reshaping. ",
-      "Expected at least one of: ", paste(item_bases, collapse = ", ")
+      "Could not find likert_barplot.R. Looked in: ",
+      paste(likert_script_candidates, collapse = " ; ")
     )
   }
 
-  # Human-readable question text for each item (used as axis labels / headers)
-  item_label_map <- c(
-    saliency        = "Easy to spot.",
-    clutter         = "Cluttered or distracted from the visualization.",
-    interpretability = "Clear and easy to interpret.",
-    usefulness      = "Information was useful for understanding the visualization.",
-    trust           = "Increased my trust in the information and methodology.",
-    standardization = "Should be widely used alongside visualizations."
+  message("Sourcing main Likert helper from: ", likert_script)
+  source(likert_script, local = TRUE)
+
+  if (!exists("generate_likert_barplot")) {
+    stop("generate_likert_barplot() not found after sourcing ", likert_script)
+  }
+
+  if (!dir.exists(out_dir)) {
+    dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+  }
+
+  message(
+    "Generating s1b Likert chart via generate_likert_barplot() using reshaped s1b data."
   )
 
-  # Standardise all item columns to the same ordered factor levels (required by likert::likert)
-  likert_labels <- c(
-    "Strongly Disagree",
-    "Disagree",
-    "Neither Agree nor Disagree",
-    "Agree",
-    "Strongly Agree"
+  generate_likert_barplot(
+    data_dir    = helper_dir,
+    out_dir     = out_dir,
+    input_file  = tmp_input_file,
+    output_file = output_file
   )
-
-  items_df <- df_wide %>%
-    dplyr::select(dplyr::all_of(item_cols))
-
-  items_df <- as.data.frame(
-    lapply(
-      items_df,
-      function(col) {
-        codes <- as.integer(as.character(col))
-        factor(
-          codes,
-          levels  = 1:5,
-          labels  = likert_labels,
-          ordered = TRUE
-        )
-      }
-    ),
-    stringsAsFactors = FALSE
-  )
-
-  # Apply long-form question labels where we have a mapping
-  original_names <- colnames(items_df)
-  colnames(items_df) <- ifelse(
-    original_names %in% names(item_label_map),
-    item_label_map[original_names],
-    original_names
-  )
-
-  grouping <- df_wide$group
-
-  likert_obj <- likert::likert(items = items_df, grouping = grouping)
-
-  # Color palette for 5-point Likert scale (negative → positive)
-  palette_5 <- c(
-    "#d73027", # Strongly Disagree
-    "#fc8d59", # Disagree
-    "#fee090", # Neither...
-    "#91bfdb", # Agree
-    "#4575b4"  # Strongly Agree
-  )
-
-  message("Writing s1b Likert barplot to: ", output_path)
-
-  grDevices::png(output_path, width = 1600, height = 1200, res = 200)
-  on.exit(grDevices::dev.off(), add = TRUE)
-
-  p <- plot(
-    likert_obj,
-    type              = "bar",
-    centered          = 3,
-    wrap              = 200,
-    plot.percent.low  = FALSE,
-    plot.percent.neutral = FALSE,
-    plot.percent.high = FALSE,
-    colors            = palette_5
-  ) +
-    ggplot2::scale_y_continuous(
-      labels = function(x) paste0(abs(x), "%")
-    ) +
-    ggplot2::scale_fill_manual(
-      values = palette_5,
-      name   = NULL,
-      breaks = likert_labels,
-      labels = likert_labels
-    ) +
-    ggplot2::labs(
-      x = NULL,
-      y = NULL
-    ) +
-    ggplot2::theme_minimal(base_size = 10) +
-    ggplot2::theme(
-      legend.position  = "bottom",
-      axis.text.y      = ggplot2::element_text(size = 10),
-      strip.text.y     = ggplot2::element_text(size = 10, face = "bold"),
-      strip.background = ggplot2::element_rect(fill = "grey95", color = NA)
-    )
-
-  print(p)
-
-  invisible(output_path)
 }
 
 
@@ -243,7 +158,7 @@ generate_s1b_likert_barplot <- function(
 # the entry point, not when sourced from another script such as r_charts.R).
 if (sys.nframe() == 1) {
   args <- commandArgs(trailingOnly = TRUE)
-  data_dir <- if (length(args) >= 1) args[[1]] else file.path("data", "s1b")
-  out_dir  <- if (length(args) >= 2) args[[2]] else file.path("s1b", "r_output")
-  generate_s1b_likert_barplot(data_dir = data_dir, out_dir = out_dir)
+  data_dir_s1b <- if (length(args) >= 1) args[[1]] else file.path("data", "s1b")
+  out_dir      <- if (length(args) >= 2) args[[2]] else file.path("s1b", "r_output")
+  generate_s1b_likert_barplot(data_dir_s1b = data_dir_s1b, out_dir = out_dir)
 }

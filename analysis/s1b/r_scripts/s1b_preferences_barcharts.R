@@ -1,30 +1,31 @@
 #!/usr/bin/env Rscript
 
-# Preference summaries for s1b follow-up study
-# --------------------------------------------
-# This script reads `analysis/data/s1b/preferences.csv` and produces a compact
-# overview of how often participants preferred badges vs footnotes (or had no
-# clear preference) across four scenarios:
-#   - Overall understanding
-#   - Presenting to others (overall)
-#   - CO2 emissions stimulus
-#   - Global warming projection stimulus
+# Preference grid for s1b follow-up study
+# ---------------------------------------
+# This script implements the "preference grid" you sketched:
+# - Left: individual participant choices (one square per task × participant)
+# - Right: total counts (one square = one person)
+# for the four preference tasks in `preferences.csv`.
 
 suppressPackageStartupMessages({
   library(tidyverse)
+  library(stringr)
 })
 
-#' Generate stacked percentage bars for s1b preference questions.
+#' Generate preference grid plot for the s1b follow-up study.
 #'
 #' @param data_dir   Directory where the s1b CSV lives (default: "data/s1b").
 #' @param out_dir    Output directory for charts (created if missing).
 #' @param input_file CSV file name inside `data_dir` (default: "preferences.csv").
+#' @param output_file PNG file name inside `out_dir`.
 generate_s1b_preferences_barcharts <- function(
-  data_dir   = file.path("data", "s1b"),
-  out_dir    = file.path("s1b", "r_output"),
-  input_file = "preferences.csv"
+  data_dir    = file.path("data", "s1b"),
+  out_dir     = file.path("s1b", "r_output"),
+  input_file  = "preferences.csv",
+  output_file = "s1b_preferences_overall.png"
 ) {
-  input_path <- file.path(data_dir, input_file)
+  input_path  <- file.path(data_dir, input_file)
+  output_path <- file.path(out_dir, output_file)
 
   if (!file.exists(input_path)) {
     stop("s1b preferences input file not found: ", input_path)
@@ -37,112 +38,156 @@ generate_s1b_preferences_barcharts <- function(
   message("Reading s1b preference data from: ", input_path)
   df <- readr::read_csv(input_path, show_col_types = FALSE)
 
-  choice_cols <- c(
-    "global_understanding_choice",
-    "global_presenting_choice",
-    "co2_understanding_choice",
-    "co2_presenting_choice"
+  # 1. Tasks and badge score -------------------------------------------------
+  tasks <- c("global_understanding", "global_presenting", "co2_understanding", "co2_presenting")
+
+  df <- df %>%
+    rowwise() %>%
+    mutate(badge_score = sum(c_across(ends_with("choice")) == "badges", na.rm = TRUE)) %>%
+    ungroup()
+
+  # Ensure a stable group ordering: badges -> footnotes
+  df <- df %>%
+    mutate(group = factor(group, levels = c("badges", "footnotes")))
+
+  # Sort participants first by group, then by badge_score (descending)
+  df_sorted <- df %>%
+    arrange(group, desc(badge_score)) %>%
+    mutate(participant_rank = row_number())
+
+  # X-offset per group to leave a visual gap
+  df_positions <- df_sorted %>%
+    mutate(
+      x_offset = if_else(group == levels(group)[1], 0, 0.8),
+      x_main   = participant_rank + x_offset
+    ) %>%
+    select(participantId, group, participant_rank, x_main)
+
+  # 2. Main grid (individual choices) ----------------------------------------
+  main_grid <- df_sorted %>%
+    select(participantId, group, participant_rank, ends_with("choice")) %>%
+    left_join(df_positions, by = c("participantId", "group", "participant_rank")) %>%
+    pivot_longer(cols = ends_with("choice"), names_to = "task_raw", values_to = "choice") %>%
+    mutate(
+      task_name = str_remove(task_raw, "_choice"),
+      # y rows (reverse so first task is at top)
+      y = match(task_name, rev(tasks)),
+      x = x_main
+    )
+
+  # 3. Summary grid (totals on the right) ------------------------------------
+  # Start summary squares a bit to the right of the main grid
+  max_main_x <- max(main_grid$x, na.rm = TRUE)
+  start_summary_x <- max_main_x + 3
+
+  summary_grid <- main_grid %>%
+    group_by(y, task_name, choice) %>%
+    summarise(count = n(), .groups = "drop") %>%
+    group_by(y, task_name) %>%
+    mutate(
+      choice = factor(choice, levels = c("badges", "no_preference", "footnotes"))
+    ) %>%
+    arrange(choice) %>%
+    tidyr::uncount(count, .id = "id") %>%
+    group_by(y) %>%
+    mutate(
+      x = start_summary_x + (row_number() - 1) * 1.1
+    ) %>%
+    ungroup() %>%
+    mutate(type = "summary")
+
+  plot_data <- bind_rows(
+    main_grid %>% mutate(type = "main"),
+    summary_grid
   )
 
-  missing_cols <- setdiff(choice_cols, names(df))
-  if (length(missing_cols) > 0) {
-    stop(
-      "Missing expected preference choice columns: ",
-      paste(missing_cols, collapse = ", ")
-    )
+  # 4. Colors and group label positions --------------------------------------
+  colors <- c(
+    "badges"        = "#4E79A7",
+    "no_preference" = "#E0E0E0",
+    "footnotes"     = "#F28E2B"
+  )
+
+  group_labels <- main_grid %>%
+    distinct(participantId, group, participant_rank, x) %>%
+    group_by(group) %>%
+    summarise(avg_x = mean(x), .groups = "drop")
+
+  badges_x    <- group_labels$avg_x[group_labels$group == "badges"]
+  footnotes_x <- group_labels$avg_x[group_labels$group == "footnotes"]
+
+  split_x <- if (length(badges_x) == 1 && length(footnotes_x) == 1) {
+    (badges_x + footnotes_x) / 2
+  } else {
+    max_main_x / 2
   }
 
-  # Long format: participant × question × choice
-  df_long <- df %>%
-    tidyr::pivot_longer(
-      cols      = tidyselect::all_of(choice_cols),
-      names_to  = "question",
-      values_to = "choice"
-    ) %>%
-    dplyr::filter(!is.na(choice), trimws(choice) != "")
+  # 5. Build plot -------------------------------------------------------------
+  y_max <- length(tasks)
+  max_blocks_per_row <- summary_grid %>%
+    count(y, name = "blocks") %>%
+    summarise(max(blocks), .groups = "drop") %>%
+    pull()
 
-  if (nrow(df_long) == 0) {
-    stop("No non-empty s1b preference responses found in: ", input_path)
-  }
+  end_summary_x <- start_summary_x + (max_blocks_per_row - 1) * 1.1
+  x_min <- -3
+  x_max <- end_summary_x + 3
 
-  # Friendly labels
-  question_labels <- c(
-    global_understanding_choice = "Overall: easier to understand",
-    global_presenting_choice    = "Overall: better for presenting",
-    co2_understanding_choice    = "CO2 chart: easier to understand",
-    co2_presenting_choice       = "CO2 chart: better for presenting"
-  )
+  p <- ggplot(plot_data, aes(x = x, y = y)) +
+    # Squares
+    geom_tile(aes(fill = choice), width = 0.85, height = 0.85) +
+    scale_fill_manual(
+      values = colors,
+      labels = c("Prefer Badges", "No Preference", "Prefer Footnotes"),
+      drop   = FALSE
+    ) +
 
-  choice_labels <- c(
-    badges        = "Badges",
-    footnotes     = "Footnotes",
-    no_preference = "No clear preference"
-  )
-
-  df_long <- df_long %>%
-    dplyr::mutate(
-      question_label = dplyr::recode(question, !!!question_labels, .default = question),
-      choice_clean   = tolower(trimws(choice)),
-      choice_label   = dplyr::recode(choice_clean, !!!choice_labels, .default = stringr::str_to_title(choice_clean))
-    )
-
-  # Aggregate to percentages per question
-  summary_df <- df_long %>%
-    dplyr::group_by(question_label, choice_label) %>%
-    dplyr::summarise(
-      n = dplyr::n(),
-      .groups = "drop_last"
-    ) %>%
-    dplyr::mutate(
-      total_n = sum(n),
-      prop    = n / total_n
-    ) %>%
-    dplyr::ungroup()
-
-  output_path <- file.path(out_dir, "s1b_preferences_overall.png")
-  message("Writing s1b preferences overview plot to: ", output_path)
-
-  palette_choices <- c(
-    "Badges"            = "#4575b4",
-    "Footnotes"         = "#d73027",
-    "No clear preference" = "#aaaaaa"
-  )
-
-  p <- ggplot(
-    summary_df,
-    aes(
-      x    = question_label,
-      y    = prop * 100,
-      fill = choice_label
-    )
-  ) +
-    geom_col(width = 0.7, color = NA) +
+    # Row labels (tasks) on the left
     geom_text(
-      aes(label = paste0(round(prop * 100), "%")),
-      position = position_stack(vjust = 0.5),
-      color    = "black",
-      size     = 3
+      data = distinct(plot_data, y, task_name),
+      aes(x = x_min + 0.5, label = str_to_title(str_replace(task_name, "_", "\n"))),
+      hjust    = 1,
+      vjust    = 0.5,
+      fontface = "bold",
+      size     = 3.5,
+      color    = "#444444"
     ) +
-    scale_fill_manual(values = palette_choices, name = "Preferred format") +
-    scale_y_continuous(
-      labels = function(x) paste0(x, "%"),
-      expand = expansion(mult = c(0, 0.05))
-    ) +
-    labs(
-      x = NULL,
-      y = "Share of participants",
-      title = NULL
-    ) +
-    theme_minimal(base_size = 11) +
-    theme(
-      axis.text.x      = element_text(angle = 20, hjust = 1),
-      legend.position  = "bottom",
-      legend.key.size  = unit(0.4, "lines"),
-      panel.grid.major = element_line(colour = "grey93"),
-      panel.grid.minor = element_blank()
-    )
 
-  grDevices::png(output_path, width = 1600, height = 800, res = 200)
+    # Group labels (top)
+    { if (!is.na(badges_x)) annotate("text", x = badges_x, y = y_max + 0.8,
+                                     label = "Assigned: Badges", fontface = "bold", color = "#555555") } +
+    { if (!is.na(footnotes_x)) annotate("text", x = footnotes_x, y = y_max + 0.8,
+                                        label = "Assigned: Footnotes", fontface = "bold", color = "#555555") } +
+
+    # Split line between groups
+    annotate("segment",
+             x = split_x, xend = split_x,
+             y = 0.5,    yend = y_max + 0.5,
+             linetype = "dashed", color = "grey50") +
+
+    # Summary header
+    annotate("text",
+             x = start_summary_x,
+             y = y_max + 0.8,
+             label   = "Total Counts (1 square = 1 person)",
+             hjust   = 0,
+             fontface = "italic",
+             color   = "#555555") +
+
+    coord_fixed() +
+    theme_void() +
+    theme(
+      legend.position = "bottom",
+      legend.title    = element_blank(),
+      plot.title      = element_text(face = "bold", size = 16, hjust = 0.5),
+      plot.margin     = margin(20, 20, 20, 20)
+    ) +
+    scale_y_continuous(limits = c(0, y_max + 1.5), breaks = 1:y_max) +
+    scale_x_continuous(limits = c(x_min, x_max)) +
+    labs(title = "Preference Grid: Individual Choices & Group Totals")
+
+  message("Writing s1b preferences grid to: ", output_path)
+  grDevices::png(output_path, width = 1800, height = 1000, res = 200)
   print(p)
   grDevices::dev.off()
 
@@ -150,8 +195,7 @@ generate_s1b_preferences_barcharts <- function(
 }
 
 
-# Allow running this script directly for quick checks (only when this file is
-# the entry point, not when sourced from another script such as r_charts.R).
+# Allow running this script directly for quick checks.
 if (sys.nframe() == 1) {
   args <- commandArgs(trailingOnly = TRUE)
   data_dir <- if (length(args) >= 1) args[[1]] else file.path("data", "s1b")
