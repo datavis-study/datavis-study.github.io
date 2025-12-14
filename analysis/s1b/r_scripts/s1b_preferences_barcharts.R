@@ -39,7 +39,17 @@ generate_s1b_preferences_barcharts <- function(
   df <- readr::read_csv(input_path, show_col_types = FALSE)
 
   # 1. Tasks and participant ordering ----------------------------------------
-  tasks <- c("global_understanding", "global_presenting", "co2_understanding", "co2_presenting")
+  # Desired Y order (top → bottom):
+  #   Stimuli 1 – Understanding
+  #   Stimuli 2 – Understanding
+  #   Stimuli 1 – Presenting
+  #   Stimuli 2 – Presenting
+  tasks <- c(
+    "global_understanding",
+    "co2_understanding",
+    "global_presenting",
+    "co2_presenting"
+  )
 
   # Ensure a stable group ordering: badges -> footnotes
   df <- df %>%
@@ -73,25 +83,46 @@ generate_s1b_preferences_barcharts <- function(
     mutate(participant_rank = row_number()) %>%
     select(-starts_with("s_"))
 
-  # X-offset per group to leave a visual gap
-  df_positions <- df_sorted %>%
-    mutate(
-      x_offset = if_else(group == levels(group)[1], 0, 0.8),
-      x_main   = participant_rank + x_offset
-    ) %>%
-    select(participantId, group, participant_rank, x_main)
+  # Precompute group sizes for clean separation between assigned groups
+  n_badges    <- sum(df_sorted$group == "badges")
+  n_footnotes <- sum(df_sorted$group == "footnotes")
+  gap_between_groups <- 1.5
+  # Shift both groups further to the right to make more room for long row labels
+  start_badges       <- 6
+  start_footnotes    <- start_badges + n_badges + gap_between_groups
 
   # 2. Main grid (individual choices) ----------------------------------------
   main_grid <- df_sorted %>%
     select(participantId, group, participant_rank, ends_with("choice")) %>%
-    left_join(df_positions, by = c("participantId", "group", "participant_rank")) %>%
-    pivot_longer(cols = ends_with("choice"), names_to = "task_raw", values_to = "choice") %>%
+    pivot_longer(
+      cols      = ends_with("choice"),
+      names_to  = "task_raw",
+      values_to = "choice"
+    ) %>%
     mutate(
       task_name = str_remove(task_raw, "_choice"),
-      # y rows (reverse so first task is at top)
-      y = match(task_name, rev(tasks)),
-      x = x_main
-    )
+      # y rows follow the explicit `tasks` vector (top → bottom)
+      # Note: ggplot's y-axis increases upwards, so we invert the index so the
+      # first entry in `tasks` appears at the top row.
+      y = length(tasks) - match(task_name, tasks) + 1,
+      choice = tolower(trimws(choice)),
+      choice = dplyr::case_when(
+        choice == "badges"        ~ "badges",
+        choice == "footnotes"     ~ "footnotes",
+        TRUE                      ~ "no_preference"
+      ),
+      choice = factor(choice, levels = c("badges", "no_preference", "footnotes"))
+    ) %>%
+    group_by(group, y) %>%
+    arrange(choice, .by_group = TRUE) %>%
+    mutate(
+      x = dplyr::if_else(
+        group == "badges",
+        start_badges + row_number() - 1,
+        start_footnotes + row_number() - 1
+      )
+    ) %>%
+    ungroup()
 
   # 3. Summary grid (totals on the right) ------------------------------------
   # Start summary squares a bit to the right of the main grid
@@ -136,11 +167,8 @@ generate_s1b_preferences_barcharts <- function(
   badges_x    <- group_labels$avg_x[group_labels$group == "badges"]
   footnotes_x <- group_labels$avg_x[group_labels$group == "footnotes"]
 
-  split_x <- if (length(badges_x) == 1 && length(footnotes_x) == 1) {
-    (badges_x + footnotes_x) / 2
-  } else {
-    max_main_x / 2
-  }
+  # Position of separator between individual grids and aggregate grid
+  sep_x <- max_main_x + 1.5
 
   # 5. Build plot (compact, clean, \"scientific\") -----------------------------
   y_max <- length(tasks)
@@ -150,12 +178,19 @@ generate_s1b_preferences_barcharts <- function(
     pull()
 
   end_summary_x <- start_summary_x + (max_blocks_per_row - 1) * 1.1
-  x_min <- -3
-  x_max <- end_summary_x + 3
+
+  # Place task labels close to the waffles, but keep enough room so they never clip.
+  # Since hjust = 1, the text extends to the LEFT of `label_x`.
+  label_x <- start_badges - 1.4
+  x_min   <- label_x - 9
+  x_max   <- end_summary_x + 1.2
+
+  # Centered figure title above all waffle groups (not including the label area)
+  title_x <- (start_badges + end_summary_x) / 2
 
   p <- ggplot(plot_data, aes(x = x, y = y)) +
     # Squares
-    geom_tile(aes(fill = choice), width = 0.85, height = 0.85) +
+    geom_tile(aes(fill = choice), width = 0.92, height = 0.92) +
     scale_fill_manual(
       values = colors,
       breaks = c("badges", "no_preference", "footnotes"),
@@ -167,12 +202,12 @@ generate_s1b_preferences_barcharts <- function(
     geom_text(
       data = distinct(plot_data, y, task_name),
       aes(
-        x     = x_min + 0.4,
+        x     = label_x,
         label = dplyr::case_when(
-          task_name == "global_understanding" ~ "Stimuli 1\nUnderstanding",
-          task_name == "global_presenting"    ~ "Stimuli 1\nPresenting",
-          task_name == "co2_understanding"    ~ "Stimuli 2\nUnderstanding",
-          task_name == "co2_presenting"       ~ "Stimuli 2\nPresenting",
+          task_name == "global_understanding" ~ "Stimuli 1 - Understanding",
+          task_name == "global_presenting"    ~ "Stimuli 1 - Presenting",
+          task_name == "co2_understanding"    ~ "Stimuli 2 - Understanding",
+          task_name == "co2_presenting"       ~ "Stimuli 2 - Presenting",
           TRUE                                ~ str_to_title(str_replace(task_name, "_", "\n"))
         )
       ),
@@ -183,35 +218,57 @@ generate_s1b_preferences_barcharts <- function(
       color    = "#333333"
     ) +
 
-    # Group labels (top)
-    { if (!is.na(badges_x)) annotate("text", x = badges_x, y = y_max + 0.6,
+    # Figure title (centered above all waffle groups)
+    annotate(
+      "text",
+      x = title_x,
+      y = y_max + 2.05,
+      label = "Preferences by task (s1b follow-up)",
+      size = 3.4,
+      fontface = "plain",
+      colour = "#222222"
+    ) +
+
+    # Group labels (top, above individual grids)
+    { if (!is.na(badges_x)) annotate("text", x = badges_x, y = y_max + 1.35,
                                      label = "Assigned badges", fontface = "plain",
                                      size = 3.0, color = "#555555") } +
-    { if (!is.na(footnotes_x)) annotate("text", x = footnotes_x, y = y_max + 0.6,
+    { if (!is.na(footnotes_x)) annotate("text", x = footnotes_x, y = y_max + 1.35,
                                         label = "Assigned footnotes", fontface = "plain",
                                         size = 3.0, color = "#555555") } +
 
-    # Split line between groups
+    # Header and separator for aggregate grid on the right
+    annotate("text",
+             x = start_summary_x,
+             y = y_max + 1.35,
+             label = "Aggregate (1 square = 1 participant)",
+             hjust = 0,
+             size  = 3.0,
+             colour = "#333333") +
     annotate("segment",
-             x = split_x, xend = split_x,
-             y = 0.5,    yend = y_max + 0.5,
-             linetype = "dotted", color = "grey70") +
+             x = sep_x, xend = sep_x,
+             y = 0.4,  yend = y_max + 2.15,
+             linetype = "dashed", colour = "grey75") +
 
-    coord_fixed() +
+    coord_fixed(clip = "off") +
     theme_void() +
     theme(
       legend.position = "bottom",
       legend.title    = element_blank(),
-      legend.text     = element_text(size = 7),
+      legend.text     = element_text(size = 6),
+      legend.key.width  = unit(0.6, "lines"),
+      legend.key.height = unit(0.4, "lines"),
       plot.title      = element_text(face = "plain", size = 10, hjust = 0.5),
-      plot.margin     = margin(8, 8, 8, 8)
+      plot.margin     = margin(8, 6, 4, 10)
     ) +
-    scale_y_continuous(limits = c(0, y_max + 1.5), breaks = 1:y_max) +
+    # Lower limit must be <= 1 - (tile_height / 2) to avoid clipping bottom row.
+    scale_y_continuous(limits = c(0.4, y_max + 2.25), breaks = 1:y_max) +
     scale_x_continuous(limits = c(x_min, x_max)) +
     labs(title = NULL)
 
   message("Writing s1b preferences grid to: ", output_path)
-  grDevices::png(output_path, width = 1800, height = 1000, res = 200)
+  # Use an aspect ratio close to y_range/x_range to avoid excessive white space.
+  grDevices::png(output_path, width = 1700, height = 520, res = 200)
   print(p)
   grDevices::dev.off()
 

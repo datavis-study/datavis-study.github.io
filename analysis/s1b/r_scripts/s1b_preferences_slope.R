@@ -121,6 +121,13 @@ generate_s1b_preferences_slope <- function(
       labels = function(x) paste0(round(x * 100), "%"),
       limits = c(0, 1)
     ) +
+    # Use very compact x-axis labels (U / P) to avoid overlap
+    scale_x_discrete(
+      labels = c(
+        "Understanding" = "U",
+        "Presenting"    = "P"
+      )
+    ) +
     scale_color_manual(
       values = colors,
       breaks = c("badges", "no_preference", "footnotes"),
@@ -132,15 +139,16 @@ generate_s1b_preferences_slope <- function(
       x     = NULL,
       y     = NULL
     ) +
-    theme_minimal(base_size = 11) +
+    theme_minimal(base_size = 10) +
     theme(
       legend.position      = "bottom",
-      legend.key.width     = unit(1.2, "lines"),
-      legend.text          = element_text(size = 7),
+      legend.key.width     = unit(0.8, "lines"),
+      legend.key.height    = unit(0.4, "lines"),
+      legend.text          = element_text(size = 6),
       panel.grid.major.x   = element_blank(),
-      strip.text           = element_text(size = 11, face = "bold"),
-      axis.text.x          = element_text(size = 10),
-      axis.text.y          = element_text(size = 10)
+      strip.text           = element_text(size = 10, face = "bold"),
+      axis.text.x          = element_text(size = 7, margin = margin(t = 2)),
+      axis.text.y          = element_text(size = 8)
     )
 
   print(p)
