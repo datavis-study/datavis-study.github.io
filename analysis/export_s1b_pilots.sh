@@ -31,5 +31,14 @@ python3 -m src.data_prep.export_s1b_preferences
 echo "Exporting Likert CSV (both groups combined)..."
 python3 -m src.data_prep.export_s1b_likert
 
-echo "Done. CSV files are in analysis/data/s1b/."
+if command -v Rscript >/dev/null 2>&1; then
+  echo "Generating s1b R charts (Likert + preferences + quick reminder)..."
+  if ! Rscript s1b/r_charts.R "data/s1b" "s1b/r_output"; then
+    echo "Warning: s1b R chart generation failed; CSV exports are still available in analysis/data/s1b/." >&2
+  fi
+else
+  echo "Warning: Rscript not found on PATH; skipping s1b R chart generation."
+fi
+
+echo "Done. s1b CSV files are in analysis/data/s1b/ and R figures in analysis/s1b/r_output/."
 
