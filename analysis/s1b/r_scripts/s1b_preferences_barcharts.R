@@ -222,7 +222,7 @@ generate_s1b_preferences_barcharts <- function(
     scale_fill_manual(
       values = colors,
       breaks = c("badges", "no_preference", "footnotes"),
-      labels = c("Badges", "No preference", "Footnotes"),
+      labels = c("Prefer Badges", "No preference", "Prefer Footnotes"),
       drop   = FALSE
     ) +
 

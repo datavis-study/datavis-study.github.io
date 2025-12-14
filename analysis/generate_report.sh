@@ -121,12 +121,17 @@ fi
 
 # Always (re)generate R-based charts from the current CSV exports so that
 # report runs are fully automated and self-contained.
-echo "Generating R charts (Likert + interaction summaries)..."
+echo "Generating R charts (main study)..."
 if ! command -v Rscript >/dev/null 2>&1; then
 	echo "Warning: Rscript not found on PATH; skipping R chart generation."
 else
 	if ! Rscript "${SCRIPT_DIR}/r_charts.R" "${DATA_DIR_DEFAULT}" "${SCRIPT_DIR}/r_output"; then
 		echo "Warning: R chart generation failed; continuing without updated R figures."
+	fi
+	# Also refresh s1b follow-up charts (preferences, slopes, quick reminder, etc.)
+	echo "Generating R charts (s1b follow-up)..."
+	if ! Rscript "${SCRIPT_DIR}/s1b/r_charts.R" "${DATA_DIR_DEFAULT}/s1b" "${SCRIPT_DIR}/s1b/r_output"; then
+		echo "Warning: s1b R chart generation failed; continuing without updated s1b figures."
 	fi
 fi
 

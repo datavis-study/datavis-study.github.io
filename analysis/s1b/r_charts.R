@@ -98,4 +98,16 @@ if (!is.null(s1b_preferences_slope_script)) {
   }
 }
 
+s1b_quick_reminder_script <- resolve_script("s1b_quick_reminder_barcharts.R")
+if (!is.null(s1b_quick_reminder_script)) {
+  message("Sourcing s1b quick reminder barcharts script: ", s1b_quick_reminder_script)
+  source(s1b_quick_reminder_script, local = TRUE)
+  if (exists("generate_s1b_quick_reminder_barcharts")) {
+    message("Generating s1b quick reminder charts …")
+    generate_s1b_quick_reminder_barcharts(data_dir = data_dir, out_dir = out_dir)
+  } else {
+    warning("Function generate_s1b_quick_reminder_barcharts() not found after sourcing ", s1b_quick_reminder_script)
+  }
+}
+
 message("s1b R wrapper finished.")

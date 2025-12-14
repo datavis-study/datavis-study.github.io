@@ -98,8 +98,14 @@ def generate_report(
 	try:
 		this_file = pathlib.Path(__file__).resolve()
 		analysis_dir = this_file.parents[2]  # .../analysis
-		r_output_dir = analysis_dir / "r_output"
-		if r_output_dir.exists():
+		# Copy both "global" R outputs and s1b-specific charts
+		r_output_dirs = [
+			analysis_dir / "r_output",
+			analysis_dir / "s1b" / "r_output",
+		]
+		for r_output_dir in r_output_dirs:
+			if not r_output_dir.exists():
+				continue
 			for png in r_output_dir.glob("*.png"):
 				dst = fig_out / png.name
 				if not dst.exists():
@@ -127,6 +133,50 @@ def generate_report(
 		group_line = "; ".join(f"{row['group']}: {int(row['n_participants'])}" for _, row in group_counts.iterrows())
 	else:
 		group_line = "No participant metadata available"
+
+	# Prettified group counts for the report header (Badges / Footnotes)
+	group_label_map = {
+		"badge": "Badges",
+		"badges": "Badges",
+		"footnote": "Footnotes",
+		"footnotes": "Footnotes",
+	}
+	group_counts_pretty: list[dict] = []
+	if group_counts is not None and not group_counts.empty:
+		for _, row in group_counts.iterrows():
+			raw = str(row.get("group", "")).strip()
+			label = group_label_map.get(raw.lower(), raw.title() if raw else "Unknown")
+			group_counts_pretty.append({"group": label, "n": int(row.get("n_participants", 0))})
+
+	# s1b "quick reminder" (do they remember the study / the stimuli?)
+	quick_reminder: dict | None = None
+	try:
+		qr_path = pathlib.Path(data_dir) / "s1b" / "quick_reminder.csv"
+		if qr_path.exists():
+			qr = pd.read_csv(qr_path)
+			# Normalize group labels
+			if "group" in qr.columns:
+				qr["group"] = qr["group"].astype(str).str.strip().str.lower()
+			total = int(qr.shape[0])
+			remember_study_yes = int((qr.get("rememberStudy", "").astype(str).str.strip().str.lower() == "yes").sum()) if "rememberStudy" in qr.columns else 0
+			remember_stimuli_yes = int((qr.get("rememberStimuli", "").astype(str).str.strip().str.lower() == "yes").sum()) if "rememberStimuli" in qr.columns else 0
+			by_group: list[dict] = []
+			if "group" in qr.columns and total > 0:
+				for g, sub in qr.groupby("group", dropna=False):
+					g_label = group_label_map.get(str(g).lower(), str(g).title())
+					g_total = int(sub.shape[0])
+					g_stim_yes = int((sub.get("rememberStimuli", "").astype(str).str.strip().str.lower() == "yes").sum()) if "rememberStimuli" in sub.columns else 0
+					by_group.append({"group": g_label, "total": g_total, "remember_stimuli_yes": g_stim_yes})
+				by_group.sort(key=lambda d: d["group"])
+			quick_reminder = {
+				"total": total,
+				"remember_study_yes": remember_study_yes,
+				"remember_stimuli_yes": remember_stimuli_yes,
+				"remember_stimuli_all": (total > 0 and remember_stimuli_yes == total),
+				"by_group": by_group,
+			}
+	except Exception:
+		quick_reminder = None
 
 	def _top_counts(series: Optional[pd.Series], top_n: int = 3) -> list[tuple[str, int]]:
 		if series is None:
@@ -217,6 +267,8 @@ def generate_report(
 		"report_title": "Mind the Badge – Automated Report",
 		"participants_count": n_participants,
 		"group_counts": (group_counts.to_dict(orient="records") if group_counts is not None else []),
+		"group_counts_pretty": group_counts_pretty,
+		"quick_reminder": quick_reminder,
 		"data_dir": str(pathlib.Path(data_dir).resolve()),
 		"out_dir": str(root_out.resolve()),
 		"run_id": run_id,
@@ -293,6 +345,181 @@ def generate_report(
 						"group": str(row.get("group", "")) if "group" in dfp.columns else "",
 						"isProlific": bool(row.get("isProlific")) if has_prolific else False,
 					})
+
+	# ---------------------------------------------------------------------
+	# s1b follow-up: participant counts + free-text preference reasons
+	# ---------------------------------------------------------------------
+	s1b_followup: dict | None = None
+	s1b_preference_reasons: list[dict] = []
+	s1b_preference_summary: list[dict] = []
+	try:
+		s1b_pref_path = pathlib.Path(data_dir) / "s1b" / "preferences.csv"
+		if s1b_pref_path.exists():
+			df_s1b_pref = pd.read_csv(s1b_pref_path)
+			if {"group", "participantId"}.issubset(df_s1b_pref.columns):
+				# Normalize groups
+				df_s1b_pref["group"] = df_s1b_pref["group"].astype(str).str.strip().str.lower()
+				df_s1b_pref["participantId"] = df_s1b_pref["participantId"].astype(str).str.strip()
+
+				# Participant counts (who actually filled out the s1b preferences)
+				counts = (
+					df_s1b_pref.groupby("group", dropna=False)["participantId"]
+					.nunique()
+					.reset_index(name="n")
+				)
+				counts_pretty: list[dict] = []
+				total_n = int(df_s1b_pref["participantId"].nunique())
+				for _, row in counts.iterrows():
+					raw = str(row.get("group", "")).strip().lower()
+					# Use the study identifiers for clarity in the report
+					if raw == "badges":
+						label = "s1b-badges"
+					elif raw == "footnotes":
+						label = "s1b-footnotes"
+					else:
+						label = raw if raw else "Unknown"
+					counts_pretty.append({"group": label, "n": int(row.get("n", 0))})
+				# Stable order
+				order = {"s1b-badges": 0, "s1b-footnotes": 1}
+				counts_pretty.sort(key=lambda d: order.get(d["group"], 99))
+				s1b_followup = {"total": total_n, "by_group": counts_pretty}
+
+				# Free-text reasons (the *_why columns)
+				task_map = [
+					("global_understanding", "Stimuli 1 - Understanding"),
+					("co2_understanding", "Stimuli 2 - Understanding"),
+					("global_presenting", "Stimuli 1 - Presenting"),
+					("co2_presenting", "Stimuli 2 - Presenting"),
+				]
+
+				def _pref_label(x: str) -> str:
+					v = str(x or "").strip().lower()
+					if v == "badges":
+						return "Prefer Badges"
+					if v == "footnotes":
+						return "Prefer Footnotes"
+					return "No preference"
+
+				for key, label in task_map:
+					choice_col = f"{key}_choice"
+					why_col = f"{key}_why"
+					if choice_col not in df_s1b_pref.columns or why_col not in df_s1b_pref.columns:
+						continue
+
+					res_badges: list[dict] = []
+					res_foot: list[dict] = []
+
+					for _, row in df_s1b_pref.iterrows():
+						pid = str(row.get("participantId", "")).strip()
+						if not pid:
+							continue
+						group_raw = str(row.get("group", "")).strip().lower()
+						why = text_clean.clean_text(row.get(why_col))
+						if not why:
+							continue
+						choice = _pref_label(row.get(choice_col))
+						rid = participant_id_map.get(pid) or (pid[:8] if pid else "")
+						is_prolific = participant_is_prolific.get(pid, False)
+						rec = {
+							"participant": rid,
+							"isProlific": bool(is_prolific),
+							"choice": choice,
+							"text": why,
+						}
+						if group_raw == "badges":
+							res_badges.append(rec)
+						elif group_raw == "footnotes":
+							res_foot.append(rec)
+
+					s1b_preference_reasons.append(
+						{
+							"key": key,
+							"label": label,
+							"responses_badges": res_badges,
+							"responses_footnotes": res_foot,
+						}
+					)
+
+				# Preference counts (for compact reporting in the main report)
+				def _count_choice(col: str) -> dict[str, int]:
+					ser = df_s1b_pref[col].dropna().astype(str).str.strip().str.lower()
+					return {
+						"badges": int((ser == "badges").sum()),
+						"footnotes": int((ser == "footnotes").sum()),
+						"no_preference": int((~ser.isin(["badges", "footnotes"]) | (ser == "no_preference")).sum()),
+						"n": int(ser.shape[0]),
+					}
+
+				# Extract the *exact* question wording from the s1b study config (best-effort).
+				prompts: dict[str, dict] = {}
+				try:
+					this_file = pathlib.Path(__file__).resolve()
+					project_root = this_file.parents[2].parent  # .../study
+					cfg_candidates = [
+						project_root / "public" / "s1b-footnotes" / "config.json",
+						project_root / "public" / "s1b-badges" / "config.json",
+					]
+					cfg_path = next((p for p in cfg_candidates if p.exists()), None)
+					if cfg_path:
+						cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+						comps = cfg.get("components", {}) if isinstance(cfg, dict) else {}
+
+						def _get_prompt(comp_id: str, resp_id: str) -> tuple[str | None, list[str] | None]:
+							comp = comps.get(comp_id) if isinstance(comps, dict) else None
+							if not isinstance(comp, dict):
+								return None, None
+							for it in comp.get("response", []) or []:
+								if not isinstance(it, dict):
+									continue
+								if str(it.get("id", "")).strip() == resp_id:
+									return it.get("prompt"), it.get("options")
+							return None, None
+
+						for key, comp_id, resp_id in [
+							("global_understanding", "badge-global-comparison", "preferred-condition-global-understanding"),
+							("global_presenting", "badge-global-comparison", "preferred-condition-global-presenting"),
+							("co2_understanding", "badge-co2-comparison", "preferred-condition-co2-understanding"),
+							("co2_presenting", "badge-co2-comparison", "preferred-condition-co2-presenting"),
+						]:
+							prompt, options = _get_prompt(comp_id, resp_id)
+							if prompt:
+								prompts[key] = {"prompt": str(prompt), "options": options}
+				except Exception:
+					prompts = {}
+
+				# Use meaningful labels (not "Stimuli 1/2") for the summary table.
+				summary_map = [
+					("global_understanding", "Global warming projection — Understanding"),
+					("global_presenting", "Global warming projection — Presenting"),
+					("co2_understanding", "CO₂ emissions — Understanding"),
+					("co2_presenting", "CO₂ emissions — Presenting"),
+				]
+				for key, label in summary_map:
+					choice_col = f"{key}_choice"
+					if choice_col not in df_s1b_pref.columns:
+						continue
+					cnt = _count_choice(choice_col)
+					p = prompts.get(key) or {}
+					s1b_preference_summary.append(
+						{
+							"key": key,
+							"label": label,
+							"prefer_badges": cnt["badges"],
+							"no_preference": cnt["no_preference"],
+							"prefer_footnotes": cnt["footnotes"],
+							"n": cnt["n"],
+							"prompt": p.get("prompt"),
+							"options": p.get("options"),
+						}
+					)
+	except Exception:
+		s1b_followup = None
+		s1b_preference_reasons = []
+		s1b_preference_summary = []
+
+	context["s1b_followup"] = s1b_followup
+	context["s1b_preference_reasons"] = s1b_preference_reasons
+	context["s1b_preference_summary"] = s1b_preference_summary
 
 	# Attach per-component timing to the participant mapping records (converted to minutes)
 	time_columns_map: list[dict] = []

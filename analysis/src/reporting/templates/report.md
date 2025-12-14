@@ -1,6 +1,8 @@
 # Mind the Badge - Study Data Report
 Generated at: `{{ generated_at }}`
 
+## Study metadata
+
 **Demographics**
 
 {% if demographics_summary and demographics_summary|length > 0 %}
@@ -214,4 +216,69 @@ _Times per component are shown in minutes (rounded to 1 decimal)._
 {% else %}
 > No participant mapping available.
 {% endif %}
+
+## s1b follow-up study
+
+{% if s1b_followup %}
+**Participants (s1b follow-up):** {{ s1b_followup.total }} total{% if s1b_followup.by_group and s1b_followup.by_group|length > 0 %} — {% for g in s1b_followup.by_group %}{{ g.group }}: {{ g.n }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
+{% endif %}
+
+**Data:** `analysis/data/s1b/preferences.csv`
+
+{% if s1b_preference_summary and s1b_preference_summary|length > 0 %}
+**Preference counts (all s1b participants):**
+
+**Questions asked:**
+- **Understanding:** For understanding this visualization yourself, which version do you prefer? **Why**
+- **Presentation:** For presenting and explaining this visualization to others (like in the speech you wrote), which version would you prefer to use? **Why**
+  {% endif %}
+
+| Question | Prefer Badges | No preference | Prefer Footnotes | N |
+|---|---:|---:|---:|---:|
+{% for q in s1b_preference_summary -%}
+| {{ q.label }} | {{ q.prefer_badges }} | {{ q.no_preference }} | {{ q.prefer_footnotes }} | {{ q.n }} |
+{% endfor %}
+
+### Badges vs. Footnotes
+
+<img src="figures/s1b_preferences_overall.png" alt="s1b preferences waffle chart (individual + total count)" width="980" />
+
+{% if s1b_preference_reasons and s1b_preference_reasons|length > 0 %}
+{% for t in s1b_preference_reasons %}
+{% set foot = t.responses_footnotes %}
+{% set badge = t.responses_badges %}
+<details>
+<summary><span style="font-size: 1.05em;"><strong>{{ t.label }}</strong></span></summary>
+
+{% if foot and foot|length > 0 %}
+**Footnotes** — {{ foot|length }} responses
+
+{% for r in foot %}
+- **{{ r.participant }} ({{ r.choice }}{% if r.isProlific %}; Prolific{% endif %})**: {{ r.text }}
+{% endfor %}
+{% else %}
+**Footnotes** — 0 responses
+{% endif %}
+
+{% if badge and badge|length > 0 %}
+**Badges** — {{ badge|length }} responses
+
+{% for r in badge %}
+- **{{ r.participant }} ({{ r.choice }}{% if r.isProlific %}; Prolific{% endif %})**: {{ r.text }}
+{% endfor %}
+{% else %}
+**Badges** — 0 responses
+{% endif %}
+
+</details>
+{% endfor %}
+{% endif %}
+
+### Preferences (slope — small)
+
+<img src="figures/s1b_preferences_slope.png" alt="s1b preferences slope chart (Understanding vs Presentation)" width="520" />
+
+### Likert scale (s1b)
+
+<img src="figures/s1b_likert_barplot_by_group.png" alt="s1b Likert scale responses by group" width="980" />
 
