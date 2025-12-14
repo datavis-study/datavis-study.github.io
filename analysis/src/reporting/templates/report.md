@@ -220,26 +220,24 @@ _Times per component are shown in minutes (rounded to 1 decimal)._
 ## s1b follow-up study
 
 {% if s1b_followup %}
-**Participants (s1b follow-up):** {{ s1b_followup.total }} total{% if s1b_followup.by_group and s1b_followup.by_group|length > 0 %} — {% for g in s1b_followup.by_group %}{{ g.group }}: {{ g.n }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
+### Participants (s1b): {{ s1b_followup.total }} total{% if s1b_followup.by_group and s1b_followup.by_group|length > 0 %} — {% for g in s1b_followup.by_group %}{{ g.group }}: {{ g.n }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
 {% endif %}
 
-**Data:** `analysis/data/s1b/preferences.csv`
-
-{% if s1b_preference_summary and s1b_preference_summary|length > 0 %}
-**Preference counts (all s1b participants):**
-
-**Questions asked:**
+### Questions asked:
 - **Understanding:** For understanding this visualization yourself, which version do you prefer? **Why**
 - **Presentation:** For presenting and explaining this visualization to others (like in the speech you wrote), which version would you prefer to use? **Why**
-  {% endif %}
+
+{% if s1b_preference_summary and s1b_preference_summary|length > 0 %}
 
 | Question | Prefer Badges | No preference | Prefer Footnotes | N |
 |---|---:|---:|---:|---:|
 {% for q in s1b_preference_summary -%}
 | {{ q.label }} | {{ q.prefer_badges }} | {{ q.no_preference }} | {{ q.prefer_footnotes }} | {{ q.n }} |
 {% endfor %}
+{% endif %}
 
 ### Badges vs. Footnotes
+One square is one response 
 
 <img src="figures/s1b_preferences_overall.png" alt="s1b preferences waffle chart (individual + total count)" width="980" />
 
