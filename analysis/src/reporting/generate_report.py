@@ -165,8 +165,16 @@ def generate_report(
 				for g, sub in qr.groupby("group", dropna=False):
 					g_label = group_label_map.get(str(g).lower(), str(g).title())
 					g_total = int(sub.shape[0])
+					g_study_yes = int((sub.get("rememberStudy", "").astype(str).str.strip().str.lower() == "yes").sum()) if "rememberStudy" in sub.columns else 0
 					g_stim_yes = int((sub.get("rememberStimuli", "").astype(str).str.strip().str.lower() == "yes").sum()) if "rememberStimuli" in sub.columns else 0
-					by_group.append({"group": g_label, "total": g_total, "remember_stimuli_yes": g_stim_yes})
+					by_group.append(
+						{
+							"group": g_label,
+							"total": g_total,
+							"remember_study_yes": g_study_yes,
+							"remember_stimuli_yes": g_stim_yes,
+						}
+					)
 				by_group.sort(key=lambda d: d["group"])
 			quick_reminder = {
 				"total": total,

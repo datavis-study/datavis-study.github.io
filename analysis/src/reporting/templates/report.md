@@ -221,6 +221,9 @@ _Times per component are shown in minutes (rounded to 1 decimal)._
 
 {% if s1b_followup %}
 ### Participants (s1b): {{ s1b_followup.total }} total{% if s1b_followup.by_group and s1b_followup.by_group|length > 0 %} — {% for g in s1b_followup.by_group %}{{ g.group }}: {{ g.n }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}
+{% if quick_reminder and quick_reminder.by_group and quick_reminder.by_group|length > 0 %}
+Quick reminder —{% for g in quick_reminder.by_group %} {{ g.group }}: {{ g.remember_study_yes }}/{{ g.total }} remembered taking part and {{ g.remember_stimuli_yes }}/{{ g.total }} remembered reading visualizations {% if g.group == "Badges" %}with visualization badges{% elif g.group == "Footnotes" %}with footnotes{% else %}in their original condition{% endif %}{% if not loop.last %};{% endif %}{% endfor %}
+{% endif %}
 {% endif %}
 
 ### Questions asked:
@@ -271,8 +274,6 @@ One square is one response
 </details>
 {% endfor %}
 {% endif %}
-
-### Preferences (slope — small)
 
 <img src="figures/s1b_preferences_slope.png" alt="s1b preferences slope chart (Understanding vs Presentation)" width="520" />
 
