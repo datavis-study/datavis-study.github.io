@@ -186,7 +186,7 @@ Generated at: `{{ generated_at }}`
 
 ## Likert scale responses
 
-<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="800" />
+<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="600" />
 
 ### Measured badge interaction
 
@@ -228,10 +228,10 @@ Quick reminder —{% for g in quick_reminder.by_group %} {{ g.group }}: {{ g.rem
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
   <div style="text-align: center;">
-    <img src="figures/stim1.png" alt="s1b stimulus 1" width="420" />
+    <img src="figures/stim1.png" alt="s1b stimulus 1" width="600" />
   </div>
   <div style="text-align: center;">
-    <img src="figures/stim2.png" alt="s1b stimulus 2" width="420" />
+    <img src="figures/stim2.png" alt="s1b stimulus 2" width="600" />
   </div>
 </div>
 
@@ -288,5 +288,5 @@ One square is one response
 
 ### Likert scale (s1b)
 
-<img src="figures/s1b_likert_barplot_by_group.png" alt="s1b Likert scale responses by group" width="980" />
+<img src="figures/s1b_likert_barplot_by_group.png" alt="s1b Likert scale responses by group" width="600" />
 

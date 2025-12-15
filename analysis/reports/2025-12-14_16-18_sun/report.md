@@ -623,7 +623,7 @@ Least: copyright and the ones I forgot already
 
 ## Likert scale responses
 
-<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="800" />
+<img src="figures/likert_barplot_by_group.png" alt="Likert scale responses by group" width="600" />
 
 ### Measured badge interaction
 
@@ -924,4 +924,4 @@ One square is one response
 
 ### Likert scale (s1b)
 
-<img src="figures/s1b_likert_barplot_by_group.png" alt="s1b Likert scale responses by group" width="980" />
+<img src="figures/s1b_likert_barplot_by_group.png" alt="s1b Likert scale responses by group" width="720" />
