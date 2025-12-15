@@ -118,6 +118,13 @@ def generate_report(
 					dst = fig_out / asset.name
 					if not dst.exists():
 						shutil.copy2(asset, dst)
+		# Also copy any s1b stimulus PNGs that live alongside the s1b CSVs
+		s1b_data_dir = pathlib.Path(data_dir) / "s1b"
+		if s1b_data_dir.exists():
+			for png in s1b_data_dir.glob("*.png"):
+				dst = fig_out / png.name
+				if not dst.exists():
+					shutil.copy2(png, dst)
 	except Exception:
 		# Figure copying is best-effort; do not fail the whole report
 		pass

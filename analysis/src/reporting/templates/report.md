@@ -226,6 +226,15 @@ Quick reminder —{% for g in quick_reminder.by_group %} {{ g.group }}: {{ g.rem
 {% endif %}
 {% endif %}
 
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
+  <div style="text-align: center;">
+    <img src="figures/stim1.png" alt="s1b stimulus 1" width="420" />
+  </div>
+  <div style="text-align: center;">
+    <img src="figures/stim2.png" alt="s1b stimulus 2" width="420" />
+  </div>
+</div>
+
 ### Questions asked:
 - **Understanding:** For understanding this visualization yourself, which version do you prefer? **Why**
 - **Presentation:** For presenting and explaining this visualization to others (like in the speech you wrote), which version would you prefer to use? **Why**
