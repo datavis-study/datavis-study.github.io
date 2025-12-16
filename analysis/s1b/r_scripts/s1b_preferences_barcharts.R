@@ -141,8 +141,9 @@ generate_s1b_preferences_barcharts <- function(
   # - Main grid: keep a small gap between participants for readability.
   # - Summary (aggregate) grid: reduce *horizontal* whitespace only (keep the
   #   same vertical spacing as the main grid).
-  tile_size_main           <- 0.92
-  tile_size_summary_width  <- 0.97
+  # Slightly increase the gap between squares for readability
+  tile_size_main           <- 0.88
+  tile_size_summary_width  <- 0.93
   tile_size_summary_height <- tile_size_main
   summary_step_x           <- 1.0
 
