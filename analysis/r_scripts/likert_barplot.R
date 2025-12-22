@@ -13,7 +13,121 @@
 suppressPackageStartupMessages({
   library(tidyverse)
   library(likert)
+  library(ggpattern)
 })
+
+generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
+  # `likert::plot()` already provides signed percentages in `likert_plot_data$value`
+  # (negative = disagree side, positive = agree side).
+  # We replot it with ggpattern so the Badge group can be hatched cleanly.
+  dfp <- likert_plot_data %>%
+    dplyr::mutate(
+      Group = factor(Group, levels = c("footnote", "Footnotes", "badge", "Badges")),
+      # Pattern is only used to differentiate groups (Badge vs Footnote)
+      pattern = dplyr::case_when(
+        tolower(as.character(Group)) %in% c("badge", "badges") ~ "stripe",
+        TRUE ~ "none"
+      )
+    ) %>%
+    dplyr::filter(!is.na(Group))
+
+  # Split into positive / negative halves so we can control stacking order per side.
+  # Goal: Strongest responses should be furthest from 0 (Strongly Agree rightmost, Strongly Disagree leftmost).
+  df_pos <- dfp %>%
+    dplyr::filter(.data$value >= 0) %>%
+    dplyr::mutate(
+      variable = factor(
+        .data$variable,
+        levels = c(
+          "Neither Agree nor Disagree",
+          "Agree",
+          "Strongly Agree",
+          "Disagree",
+          "Strongly Disagree"
+        )
+      )
+    )
+
+  df_neg <- dfp %>%
+    dplyr::filter(.data$value < 0) %>%
+    dplyr::mutate(
+      variable = factor(
+        .data$variable,
+        levels = c(
+          "Neither Agree nor Disagree",
+          "Disagree",
+          "Strongly Disagree",
+          "Agree",
+          "Strongly Agree"
+        )
+      )
+    )
+
+  base <- ggplot2::ggplot() +
+    ggplot2::facet_wrap(~Item, ncol = 1, strip.position = "top") +
+    ggplot2::coord_flip() +
+    ggplot2::scale_y_continuous(labels = function(x) paste0(abs(x), "%")) +
+    ggplot2::scale_fill_manual(
+      # Use *named* values so the darkest colour always maps to Strongly Agree.
+      values = palette_5,
+      name = NULL,
+      breaks = names(palette_5),
+      labels = names(palette_5)
+    ) +
+    ggpattern::scale_pattern_manual(values = c(none = "none", stripe = "stripe"), guide = "none") +
+    ggplot2::guides(
+      fill = ggplot2::guide_legend(override.aes = list(pattern = "none"))
+    ) +
+    ggplot2::labs(x = NULL, y = NULL) +
+    ggplot2::theme_minimal(base_size = 10) +
+    ggplot2::theme(
+      legend.position = "bottom",
+      axis.text.y = ggplot2::element_text(size = 10),
+      strip.text = ggplot2::element_text(size = 10, face = "bold"),
+      strip.background = ggplot2::element_rect(fill = "grey95", color = NA)
+    )
+
+  # Denser pattern for clearer group distinction (badge vs footnote), while preserving greyscale meaning.
+  pattern_params <- list(
+    # ggplot stacks fills in reverse factor order by default in this coord/geom setup.
+    # We want responses to increase in strength *away* from 0:
+    # - positive side: Neutral (closest) → Agree → Strongly Agree (furthest)
+    # - negative side: Neutral (closest) → Disagree → Strongly Disagree (furthest)
+    # so we explicitly reverse the stacking direction.
+    position = ggplot2::position_stack(reverse = TRUE),
+    color = "white",
+    linewidth = 0.2,
+    pattern_fill = "grey90",
+    pattern_colour = "grey90",
+    pattern_alpha = 0.85,
+    pattern_density = 0.40,
+    pattern_spacing = 0.05,
+    pattern_angle = 45,
+    pattern_key_scale_factor = 0.8
+  )
+
+  base +
+    do.call(
+      ggpattern::geom_col_pattern,
+      c(
+        list(
+          data = df_neg,
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern)
+        ),
+        pattern_params
+      )
+    ) +
+    do.call(
+      ggpattern::geom_col_pattern,
+      c(
+        list(
+          data = df_pos,
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern)
+        ),
+        pattern_params
+      )
+    )
+}
 
 #' Generate a Likert-type horizontal stacked barplot for questionnaire items.
 #'
@@ -114,14 +228,14 @@ generate_likert_barplot <- function(
     likert::likert(items = items_df)
   }
 
-  # Color palette for a 5-point Likert scale: from negative to positive
-  # Ensure colors map correctly to levels 1..5
+  # Print-friendly greyscale palette for a 5-point Likert scale.
+  # Darkest (Strongly Agree) is black.
   palette_5 <- c(
-    "#d73027", # 1: Strongly Disagree
-    "#fc8d59", # 2: Disagree
-    "#fee090", # 3: Neither...
-    "#91bfdb", # 4: Agree
-    "#4575b4"  # 5: Strongly Agree
+    "#e6e6e6", # 1: Strongly Disagree
+    "#cccccc", # 2: Disagree
+    "#b3b3b3", # 3: Neither...
+    "#7a7a7a", # 4: Agree
+    "#000000"  # 5: Strongly Agree
   )
 
   message("Writing Likert barplot to: ", output_path)
@@ -129,7 +243,7 @@ generate_likert_barplot <- function(
   grDevices::png(output_path, width = 1500, height = 1200, res = 200)
   on.exit(grDevices::dev.off(), add = TRUE)
 
-  p <- plot(
+  p_base <- plot(
     likert_obj,
     type          = "bar",   # stacked bar representation
     centered      = 3,       # center on the neutral point (for 1–5 scale)
@@ -138,27 +252,11 @@ generate_likert_barplot <- function(
     plot.percent.neutral = FALSE,
     plot.percent.high = FALSE,
     colors        = palette_5 # Pass colors directly to plot.likert
-  ) +
-    ggplot2::scale_y_continuous(
-      labels = function(x) paste0(abs(x), "%")
-    ) + # Make negative values positive on the axis and add % sign
-    ggplot2::scale_fill_manual(
-      values = palette_5,
-      name   = NULL,          # no legend title ("Response")
-      breaks = likert_labels,
-      labels = likert_labels
-    ) +
-   ggplot2::labs(
-      x = NULL,
-      y = NULL
-    ) +
-    ggplot2::theme_minimal(base_size = 10) +
-    ggplot2::theme(
-      legend.position = "bottom",
-      axis.text.y     = ggplot2::element_text(size = 10),
-      strip.text.y    = ggplot2::element_text(size = 10, face = "bold"),
-      strip.background = ggplot2::element_rect(fill = "grey95", color = NA)
-    )
+  )
+
+  # Build the print-friendly ggpattern version from the base plot data.
+  palette_named <- setNames(palette_5, likert_labels)
+  p <- generate_likert_plot_print_friendly(p_base$data, palette_named)
 
   # Ensure plot is drawn into the device
   print(p)
