@@ -63,7 +63,7 @@ draw_key_half_stripe_overlay <- function(data, params, size) {
   grid::grobTree(base, stripes, split_line)
 }
 
-generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
+generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, counts_df) {
   # `likert::plot()` already provides signed percentages in `likert_plot_data$value`
   # (negative = disagree side, positive = agree side).
   # We replot it with ggpattern so the Badge group can be hatched cleanly.
@@ -80,6 +80,28 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
       pattern = dplyr::if_else(.data$Group == "Badges", "stripe", "none")
     ) %>%
     dplyr::filter(!is.na(Group))
+
+  # Join absolute counts (n) computed from the raw questionnaire data.
+  # Note: `likert::plot()` splits the Neutral category into two halves (positive + negative).
+  # We keep both halves for geometry, but label Neutral only once (at y = 0) with the full count.
+  counts_norm <- counts_df %>%
+    dplyr::mutate(
+      Group = dplyr::case_when(
+        tolower(as.character(.data$Group)) %in% c("footnote", "footnotes") ~ "Footnotes",
+        tolower(as.character(.data$Group)) %in% c("badge", "badges") ~ "Badges",
+        TRUE ~ as.character(.data$Group)
+      ),
+      Group = factor(.data$Group, levels = c("Footnotes", "Badges")),
+      Item = as.character(.data$Item),
+      variable = as.character(.data$variable),
+      n = as.integer(.data$n)
+    )
+
+  dfp <- dfp %>%
+    dplyr::left_join(
+      counts_norm %>% dplyr::select(.data$Group, .data$Item, .data$variable, .data$n),
+      by = c("Group", "Item", "variable")
+    )
 
   # Split into positive / negative halves so we can control stacking order per side.
   # Goal: Strongest responses should be furthest from 0 (Strongly Agree rightmost, Strongly Disagree leftmost).
@@ -113,6 +135,47 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
       )
     )
 
+  # Add per-segment labels using absolute counts (n).
+  # We compute explicit midpoints (instead of relying on position_stack) to avoid misplacement
+  # when the Neutral category is split across the zero line.
+  add_segment_labels <- function(d) {
+    d <- d %>%
+      dplyr::mutate(
+        # Keep labels readable on darker fills.
+        label_color = dplyr::if_else(
+          as.character(.data$variable) %in% c("Agree", "Strongly Agree"),
+          "white",
+          "black"
+        ),
+        label = dplyr::if_else(
+          is.na(.data$n) | .data$n <= 0 | is.na(.data$value) | abs(.data$value) < 1e-9,
+          "",
+          as.character(.data$n)
+        )
+      ) %>%
+      dplyr::group_by(.data$Item, .data$Group) %>%
+      dplyr::arrange(.data$variable, .by_group = TRUE) %>%
+      dplyr::mutate(
+        y_start = dplyr::lag(cumsum(.data$value), default = 0),
+        y_end = .data$y_start + .data$value,
+        y_mid = (.data$y_start + .data$y_end) / 2
+      ) %>%
+      dplyr::ungroup()
+
+    # Neutral is drawn as two halves; label it once with the full count at y = 0.
+    d <- d %>%
+      dplyr::mutate(
+        is_neutral = as.character(.data$variable) == "Neither Agree nor Disagree",
+        label = dplyr::if_else(.data$is_neutral & .data$value < 0, "", .data$label),
+        y_mid = dplyr::if_else(.data$is_neutral & .data$value > 0 & .data$label != "", 0, .data$y_mid)
+      )
+
+    d
+  }
+
+  df_pos <- add_segment_labels(df_pos)
+  df_neg <- add_segment_labels(df_neg)
+
   base <- ggplot2::ggplot() +
     ggplot2::facet_wrap(~Item, ncol = 1, strip.position = "top") +
     ggplot2::coord_flip() +
@@ -125,6 +188,7 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
       labels = names(palette_5)
     ) +
     ggpattern::scale_pattern_manual(values = c(none = "none", stripe = "stripe"), guide = "none") +
+    ggplot2::scale_color_identity() +
     ggplot2::guides(fill = ggplot2::guide_legend()) +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_minimal(base_size = 10) +
@@ -200,6 +264,23 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
         ),
         pattern_params
       )
+    ) +
+    # Per-segment percentage labels (drawn last so they sit above the patterns).
+    ggplot2::geom_text(
+      data = df_neg,
+      mapping = ggplot2::aes(x = Group, y = y_mid, label = label, color = label_color),
+      position = "identity",
+      size = 3,
+      lineheight = 0.95,
+      show.legend = FALSE
+    ) +
+    ggplot2::geom_text(
+      data = df_pos,
+      mapping = ggplot2::aes(x = Group, y = y_mid, label = label, color = label_color),
+      position = "identity",
+      size = 3,
+      lineheight = 0.95,
+      show.legend = FALSE
     )
 }
 
@@ -330,7 +411,20 @@ generate_likert_barplot <- function(
 
   # Build the print-friendly ggpattern version from the base plot data.
   palette_named <- setNames(palette_5, likert_labels)
-  p <- generate_likert_plot_print_friendly(p_base$data, palette_named)
+
+  # Absolute counts (n) per Group × Item × response.
+  # Use the already-renamed item columns so `Item` matches the plot facets.
+  counts_long <- tibble::as_tibble(items_df) %>%
+    dplyr::mutate(Group = grouping) %>%
+    tidyr::pivot_longer(
+      cols = -Group,
+      names_to = "Item",
+      values_to = "variable"
+    ) %>%
+    dplyr::filter(!is.na(.data$variable)) %>%
+    dplyr::count(.data$Group, .data$Item, .data$variable, name = "n")
+
+  p <- generate_likert_plot_print_friendly(p_base$data, palette_named, counts_long)
 
   # Ensure plot is drawn into the device
   print(p)
