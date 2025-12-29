@@ -16,18 +16,67 @@ suppressPackageStartupMessages({
   library(ggpattern)
 })
 
+draw_key_half_stripe_overlay <- function(data, params, size) {
+  # Legend key: left half = plain fill, right half = same fill with a light stripe overlay.
+  # This makes the legend "correct" when the plot uses a pattern overlay for one condition.
+  if (!requireNamespace("grid", quietly = TRUE)) {
+    return(ggplot2::draw_key_rect(data, params, size))
+  }
+
+  alpha <- data$alpha %||% 1
+
+  base <- grid::rectGrob(
+    gp = grid::gpar(
+      col  = NA,
+      fill = scales::alpha(data$fill %||% "grey80", alpha)
+    )
+  )
+
+  stripe_vp <- grid::viewport(
+    x = 0.75, y = 0.5,
+    width = 0.5, height = 1,
+    just = c("center", "center"),
+    clip = "on"
+  )
+
+  spacing <- 0.14
+  offs <- seq(-1, 1 + spacing, by = spacing)
+  stripes <- grid::segmentsGrob(
+    x0 = offs, y0 = 0,
+    x1 = offs + 1, y1 = 1,
+    gp = grid::gpar(
+      # Slightly darker than the in-plot stripes so the split is readable at legend-key size.
+      col = scales::alpha("grey20", 0.55),
+      lwd = 1.1,
+      lineend = "butt"
+    ),
+    vp = stripe_vp
+  )
+
+  split_line <- grid::segmentsGrob(
+    x0 = 0.5, y0 = 0,
+    x1 = 0.5, y1 = 1,
+    gp = grid::gpar(col = scales::alpha("grey40", 0.6), lwd = 0.8)
+  )
+
+  grid::grobTree(base, stripes, split_line)
+}
+
 generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
   # `likert::plot()` already provides signed percentages in `likert_plot_data$value`
   # (negative = disagree side, positive = agree side).
   # We replot it with ggpattern so the Badge group can be hatched cleanly.
   dfp <- likert_plot_data %>%
     dplyr::mutate(
-      Group = factor(Group, levels = c("footnote", "Footnotes", "badge", "Badges")),
-      # Pattern is only used to differentiate groups (Badge vs Footnote)
-      pattern = dplyr::case_when(
-        tolower(as.character(Group)) %in% c("badge", "badges") ~ "stripe",
-        TRUE ~ "none"
-      )
+      # Normalise group labels so the axis is consistent across datasets.
+      Group = dplyr::case_when(
+        tolower(as.character(Group)) %in% c("footnote", "footnotes") ~ "Footnotes",
+        tolower(as.character(Group)) %in% c("badge", "badges") ~ "Badges",
+        TRUE ~ as.character(Group)
+      ),
+      Group = factor(Group, levels = c("Footnotes", "Badges")),
+      # Pattern is only used to differentiate groups (Badges vs Footnotes)
+      pattern = dplyr::if_else(.data$Group == "Badges", "stripe", "none")
     ) %>%
     dplyr::filter(!is.na(Group))
 
@@ -75,9 +124,7 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
       labels = names(palette_5)
     ) +
     ggpattern::scale_pattern_manual(values = c(none = "none", stripe = "stripe"), guide = "none") +
-    ggplot2::guides(
-      fill = ggplot2::guide_legend(override.aes = list(pattern = "none"))
-    ) +
+    ggplot2::guides(fill = ggplot2::guide_legend()) +
     ggplot2::labs(x = NULL, y = NULL) +
     ggplot2::theme_minimal(base_size = 10) +
     ggplot2::theme(
@@ -87,7 +134,8 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
       strip.background = ggplot2::element_rect(fill = "grey95", color = NA)
     )
 
-  # Denser pattern for clearer group distinction (badge vs footnote), while preserving greyscale meaning.
+  # Pattern settings for the "Badge" group.
+  # We want a clear group distinction without washing out the underlying fill colours.
   pattern_params <- list(
     # ggplot stacks fills in reverse factor order by default in this coord/geom setup.
     # We want responses to increase in strength *away* from 0:
@@ -95,24 +143,48 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
     # - negative side: Neutral (closest) → Disagree → Strongly Disagree (furthest)
     # so we explicitly reverse the stacking direction.
     position = ggplot2::position_stack(reverse = TRUE),
-    color = "white",
-    linewidth = 0.2,
-    pattern_fill = "grey90",
-    pattern_colour = "grey90",
-    pattern_alpha = 0.85,
-    pattern_density = 0.40,
-    pattern_spacing = 0.05,
+    # Remove segment outlines (they can look like a dashed border in patterned bars).
+    color = NA,
+    linewidth = 0,
+    # Make the pattern "line-only" (no opaque pattern fill) so bar colours remain visible.
+    pattern_fill = NA,
+    # Light, semi-transparent lines (instead of filled stripes) to avoid muting fills.
+    pattern_colour = "white",
+    pattern_alpha = 0.35,
+    # Fewer stripes and more spacing makes the fill read first, pattern second.
+    pattern_density = 0.12,
+    pattern_spacing = 0.12,
     pattern_angle = 45,
-    pattern_key_scale_factor = 0.8
+    pattern_key_scale_factor = 0.8,
+    key_glyph = draw_key_half_stripe_overlay
   )
 
   base +
+    # Legend-only layer so the fill legend keys are deterministic:
+    # each key shows 50% plain fill + 50% stripe overlay.
+    ggplot2::layer(
+      data = tibble::tibble(
+        Item = dfp$Item[[1]],
+        Group = factor("Footnotes", levels = c("Footnotes", "Badges")),
+        value = 0,
+        variable = factor(names(palette_5), levels = names(palette_5))
+      ),
+      mapping = ggplot2::aes(x = Group, y = value, fill = variable),
+      stat = "identity",
+      geom = ggplot2::GeomCol,
+      position = "stack",
+      show.legend = TRUE,
+      inherit.aes = FALSE,
+      key_glyph = draw_key_half_stripe_overlay,
+      params = list(linewidth = 0, colour = NA, na.rm = TRUE)
+    ) +
     do.call(
       ggpattern::geom_col_pattern,
       c(
         list(
           data = df_neg,
-          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern)
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern),
+          show.legend = c(fill = FALSE, pattern = FALSE)
         ),
         pattern_params
       )
@@ -122,7 +194,8 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5) {
       c(
         list(
           data = df_pos,
-          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern)
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern),
+          show.legend = c(fill = FALSE, pattern = FALSE)
         ),
         pattern_params
       )
