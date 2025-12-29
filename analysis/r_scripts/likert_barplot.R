@@ -45,8 +45,9 @@ draw_key_half_stripe_overlay <- function(data, params, size) {
     x0 = offs, y0 = 0,
     x1 = offs + 1, y1 = 1,
     gp = grid::gpar(
-      # Slightly darker than the in-plot stripes so the split is readable at legend-key size.
-      col = scales::alpha("grey20", 0.55),
+      # Slightly stronger than the in-plot stripes so the split remains readable at legend-key size,
+      # and still visible on the darker end of the greyscale ramp.
+      col = scales::alpha("white", 0.6),
       lwd = 1.1,
       lineend = "butt"
     ),
@@ -56,7 +57,7 @@ draw_key_half_stripe_overlay <- function(data, params, size) {
   split_line <- grid::segmentsGrob(
     x0 = 0.5, y0 = 0,
     x1 = 0.5, y1 = 1,
-    gp = grid::gpar(col = scales::alpha("grey40", 0.6), lwd = 0.8)
+    gp = grid::gpar(col = scales::alpha("grey80", 0.7), lwd = 0.8)
   )
 
   grid::grobTree(base, stripes, split_line)
@@ -302,13 +303,13 @@ generate_likert_barplot <- function(
   }
 
   # Print-friendly greyscale palette for a 5-point Likert scale.
-  # Darkest (Strongly Agree) is black.
+  # Darkest (Strongly Agree) is a near-black so it prints well without crushing.
   palette_5 <- c(
-    "#e6e6e6", # 1: Strongly Disagree
-    "#cccccc", # 2: Disagree
-    "#b3b3b3", # 3: Neither...
-    "#7a7a7a", # 4: Agree
-    "#000000"  # 5: Strongly Agree
+    "#d9d9d9", # 1: Strongly Disagree
+    "#bdbdbd", # 2: Disagree
+    "#969696", # 3: Neither...
+    "#636363", # 4: Agree
+    "#252525"  # 5: Strongly Agree
   )
 
   message("Writing Likert barplot to: ", output_path)
