@@ -10,6 +10,7 @@
 suppressPackageStartupMessages({
   library(tidyverse)
   library(stringr)
+  library(ggpattern)
 })
 
 #' Generate preference grid plot for the s1b follow-up study.
@@ -141,9 +142,10 @@ generate_s1b_preferences_barcharts <- function(
   # - Main grid: keep a small gap between participants for readability.
   # - Summary (aggregate) grid: reduce *horizontal* whitespace only (keep the
   #   same vertical spacing as the main grid).
-  # Slightly increase the gap between squares for readability
-  tile_size_main           <- 0.88
-  tile_size_summary_width  <- 0.93
+  # Slightly smaller tiles reduce any anti-aliased "bleed" from patterned fills
+  # into the whitespace between squares.
+  tile_size_main           <- 0.82
+  tile_size_summary_width  <- 0.88
   tile_size_summary_height <- tile_size_main
   summary_step_x           <- 1.0
 
@@ -172,12 +174,26 @@ generate_s1b_preferences_barcharts <- function(
 
   y_min <- min(plot_data$y, na.rm = TRUE)
 
-  # 4. Colors and group label positions --------------------------------------
+  # 4. Colors and pattern encoding -------------------------------------------
+  # Requested encoding:
+  # - No preference: grey
+  # - Prefer Footnotes: solid black
+  # - Prefer Badges: black with texture (stripe)
   colors <- c(
-    "badges"        = "#F28E2B",  # orange
-    "no_preference" = "#B0B0B0",  # grey
-    "footnotes"     = "#4E79A7"   # blue
+    "badges"        = "#000000",
+    "no_preference" = "#B0B0B0",
+    "footnotes"     = "#000000"
   )
+
+  plot_data <- plot_data %>%
+    mutate(
+      # Encode "Prefer Badges" with a hatch/stripe texture (instead of circles).
+      pattern = dplyr::if_else(choice == "badges", "stripe", "none"),
+      # De-phase the stripe pattern per tile so it doesn't visually "continue"
+      # across adjacent waffle squares (which can look like overlap).
+      pattern_xoffset = dplyr::if_else(choice == "badges", (x * 0.37) %% 1, 0),
+      pattern_yoffset = dplyr::if_else(choice == "badges", (y * 0.29) %% 1, 0)
+    )
 
   group_labels <- main_grid %>%
     distinct(participantId, group, participant_rank, x) %>%
@@ -208,17 +224,50 @@ generate_s1b_preferences_barcharts <- function(
   p <- ggplot(plot_data, aes(x = x, y = y)) +
     # Squares (draw main and aggregate grids separately so the aggregate tiles
     # can be denser / less gappy for a clean visual distinction).
-    geom_tile(
+    ggpattern::geom_tile_pattern(
       data = dplyr::filter(plot_data, type == "main"),
-      aes(fill = choice),
+      aes(
+        fill = choice,
+        pattern = pattern,
+        pattern_xoffset = pattern_xoffset,
+        pattern_yoffset = pattern_yoffset
+      ),
       width = tile_size_main,
-      height = tile_size_main
+      height = tile_size_main,
+      # A subtle border helps hide pattern anti-aliasing at tile edges.
+      colour = "#FFFFFF",
+      linewidth = 0.30,
+      # Hatch/stripe texture for the "badges" tiles (similar spirit to base R
+      # `density` + `angle` encodings).
+      pattern_fill = "#E6E6E6",
+      pattern_colour = "#E6E6E6",
+      pattern_angle = 45,
+      pattern_alpha = 0.75,
+      pattern_spacing = 0.06,
+      pattern_density = 0.38,
+      # Render the pattern at a higher internal resolution to reduce jaggies.
+      pattern_res = 1600
     ) +
-    geom_tile(
+    ggpattern::geom_tile_pattern(
       data = dplyr::filter(plot_data, type == "summary"),
-      aes(fill = choice),
+      aes(
+        fill = choice,
+        pattern = pattern,
+        pattern_xoffset = pattern_xoffset,
+        pattern_yoffset = pattern_yoffset
+      ),
       width = tile_size_summary_width,
-      height = tile_size_summary_height
+      height = tile_size_summary_height,
+      colour = "#FFFFFF",
+      linewidth = 0.30,
+      # Same hatch settings for the aggregate tiles.
+      pattern_fill = "#E6E6E6",
+      pattern_colour = "#E6E6E6",
+      pattern_angle = 45,
+      pattern_alpha = 0.75,
+      pattern_spacing = 0.06,
+      pattern_density = 0.38,
+      pattern_res = 1600
     ) +
     scale_fill_manual(
       values = colors,
@@ -226,6 +275,9 @@ generate_s1b_preferences_barcharts <- function(
       labels = c("Prefer Badges", "No preference", "Prefer Footnotes"),
       drop   = FALSE
     ) +
+    ggpattern::scale_pattern_manual(values = c(none = "none", stripe = "stripe"), guide = "none") +
+    ggpattern::scale_pattern_xoffset_identity(guide = "none") +
+    ggpattern::scale_pattern_yoffset_identity(guide = "none") +
 
     # Row labels (tasks) on the left
     geom_text(
@@ -272,12 +324,34 @@ generate_s1b_preferences_barcharts <- function(
     theme_void() +
     theme(
       legend.position = "bottom",
+      legend.box.just = "right",
+      legend.justification = "right",
+      legend.text.align = 1,
       legend.title    = element_blank(),
       legend.text     = element_text(size = 8),
       # Square legend keys (avoid rectangular swatches)
-      legend.key.width  = unit(0.55, "lines"),
-      legend.key.height = unit(0.55, "lines"),
+      legend.key.width  = unit(0.85, "lines"),
+      legend.key.height = unit(0.85, "lines"),
       plot.margin     = margin(8, 6, 4, 10)
+    ) +
+    guides(
+      # Show texture for "Prefer Badges" in the fill legend (keep pattern legend hidden).
+      fill = guide_legend(
+        override.aes = list(
+          pattern = c("stripe", "none", "none"),
+          # Use stronger contrast in the legend so the hatch is clearly visible
+          # even with small legend keys.
+          pattern_fill = "#FFFFFF",
+          pattern_colour = "#FFFFFF",
+          pattern_angle = 45,
+          pattern_alpha = 1.00,
+          pattern_spacing = 0.05,
+          pattern_density = 0.42,
+          pattern_res = 1600,
+          pattern_xoffset = 0,
+          pattern_yoffset = 0
+        )
+      )
     ) +
     # Lower limit must be <= 1 - (tile_height / 2) to avoid clipping bottom row.
     scale_y_continuous(
@@ -289,7 +363,20 @@ generate_s1b_preferences_barcharts <- function(
 
   message("Writing s1b preferences grid to: ", output_path)
   # Use an aspect ratio close to y_range/x_range to avoid excessive white space.
-  grDevices::png(output_path, width = 1700, height = 520, res = 200)
+  # Render at higher pixel dimensions for smoother pattern edges.
+  # Note: On macOS, forcing the cairo PNG device may pull in X11 libs that aren't
+  # installed (and will silently degrade output), so we use the default device.
+  if (requireNamespace("ragg", quietly = TRUE)) {
+    ragg::agg_png(output_path, width = 3400, height = 1040, res = 400)
+  } else {
+    grDevices::png(output_path, width = 3400, height = 1040, res = 400)
+  }
+  print(p)
+  grDevices::dev.off()
+
+  # Also write a PDF next to the PNG for crisp zooming in the paper.
+  pdf_path <- sub("\\.png$", ".pdf", output_path)
+  grDevices::pdf(pdf_path, width = 3400 / 400, height = 1040 / 400, useDingbats = FALSE)
   print(p)
   grDevices::dev.off()
 
@@ -298,7 +385,7 @@ generate_s1b_preferences_barcharts <- function(
 
 
 # Allow running this script directly for quick checks.
-if (sys.nframe() == 1) {
+if (!interactive()) {
   args <- commandArgs(trailingOnly = TRUE)
   data_dir <- if (length(args) >= 1) args[[1]] else file.path("data", "s1b")
   out_dir  <- if (length(args) >= 2) args[[2]] else file.path("s1b", "r_output")

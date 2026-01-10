@@ -16,53 +16,6 @@ suppressPackageStartupMessages({
   library(ggpattern)
 })
 
-draw_key_half_stripe_overlay <- function(data, params, size) {
-  # Legend key: left half = plain fill, right half = same fill with a light stripe overlay.
-  # This makes the legend "correct" when the plot uses a pattern overlay for one condition.
-  if (!requireNamespace("grid", quietly = TRUE)) {
-    return(ggplot2::draw_key_rect(data, params, size))
-  }
-
-  alpha <- data$alpha %||% 1
-
-  base <- grid::rectGrob(
-    gp = grid::gpar(
-      col  = NA,
-      fill = scales::alpha(data$fill %||% "grey80", alpha)
-    )
-  )
-
-  stripe_vp <- grid::viewport(
-    x = 0.75, y = 0.5,
-    width = 0.5, height = 1,
-    just = c("center", "center"),
-    clip = "on"
-  )
-
-  spacing <- 0.14
-  offs <- seq(-1, 1 + spacing, by = spacing)
-  stripes <- grid::segmentsGrob(
-    x0 = offs, y0 = 0,
-    x1 = offs + 1, y1 = 1,
-    gp = grid::gpar(
-      # Slightly stronger than the in-plot stripes so the split remains readable at legend-key size,
-      # and still visible on the darker end of the greyscale ramp.
-      col = scales::alpha("white", 0.6),
-      lwd = 1.1,
-      lineend = "butt"
-    ),
-    vp = stripe_vp
-  )
-
-  split_line <- grid::segmentsGrob(
-    x0 = 0.5, y0 = 0,
-    x1 = 0.5, y1 = 1,
-    gp = grid::gpar(col = scales::alpha("grey80", 0.7), lwd = 0.8)
-  )
-
-  grid::grobTree(base, stripes, split_line)
-}
-
 generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, counts_df) {
   # `likert::plot()` already provides signed percentages in `likert_plot_data$value`
   # (negative = disagree side, positive = agree side).
@@ -75,9 +28,7 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
         tolower(as.character(Group)) %in% c("badge", "badges") ~ "Badges",
         TRUE ~ as.character(Group)
       ),
-      Group = factor(Group, levels = c("Footnotes", "Badges")),
-      # Pattern is only used to differentiate groups (Badges vs Footnotes)
-      pattern = dplyr::if_else(.data$Group == "Badges", "stripe", "none")
+      Group = factor(Group, levels = c("Footnotes", "Badges"))
     ) %>%
     dplyr::filter(!is.na(Group))
 
@@ -102,6 +53,31 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
       counts_norm %>% dplyr::select(.data$Group, .data$Item, .data$variable, .data$n),
       by = c("Group", "Item", "variable")
     )
+
+  # Pattern encoding (group distinction without introducing color).
+  # Match the waffle chart’s spirit: "Badges" = hatched/striped, "Footnotes" = solid.
+  dfp <- dfp %>%
+    dplyr::mutate(
+      group_pattern = dplyr::if_else(.data$Group == "Badges", "stripe", "none")
+    )
+
+  # Enforce a consistent item/facet order (top-to-bottom).
+  # Important: run this AFTER joins, since joins will coerce factor↔character to a common type.
+  dfp <- dfp %>%
+    dplyr::mutate(
+      Item_chr = as.character(.data$Item),
+      Item_order = dplyr::case_when(
+        stringr::str_detect(stringr::str_to_lower(Item_chr), "easy to spot") ~ 1L,
+        stringr::str_detect(stringr::str_to_lower(Item_chr), "clutter") ~ 2L,
+        stringr::str_detect(stringr::str_to_lower(Item_chr), "interpret") ~ 3L,
+        stringr::str_detect(stringr::str_to_lower(Item_chr), "useful") ~ 4L,
+        stringr::str_detect(stringr::str_to_lower(Item_chr), "trust") ~ 5L,
+        stringr::str_detect(stringr::str_to_lower(Item_chr), "widely used") ~ 6L,
+        TRUE ~ 999L
+      ),
+      Item = forcats::fct_reorder(factor(Item_chr), .data$Item_order, .fun = min)
+    ) %>%
+    dplyr::select(-Item_chr, -Item_order)
 
   # Split into positive / negative halves so we can control stacking order per side.
   # Goal: Strongest responses should be furthest from 0 (Strongly Agree rightmost, Strongly Disagree leftmost).
@@ -176,6 +152,11 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
   df_pos <- add_segment_labels(df_pos)
   df_neg <- add_segment_labels(df_neg)
 
+  base_font_size <- 10
+  # `geom_text(size=...)` uses mm, while theme text sizes are in pt.
+  # Convert pt → mm so in-bar counts match legend/axis typography.
+  label_size_mm <- base_font_size / ggplot2::.pt * 0.8
+
   base <- ggplot2::ggplot() +
     ggplot2::facet_wrap(~Item, ncol = 1, strip.position = "top") +
     ggplot2::coord_flip() +
@@ -187,70 +168,62 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
       breaks = names(palette_5),
       labels = names(palette_5)
     ) +
-    ggpattern::scale_pattern_manual(values = c(none = "none", stripe = "stripe"), guide = "none") +
     ggplot2::scale_color_identity() +
-    ggplot2::guides(fill = ggplot2::guide_legend()) +
+    ggplot2::guides(
+      fill = ggplot2::guide_legend(
+        keywidth = grid::unit(0.25, "lines"),
+        keyheight = grid::unit(0.25, "lines")
+      )
+    ) +
     ggplot2::labs(x = NULL, y = NULL) +
-    ggplot2::theme_minimal(base_size = 10) +
+    ggplot2::theme_minimal(base_size = base_font_size) +
     ggplot2::theme(
       legend.position = "bottom",
-      axis.text.y = ggplot2::element_text(size = 10),
-      strip.text = ggplot2::element_text(size = 10, face = "bold"),
-      strip.background = ggplot2::element_rect(fill = "grey95", color = NA)
+      # Much smaller legend squares + right-aligned legend.
+      legend.key.size = grid::unit(0.20, "lines"),
+      legend.spacing.x = grid::unit(0.20, "lines"),
+      legend.box.just = "right",
+      legend.justification = "right",
+      legend.text.align = 1,
+      axis.text.y = ggplot2::element_text(size = 11),
+      strip.text = ggplot2::element_text(size = 11),
+      # Remove label backgrounds completely (facet strips + legend background/keys).
+      strip.background = ggplot2::element_blank(),
+      legend.background = ggplot2::element_blank(),
+      legend.key = ggplot2::element_blank()
     )
 
-  # Pattern settings for the "Badge" group.
-  # We want a clear group distinction without washing out the underlying fill colours.
-  pattern_params <- list(
-    # ggplot stacks fills in reverse factor order by default in this coord/geom setup.
-    # We want responses to increase in strength *away* from 0:
-    # - positive side: Neutral (closest) → Agree → Strongly Agree (furthest)
-    # - negative side: Neutral (closest) → Disagree → Strongly Disagree (furthest)
-    # so we explicitly reverse the stacking direction.
+  # Stacking settings.
+  # We explicitly reverse stacking so response strength increases away from 0.
+  stack_params <- list(
     position = ggplot2::position_stack(reverse = TRUE),
-    # Remove segment outlines (they can look like a dashed border in patterned bars).
-    color = NA,
-    linewidth = 0,
-    # Make the pattern "line-only" (no opaque pattern fill) so bar colours remain visible.
-    pattern_fill = NA,
-    # Light, semi-transparent lines (instead of filled stripes) to avoid muting fills.
-    pattern_colour = "white",
-    pattern_alpha = 0.35,
-    # Fewer stripes and more spacing makes the fill read first, pattern second.
-    pattern_density = 0.12,
-    pattern_spacing = 0.12,
+    colour = NA,
+    linewidth = 0
+  )
+
+  # Stripe texture settings (kept subtle so fills remain readable).
+  # White-ish stripes read clearly on darker response segments while staying low-noise on light ones.
+  pattern_params <- list(
+    pattern_fill = "#FFFFFF",
+    pattern_colour = "#FFFFFF",
     pattern_angle = 45,
-    pattern_key_scale_factor = 0.8,
-    key_glyph = draw_key_half_stripe_overlay
+    pattern_alpha = 0.35,
+    pattern_spacing = 0.06,
+    pattern_density = 0.40,
+    # Render at higher internal resolution to reduce jaggies in PNG export.
+    pattern_res = 1600
   )
 
   base +
-    # Legend-only layer so the fill legend keys are deterministic:
-    # each key shows 50% plain fill + 50% stripe overlay.
-    ggplot2::layer(
-      data = tibble::tibble(
-        Item = dfp$Item[[1]],
-        Group = factor("Footnotes", levels = c("Footnotes", "Badges")),
-        value = 0,
-        variable = factor(names(palette_5), levels = names(palette_5))
-      ),
-      mapping = ggplot2::aes(x = Group, y = value, fill = variable),
-      stat = "identity",
-      geom = ggplot2::GeomCol,
-      position = "stack",
-      show.legend = TRUE,
-      inherit.aes = FALSE,
-      key_glyph = draw_key_half_stripe_overlay,
-      params = list(linewidth = 0, colour = NA, na.rm = TRUE)
-    ) +
     do.call(
       ggpattern::geom_col_pattern,
       c(
         list(
           data = df_neg,
-          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern),
-          show.legend = c(fill = FALSE, pattern = FALSE)
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = group_pattern),
+          show.legend = TRUE
         ),
+        stack_params,
         pattern_params
       )
     ) +
@@ -259,18 +232,20 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
       c(
         list(
           data = df_pos,
-          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = pattern),
-          show.legend = c(fill = FALSE, pattern = FALSE)
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = group_pattern),
+          show.legend = TRUE
         ),
+        stack_params,
         pattern_params
       )
     ) +
-    # Per-segment percentage labels (drawn last so they sit above the patterns).
+    ggpattern::scale_pattern_manual(values = c(none = "none", stripe = "stripe"), guide = "none") +
+    # Per-segment absolute-count labels.
     ggplot2::geom_text(
       data = df_neg,
       mapping = ggplot2::aes(x = Group, y = y_mid, label = label, color = label_color),
       position = "identity",
-      size = 3,
+      size = label_size_mm,
       lineheight = 0.95,
       show.legend = FALSE
     ) +
@@ -278,7 +253,7 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
       data = df_pos,
       mapping = ggplot2::aes(x = Group, y = y_mid, label = label, color = label_color),
       position = "identity",
-      size = 3,
+      size = label_size_mm,
       lineheight = 0.95,
       show.legend = FALSE
     )
@@ -318,12 +293,13 @@ generate_likert_barplot <- function(
 
   # Human-readable question text for each item (used as axis labels / headers)
   item_label_map <- c(
-    saliency        = "Easy to spot.",
-    clutter         = "Cluttered or distracted from the visualization.",
-    interpretability = "Clear and easy to interpret.",
-    usefulness      = "Information was useful for understanding the visualization.",
-    trust           = "Increased my trust in the information and methodology.",
-    standardization = "Should be widely used alongside visualizations."
+    saliency        = "..were easy to spot",
+    # This item is reverse-coded (see below) so that higher = better across all items.
+    clutter         = "..did not clutter or distract from the visualizations",
+    interpretability = "..were clear and easy to interpret",
+    usefulness      = "..were useful for understanding the visualization",
+    trust           = "..increased my trust in the information and methodology",
+    standardization = "..should be widely used alongside visualizations."
   )
 
   if (length(item_cols) == 0) {
@@ -345,16 +321,21 @@ generate_likert_barplot <- function(
     "Strongly Agree"
   )
 
-  items_df <- df %>%
+  items_raw <- df %>%
     dplyr::select(dplyr::all_of(item_cols))
 
   # Coerce via base R to avoid any tibble/list-column surprises,
   # and apply shared ordered factor levels with human-readable labels.
+  # Reverse-code negatively phrased items so that higher values consistently mean "better".
   items_df <- as.data.frame(
-    lapply(
-      items_df,
-      function(col) {
+    purrr::imap(
+      items_raw,
+      function(col, nm) {
         codes <- as.integer(as.character(col))
+        if (identical(nm, "clutter")) {
+          # Reverse: 1↔5, 2↔4, 3 stays 3
+          codes <- dplyr::if_else(is.na(codes), NA_integer_, 6L - codes)
+        }
         factor(
           codes,
           levels  = 1:5,
@@ -395,8 +376,12 @@ generate_likert_barplot <- function(
 
   message("Writing Likert barplot to: ", output_path)
 
-  grDevices::png(output_path, width = 1500, height = 1200, res = 200)
-  on.exit(grDevices::dev.off(), add = TRUE)
+  # Prefer ragg for smoother pattern rendering; fall back to base png device.
+  if (requireNamespace("ragg", quietly = TRUE)) {
+    ragg::agg_png(output_path, width = 1500, height = 1200, res = 200)
+  } else {
+    grDevices::png(output_path, width = 1500, height = 1200, res = 200)
+  }
 
   p_base <- plot(
     likert_obj,
@@ -428,8 +413,15 @@ generate_likert_barplot <- function(
 
   # Ensure plot is drawn into the device
   print(p)
+  grDevices::dev.off()
 
-  invisible(output_path)
+  # Also write a PDF next to the PNG for crisp zooming in the paper.
+  pdf_path <- sub("\\.png$", ".pdf", output_path)
+  grDevices::pdf(pdf_path, width = 1500 / 200, height = 1200 / 200, useDingbats = FALSE)
+  print(p)
+  grDevices::dev.off()
+
+  invisible(list(png = output_path, pdf = pdf_path))
 }
 
 
