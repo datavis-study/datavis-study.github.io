@@ -1,0 +1,281 @@
+{
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.1.1/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "Badge questionnaire",
+    "version": "0.0.1",
+    "authors": [
+      "Valentin Edelsbrunner"
+    ],
+    "date": "2026-02-12",
+    "description": "A minimal post-task questionnaire about visualization badges.",
+    "organizations": []
+  },
+  "uiConfig": {
+    "contactEmail": "valentin.edelsbrunner@inria.fr",
+    "logoPath": "revisitAssets/revisitLogoSquare.svg",
+    "withProgressBar": true,
+    "sidebar": false
+  },
+  "importedLibraries": [
+    "demographics"
+  ],
+  "components": {
+    "consent": {
+      "type": "markdown",
+      "path": "mind-the-badge/assets/consent.md",
+      "nextButtonText": "Accept and Continue",
+      "response": []
+    },
+    "badge-onboarding": {
+      "type": "markdown",
+      "path": "badge-questionnaire/assets/badge-onboarding.md",
+      "nextButtonText": "Continue",
+      "response": [
+        {
+          "id": "noticed_badges",
+          "prompt": "Did you notice the badges while you were exploring the atlas pages?",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No",
+            "Not sure"
+          ],
+          "required": true
+        }
+      ]
+    },
+    "q2_interactive": {
+      "type": "questionnaire",
+      "description": "Q2 — noticing interactivity",
+      "instruction": "### Question 2",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "noticed_interactive",
+          "prompt": "Did you notice that the badges were interactive (click, hover, etc.)?",
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No",
+            "Not sure"
+          ],
+          "required": true
+        }
+      ]
+    },
+    "q3_understand_remember": {
+      "type": "questionnaire",
+      "description": "Q3 — understanding and recall",
+      "instruction": "### Question 3",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "understood_badges",
+          "prompt": "Did you understand the badges on the pages you browsed (label, color, tooltip)?",
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No",
+            "Not sure"
+          ],
+          "required": true
+        },
+        {
+          "id": "remembered_badges",
+          "prompt": "Which badges can you remember?",
+          "location": "aboveStimulus",
+          "type": "longText",
+          "required": true,
+          "minRows": 4,
+          "autosize": true,
+          "maxRows": 8
+        }
+      ]
+    },
+    "q4_help_interpret": {
+      "type": "questionnaire",
+      "description": "Q4 — interpretation support",
+      "instruction": "### Question 4",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "helped_interpret",
+          "prompt": "Did the badges help you better interpret the visualizations in the atlas pages?",
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No",
+            "Not sure"
+          ],
+          "required": true
+        },
+        {
+          "id": "helped_interpret_why",
+          "prompt": "Why?",
+          "location": "aboveStimulus",
+          "type": "longText",
+          "required": true,
+          "minRows": 4,
+          "autosize": true,
+          "maxRows": 8
+        }
+      ]
+    },
+    "q5_general_accuracy": {
+      "type": "questionnaire",
+      "description": "Q5 — general value for accuracy",
+      "instruction": "### Question 5",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "general_help_accuracy",
+          "prompt": "Do you generally think that badges can help people in making more accurate data interpretations?",
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No",
+            "Not sure"
+          ],
+          "required": true
+        },
+        {
+          "id": "general_help_accuracy_why",
+          "prompt": "Why?",
+          "location": "aboveStimulus",
+          "type": "longText",
+          "required": true,
+          "minRows": 4,
+          "autosize": true,
+          "maxRows": 8
+        }
+      ]
+    },
+    "q6_trust": {
+      "type": "questionnaire",
+      "description": "Q6 — trust impact",
+      "instruction": "### Question 6",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "trust_direction",
+          "prompt": "Would you say that you trust the atlas more or less, because of these badges?",
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "Badges increased my trust",
+            "Badges decreased my trust",
+            "Not sure"
+          ],
+          "required": true
+        },
+        {
+          "id": "trust_direction_why",
+          "prompt": "Why?",
+          "location": "aboveStimulus",
+          "type": "longText",
+          "required": true,
+          "minRows": 4,
+          "autosize": true,
+          "maxRows": 8
+        }
+      ]
+    },
+    "q7_good_number": {
+      "type": "questionnaire",
+      "description": "Q7 — good number of badges",
+      "instruction": "### Question 7",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "good_badge_count",
+          "prompt": "What do you think is a good number of badges placed alongside a visualization?",
+          "location": "aboveStimulus",
+          "type": "numerical",
+          "placeholder": "Enter a number",
+          "min": 0,
+          "max": 20,
+          "required": true
+        },
+        {
+          "id": "good_badge_count_why",
+          "prompt": "Why?",
+          "location": "aboveStimulus",
+          "type": "longText",
+          "required": true,
+          "minRows": 4,
+          "autosize": true,
+          "maxRows": 8
+        }
+      ]
+    },
+    "q8_more_or_less": {
+      "type": "questionnaire",
+      "description": "Q8 — preference for more or less badges",
+      "instruction": "### Question 8",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "want_more_or_less",
+          "prompt": "Would you generally want to see more or less badges (e.g., in the atlas)?",
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "More badges",
+            "Less badges",
+            "Not sure"
+          ],
+          "required": true
+        },
+        {
+          "id": "want_more_or_less_why",
+          "prompt": "Why?",
+          "location": "aboveStimulus",
+          "type": "longText",
+          "required": true,
+          "minRows": 4,
+          "autosize": true,
+          "maxRows": 8
+        }
+      ]
+    },
+    "q9_like_dislike": {
+      "type": "questionnaire",
+      "description": "Q9 — feedback on badges",
+      "instruction": "### Question 9",
+      "instructionLocation": "aboveStimulus",
+      "response": [
+        {
+          "id": "like_or_dislike",
+          "prompt": "What did you like or not like about the badges?",
+          "location": "aboveStimulus",
+          "type": "longText",
+          "required": true,
+          "minRows": 6,
+          "autosize": true,
+          "maxRows": 10
+        }
+      ]
+    }
+  },
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "consent",
+      "badge-onboarding",
+      "q2_interactive",
+      "q3_understand_remember",
+      "q4_help_interpret",
+      "q5_general_accuracy",
+      "q6_trust",
+      "q7_good_number",
+      "q8_more_or_less",
+      "q9_like_dislike",
+      "$demographics.co.demographics"
+    ]
+  }
+}
+

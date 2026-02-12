@@ -4,7 +4,8 @@
     "s1",
     "s2",
     "s1b-footnotes",
-    "s1b-badges"
+    "s1b-badges",
+    "badge-questionnaire"
   ],
   "configs": {
     "s1": {
@@ -18,6 +19,9 @@
     },
     "s1b-badges": {
       "path": "s1b-badges/config.json"
+    },
+    "badge-questionnaire": {
+      "path": "badge-questionnaire/config.json"
     }
   }
 }
