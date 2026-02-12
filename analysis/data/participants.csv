@@ -1,5 +1,5 @@
 readableId,participantGroup,participantId,isProlific,participantIndex,completed,ip,country,language,userAgent,resolutionWidth,resolutionHeight,firstStimulus,secondStimulus
-xray,footnote-group,6630ec1ebe18d48a3cecb54e,True,54,True,174.165.158.121,US,en-US,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0",2560,1440,global-warming-projection,co2-emissions
+xray,footnote-group,6630ec1ebe18d48a3cecb54e,True,54,True,174.165.158.121,United States,en-US,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0",2560,1440,global-warming-projection,co2-emissions
 whiskey,footnote-group,676572d1818b3b26ca9f6ce2,True,53,True,2.102.88.157,GB,en-GB,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",1920,1080,co2-emissions,global-warming-projection
 victor,footnote-group,62d59b380be0866cf039e0ee,True,50,True,88.97.193.132,GB,en-GB,"Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",1920,1080,global-warming-projection,co2-emissions
 uniform,badge-group,5dcfaad2dd9a740c2493fc28,True,45,True,86.151.161.109,GB,en-GB,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",1920,1080,global-warming-projection,co2-emissions
@@ -23,3 +23,4 @@ delta,footnote-group,6369700320bc7dd22e733009,True,19,True,108.89.4.171,US,en-US
 charlie,footnote-group,7b88dea0-0445-4362-b670-01be60f5195b,False,11,True,104.28.30.155,GB,en-US,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15",1024,1366,global-warming-projection,co2-emissions
 bravo,badge-group,782e2f94-ade5-4279-94aa-9dcdb26abbcd,False,9,True,104.28.30.123,GB,en-GB,"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0.1 Safari/605.1.15",1512,859,global-warming-projection,co2-emissions
 alpha,badge-group,5101b146-ce6f-4f61-8818-118229a2308b,False,7,True,,,en-GB,Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0,1707,1067,co2-emissions,global-warming-projection
+bal-warming-projection
