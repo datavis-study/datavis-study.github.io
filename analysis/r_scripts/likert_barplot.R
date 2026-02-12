@@ -13,13 +13,12 @@
 suppressPackageStartupMessages({
   library(tidyverse)
   library(likert)
-  library(ggpattern)
 })
 
 generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, counts_df) {
   # `likert::plot()` already provides signed percentages in `likert_plot_data$value`
   # (negative = disagree side, positive = agree side).
-  # We replot it with ggpattern so the Badge group can be hatched cleanly.
+  # We replot it with ggplot2 for full styling control.
   dfp <- likert_plot_data %>%
     dplyr::mutate(
       # Normalise group labels so the axis is consistent across datasets.
@@ -52,13 +51,6 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
     dplyr::left_join(
       counts_norm %>% dplyr::select(.data$Group, .data$Item, .data$variable, .data$n),
       by = c("Group", "Item", "variable")
-    )
-
-  # Pattern encoding (group distinction without introducing color).
-  # Match the waffle chart’s spirit: "Badges" = hatched/striped, "Footnotes" = solid.
-  dfp <- dfp %>%
-    dplyr::mutate(
-      group_pattern = dplyr::if_else(.data$Group == "Badges", "stripe", "none")
     )
 
   # Enforce a consistent item/facet order (top-to-bottom).
@@ -111,18 +103,26 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
       )
     )
 
+  # Helper to choose black/white label color based on fill luminance.
+  # This is more robust than hard-coding by response label.
+  text_color_for_fill <- function(hex) {
+    if (is.na(hex) || !nzchar(hex)) {
+      return("black")
+    }
+    rgb <- grDevices::col2rgb(hex)
+    # Relative luminance (0..255). Threshold tuned for small in-bar labels.
+    lum <- 0.2126 * rgb[1, 1] + 0.7152 * rgb[2, 1] + 0.0722 * rgb[3, 1]
+    if (lum < 140) "white" else "black"
+  }
+
   # Add per-segment labels using absolute counts (n).
   # We compute explicit midpoints (instead of relying on position_stack) to avoid misplacement
   # when the Neutral category is split across the zero line.
   add_segment_labels <- function(d) {
     d <- d %>%
       dplyr::mutate(
-        # Keep labels readable on darker fills.
-        label_color = dplyr::if_else(
-          as.character(.data$variable) %in% c("Agree", "Strongly Agree"),
-          "white",
-          "black"
-        ),
+        fill_hex = unname(palette_5[as.character(.data$variable)]),
+        label_color = vapply(.data$fill_hex, text_color_for_fill, character(1)),
         label = dplyr::if_else(
           is.na(.data$n) | .data$n <= 0 | is.na(.data$value) | abs(.data$value) < 1e-9,
           "",
@@ -201,45 +201,29 @@ generate_likert_plot_print_friendly <- function(likert_plot_data, palette_5, cou
     linewidth = 0
   )
 
-  # Stripe texture settings (kept subtle so fills remain readable).
-  # White-ish stripes read clearly on darker response segments while staying low-noise on light ones.
-  pattern_params <- list(
-    pattern_fill = "#FFFFFF",
-    pattern_colour = "#FFFFFF",
-    pattern_angle = 45,
-    pattern_alpha = 0.35,
-    pattern_spacing = 0.06,
-    pattern_density = 0.40,
-    # Render at higher internal resolution to reduce jaggies in PNG export.
-    pattern_res = 1600
-  )
-
   base +
     do.call(
-      ggpattern::geom_col_pattern,
+      ggplot2::geom_col,
       c(
         list(
           data = df_neg,
-          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = group_pattern),
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable),
           show.legend = TRUE
         ),
-        stack_params,
-        pattern_params
+        stack_params
       )
     ) +
     do.call(
-      ggpattern::geom_col_pattern,
+      ggplot2::geom_col,
       c(
         list(
           data = df_pos,
-          mapping = ggplot2::aes(x = Group, y = value, fill = variable, pattern = group_pattern),
+          mapping = ggplot2::aes(x = Group, y = value, fill = variable),
           show.legend = TRUE
         ),
-        stack_params,
-        pattern_params
+        stack_params
       )
     ) +
-    ggpattern::scale_pattern_manual(values = c(none = "none", stripe = "stripe"), guide = "none") +
     # Per-segment absolute-count labels.
     ggplot2::geom_text(
       data = df_neg,
@@ -364,14 +348,14 @@ generate_likert_barplot <- function(
     likert::likert(items = items_df)
   }
 
-  # Print-friendly greyscale palette for a 5-point Likert scale.
-  # Darkest (Strongly Agree) is a near-black so it prints well without crushing.
+  # Journal-friendly diverging palette (Orange → near-white → Blue).
+  # Chosen to stay subtle, print well, and remain legible when downscaled.
   palette_5 <- c(
-    "#d9d9d9", # 1: Strongly Disagree
-    "#bdbdbd", # 2: Disagree
-    "#969696", # 3: Neither...
-    "#636363", # 4: Agree
-    "#252525"  # 5: Strongly Agree
+    "#B85C00", # Strongly Disagree
+    "#E3A86B", # Disagree
+    "#F7F3EE", # Neither Agree nor Disagree
+    "#89B4D6", # Agree
+    "#2B6EA5"  # Strongly Agree
   )
 
   message("Writing Likert barplot to: ", output_path)

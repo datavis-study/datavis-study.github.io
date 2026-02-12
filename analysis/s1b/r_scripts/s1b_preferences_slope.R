@@ -98,11 +98,12 @@ generate_s1b_preferences_slope <- function(
     dplyr::ungroup() %>%
     dplyr::select(-total_n)
 
-  # Color mapping: badges = orange, footnotes = blue, no preference = grey
+  # Color mapping (match preference grid): badges = orange, footnotes = blue,
+  # no preference = sand/off-white (not grey)
   colors <- c(
-    "badges"        = "#F28E2B",  # orange
-    "no_preference" = "#B0B0B0",  # grey
-    "footnotes"     = "#4E79A7"   # blue
+    "badges"        = "#B85C00",  # orange
+    "no_preference" = "#E9DFD2",  # sand
+    "footnotes"     = "#2B6EA5"   # blue
   )
 
   message("Writing s1b preference slope chart to: ", output_path)
