@@ -12,7 +12,7 @@ import { useStudyConfig } from '../store/hooks/useStudyConfig';
 import { WindowEventsContext } from '../store/hooks/useWindowEvents';
 import { useStoreSelector } from '../store/store';
 import { AnalysisFooter } from './interface/AnalysisFooter';
-import { ViewportBlocker } from './interface/ViewportBlocker';
+// import { ViewportBlocker } from './interface/ViewportBlocker';
 import { useIsAnalysis } from '../store/hooks/useIsAnalysis';
 import { useCurrentComponent } from '../routes/utils';
 
@@ -134,12 +134,18 @@ export function StepRenderer() {
         aside={{ width: 360, breakpoint: 'xs', collapsed: { desktop: !asideOpen, mobile: !asideOpen } }}
         footer={{ height: (isAnalysis ? 75 : 0) + (analysisHasAudio ? 50 : 0) }}
       >
+        {/*
+          ViewportBlocker disabled intentionally.
+          The study should be accessible without a minimum viewport size restriction.
+        */}
+        {/*
         <ViewportBlocker
           minWidth={1300}
           minHeight={800}
           blockPhoneLike
           message="Your screen is too small for this study. Please use a laptop- or desktop-sized window (at least 1300 × 800 px)."
         />
+        */}
         <AppNavBar />
         <AppAside />
         <AppHeader studyNavigatorEnabled={effectiveStudyNavigatorEnabled} dataCollectionEnabled={dataCollectionEnabled} />
