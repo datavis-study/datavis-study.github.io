@@ -16,17 +16,20 @@
     "withProgressBar": true,
     "sidebar": false
   },
-  "importedLibraries": [
-    "demographics"
-  ],
   "components": {
     "consent": {
       "type": "markdown",
-      "path": "mind-the-badge/assets/consent.md",
+      "path": "badge-questionnaire/assets/consent.md",
       "nextButtonText": "Accept and Continue",
       "response": []
     },
-    "badge-onboarding": {
+    "introduction": {
+      "type": "markdown",
+      "path": "badge-questionnaire/assets/introduction.md",
+      "nextButtonText": "Continue",
+      "response": []
+    },
+    "q1_notice": {
       "type": "markdown",
       "path": "badge-questionnaire/assets/badge-onboarding.md",
       "nextButtonText": "Continue",
@@ -249,8 +252,21 @@
       "instructionLocation": "aboveStimulus",
       "response": [
         {
+          "id": "overall_helpfulness",
+          "prompt": "Overall I found badges helpful.",
+          "location": "aboveStimulus",
+          "type": "radio",
+          "options": [
+            "I found badges very helpful",
+            "I found badges helpful",
+            "I did not find badges helpful",
+            "Not sure"
+          ],
+          "required": true
+        },
+        {
           "id": "like_or_dislike",
-          "prompt": "What did you like or not like about the badges?",
+          "prompt": "Why? What did you like or not like about the badges?",
           "location": "aboveStimulus",
           "type": "longText",
           "required": true,
@@ -259,13 +275,128 @@
           "maxRows": 10
         }
       ]
+    },
+    "demographics-custom": {
+      "type": "questionnaire",
+      "description": "Demographic and background questions for visualization research study",
+      "response": [
+        {
+          "id": "gender",
+          "prompt": "What is your **gender**?",
+          "required": true,
+          "type": "radio",
+          "withOther": true,
+          "options": [
+            "Woman",
+            "Man",
+            "Non-binary",
+            "Questioning",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "age",
+          "prompt": "What is your **age group**?",
+          "required": true,
+          "type": "radio",
+          "options": [
+            "18-24 years",
+            "25-34 years",
+            "35-44 years",
+            "45-54 years",
+            "55-64 years",
+            "65+ years",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "education",
+          "prompt": "What is the **highest degree or level of education** you have completed?",
+          "required": true,
+          "type": "radio",
+          "withOther": true,
+          "options": [
+            "Less than high school",
+            "High school diploma or equivalent (e.g., GED, Matura)",
+            "Bachelor's degree",
+            "Master's degree",
+            "Doctorate (e.g., PhD, EdD)",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "field-of-study",
+          "prompt": "What is your **primary field of study or work**?",
+          "required": true,
+          "type": "radio",
+          "withOther": true,
+          "options": [
+            "Computer Science / Information Technology",
+            "Data Science / Statistics",
+            "Business / Economics",
+            "Social Sciences (Psychology, Sociology, etc.)",
+            "Natural Sciences (Biology, Chemistry, Physics, etc.)",
+            "Engineering",
+            "Arts / Design",
+            "Humanities",
+            "Healthcare / Medicine",
+            "Education"
+          ]
+        },
+        {
+          "id": "chart-reading-frequency",
+          "prompt": "How often do you **read or interpret charts and graphs**?",
+          "required": true,
+          "type": "radio",
+          "options": [
+            "Never",
+            "Rarely (few times per year)",
+            "Occasionally (few times per month)",
+            "Regularly (few times per week)",
+            "Frequently (daily or almost daily)"
+          ]
+        },
+        {
+          "id": "chart-creation-frequency",
+          "prompt": "How often do you **create charts and graphs**?",
+          "required": true,
+          "type": "radio",
+          "options": [
+            "Never",
+            "Rarely (few times per year)",
+            "Occasionally (few times per month)",
+            "Regularly (few times per week)",
+            "Frequently (daily or almost daily)"
+          ]
+        },
+        {
+          "id": "color-vision",
+          "prompt": "Do you have any form of color‑vision deficiency (often called color‑blindness)?",
+          "required": false,
+          "type": "radio",
+          "options": [
+            "Yes",
+            "No",
+            "Not sure",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "color-vision-type",
+          "prompt": "If yes, which type of color‑vision deficiency? (optional)",
+          "required": false,
+          "type": "shortText",
+          "placeholder": "e.g., Deuteranopia, Protanopia, Tritanopia"
+        }
+      ]
     }
   },
   "sequence": {
     "order": "fixed",
     "components": [
       "consent",
-      "badge-onboarding",
+      "introduction",
+      "q1_notice",
       "q2_interactive",
       "q3_understand_remember",
       "q4_help_interpret",
@@ -274,7 +405,7 @@
       "q7_good_number",
       "q8_more_or_less",
       "q9_like_dislike",
-      "$demographics.co.demographics"
+      "demographics-custom"
     ]
   }
 }
